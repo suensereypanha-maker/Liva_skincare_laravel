@@ -8,11 +8,11 @@
         <!-- Breadcrumb Header -->
         <section class="cat-shop-banner">
             <div class="container cat-shop-banner-content">
-                <h1 id="shop-title">Shop</h1>
+                <h1 id="shop-title" data-i18n="shop">Shop</h1>
                 <nav class="cat-breadcrumb-trail" aria-label="Breadcrumb">
-                    <a href="{{ route('home') }}">Home</a>
+                    <a href="{{ route('home') }}" data-i18n="home">Home</a>
                     <span aria-hidden="true">/</span>
-                    <span aria-current="page">Shop</span>
+                    <span aria-current="page" data-i18n="shop">Shop</span>
                 </nav>
             </div>
         </section>
@@ -25,7 +25,7 @@
             <!-- Column 1: Sidebar Filter -->
             <aside class="cat-filter-sidebar" id="cat-filter-sidebar" aria-label="Product filters">
                 <div class="cat-filter-sidebar-head">
-                    <h2 class="cat-filter-sidebar-title">Filter Options</h2>
+                    <h2 class="cat-filter-sidebar-title" data-i18n="filterOptions">Filter Options</h2>
                     <button type="button" class="icon-button cat-filter-close" id="cat-filter-close" aria-label="Close filters">
                         <x-icon name="close" />
                     </button>
@@ -33,18 +33,36 @@
 
                 <!-- Categories Filter -->
                 <div class="cat-filter-group">
-                    <h3 class="cat-filter-heading">By Categories</h3>
+                    <h3 class="cat-filter-heading" data-i18n="byCategories">By Categories</h3>
                     <ul class="cat-filter-list">
                         <li>
                             <button type="button" class="cat-filter-link{{ empty($category) ? ' is-active' : '' }}" data-filter-type="category" data-filter-value="">
-                                <span>All Categories</span>
+                                <span data-i18n="allCategories">All Categories</span>
                                 <span class="cat-filter-count">{{ $totalAll ?? count($products) }}</span>
                             </button>
                         </li>
+                        @php
+                            $catI18nMap = [
+                                'skin-care' => 'skinCare',
+                                'makeup' => 'makeup',
+                                'hair' => 'hairCare',
+                                'fragrances' => 'fragrances',
+                                'nail-care' => 'nailCare',
+                                'body' => 'bodyCare',
+                                'sets' => 'sets',
+                            ];
+                            $skinI18nMap = [
+                                'Normal' => 'normal',
+                                'Oily' => 'oily',
+                                'Dry' => 'dry',
+                                'Combination' => 'combination',
+                                'Sensitive' => 'sensitive',
+                            ];
+                        @endphp
                         @foreach($categories as $key => $name)
                             <li>
                                 <button type="button" class="cat-filter-link{{ ($category ?? '') === $key ? ' is-active' : '' }}" data-filter-type="category" data-filter-value="{{ $key }}">
-                                    <span>{{ $name }}</span>
+                                    <span data-i18n="{{ $catI18nMap[$key] ?? '' }}">{{ $name }}</span>
                                     <span class="cat-filter-count">{{ $categoryCounts[$key] ?? 0 }}</span>
                                 </button>
                             </li>
@@ -54,12 +72,12 @@
 
                 <!-- Skin Type Filter -->
                 <div class="cat-filter-group">
-                    <h3 class="cat-filter-heading">By Skin Type</h3>
+                    <h3 class="cat-filter-heading" data-i18n="bySkinType">By Skin Type</h3>
                     <ul class="cat-filter-list">
                         @foreach($skinTypes as $type)
                             <li>
-                                <button type="button" class="cat-filter-link" data-filter-type="skinType" data-filter-value="{{ $type }}">
-                                    <span>{{ $type }}</span>
+                                <button type="button" class="cat-filter-link{{ ($skinType ?? '') === $type ? ' is-active' : '' }}" data-filter-type="skinType" data-filter-value="{{ $type }}">
+                                    <span data-i18n="{{ $skinI18nMap[$type] ?? '' }}">{{ $type }}</span>
                                 </button>
                             </li>
                         @endforeach
@@ -68,56 +86,74 @@
 
                 <!-- Price Range Filter -->
                 <div class="cat-filter-group">
-                    <h3 class="cat-filter-heading">Price Range</h3>
-                    <div class="cat-range-slider">
-                        <div class="cat-slider-track">
-                            <div class="cat-slider-range" id="cat-slider-range-fill" style="left:0%;right:0%;"></div>
-                        </div>
-                        <input type="range" class="cat-range-input cat-range-min" id="cat-range-min" min="10" max="100" value="{{ $minPrice ?? 10 }}" step="1" aria-label="Minimum price">
-                        <input type="range" class="cat-range-input cat-range-max" id="cat-range-max" min="10" max="100" value="{{ $maxPrice ?? 100 }}" step="1" aria-label="Maximum price">
+                    <div class="cat-price-heading-row">
+                        <h3 class="cat-filter-heading" data-i18n="price">Price</h3>
                     </div>
-                    <div class="cat-range-values">
-                        <span id="cat-min-price-display">${{ number_format($minPrice ?? 10, 2) }}</span>
-                        <span id="cat-max-price-display">${{ number_format($maxPrice ?? 100, 2) }}</span>
+                    <p class="cat-price-val-display" id="cat-price-val-display">${{ number_format($minPrice ?? 10, 2) }} - ${{ number_format($maxPrice ?? 100, 2) }}</p>
+                    <div class="cat-dual-slider">
+                        <div class="cat-slider-track"></div>
+                        <div class="cat-slider-range" id="cat-slider-range" style="left: 0%; right: 0%;"></div>
+                        <input type="range" class="cat-slider-input" id="cat-range-min" min="10" max="100" step="5" value="{{ $minPrice ?? 10 }}" aria-label="Minimum price">
+                        <input type="range" class="cat-slider-input" id="cat-range-max" min="10" max="100" step="5" value="{{ $maxPrice ?? 100 }}" aria-label="Maximum price">
                     </div>
                 </div>
 
-                <!-- Promotion Filter -->
+                <!-- Review / Ratings Filter -->
                 <div class="cat-filter-group">
-                    <h3 class="cat-filter-heading">Promotions</h3>
-                    <ul class="cat-filter-list">
-                        <li>
-                            <button type="button" class="cat-filter-link" data-filter-type="promo" data-filter-value="new-arrival">
-                                <span>New Arrivals</span>
-                            </button>
-                        </li>
-                        <li>
-                            <button type="button" class="cat-filter-link" data-filter-type="promo" data-filter-value="best-seller">
-                                <span>Best Sellers</span>
-                            </button>
-                        </li>
-                        <li>
-                            <button type="button" class="cat-filter-link" data-filter-type="promo" data-filter-value="on-sale">
-                                <span>On Sale</span>
-                            </button>
-                        </li>
+                    <h3 class="cat-filter-heading" data-i18n="review">Review</h3>
+                    <ul class="cat-ratings-list">
+                        @foreach([5, 4, 3, 2, 1] as $r)
+                            <li>
+                                <button type="button" class="cat-rating-btn" data-filter-type="rating" data-filter-value="{{ $r }}">
+                                    <span class="cat-stars-row" aria-hidden="true">{{ str_repeat('★', $r) . str_repeat('☆', 5 - $r) }}</span>
+                                    <span class="cat-rating-label">{{ $r }} <span data-i18n="star">Star</span>{{ $r === 5 ? '' : ' ' }}@if($r < 5)<span data-i18n="andAbove">& Above</span>@endif</span>
+                                </button>
+                            </li>
+                        @endforeach
                     </ul>
                 </div>
 
-                <!-- Stock Availability -->
+                <!-- By Promotions Filter -->
                 <div class="cat-filter-group">
-                    <h3 class="cat-filter-heading">Availability</h3>
-                    <ul class="cat-filter-list">
-                        <li>
-                            <button type="button" class="cat-filter-link" data-filter-type="stock" data-filter-value="in-stock">
-                                <span>In Stock</span>
-                            </button>
-                        </li>
-                    </ul>
+                    <h3 class="cat-filter-heading" data-i18n="byPromotions">By Promotions</h3>
+                    <div class="cat-checkbox-group">
+                        <label class="cat-custom-checkbox">
+                            <input type="checkbox" class="cat-promo-toggle" value="new-arrival">
+                            <span class="cat-checkbox-mark"></span>
+                            <span class="cat-checkbox-text" data-i18n="newArrivals">New Arrivals</span>
+                        </label>
+                        <label class="cat-custom-checkbox">
+                            <input type="checkbox" class="cat-promo-toggle" value="best-seller">
+                            <span class="cat-checkbox-mark"></span>
+                            <span class="cat-checkbox-text" data-i18n="bestSellers">Best Sellers</span>
+                        </label>
+                        <label class="cat-custom-checkbox">
+                            <input type="checkbox" class="cat-promo-toggle" value="on-sale">
+                            <span class="cat-checkbox-mark"></span>
+                            <span class="cat-checkbox-text" data-i18n="onSale">On Sale</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Availability Filter -->
+                <div class="cat-filter-group">
+                    <h3 class="cat-filter-heading" data-i18n="availability">Availability</h3>
+                    <div class="cat-checkbox-group">
+                        <label class="cat-custom-checkbox">
+                            <input type="checkbox" class="cat-stock-toggle" value="in-stock">
+                            <span class="cat-checkbox-mark"></span>
+                            <span class="cat-checkbox-text" data-i18n="inStock">In Stock</span>
+                        </label>
+                        <label class="cat-custom-checkbox">
+                            <input type="checkbox" class="cat-stock-toggle" value="out-of-stock">
+                            <span class="cat-checkbox-mark"></span>
+                            <span class="cat-checkbox-text" data-i18n="outOfStock">Out of Stock</span>
+                        </label>
+                    </div>
                 </div>
 
                 <div class="cat-filter-reset-wrap">
-                    <button type="button" class="cat-filter-reset-btn" id="cat-filter-reset">Reset Filters</button>
+                    <button type="button" class="cat-filter-reset-btn" id="cat-filter-reset" data-i18n="clearAll">Reset Filters</button>
                 </div>
             </aside>
 
@@ -126,15 +162,15 @@
                 <!-- Top Results Bar -->
                 <div class="cat-results-header">
                     <div class="cat-results-counter">
-                        <p aria-live="polite">Showing 1–{{ min(12, $totalCount) }} of {{ $totalCount }} results</p>
+                        <p aria-live="polite"><span data-i18n="showing">Showing</span> 1–{{ min(12, $totalCount) }} <span data-i18n="of">of</span> {{ $totalCount }} <span data-i18n="results">results</span></p>
                     </div>
                     <div class="cat-results-controls">
                         <button type="button" class="cat-mobile-filter-trigger" id="cat-mobile-filter-open">
                             <x-icon name="filter" />
-                            <span>Filter Options</span>
+                            <span data-i18n="filterOptions">Filter Options</span>
                         </button>
                         <div class="cat-sort-control">
-                            <label for="cat-sort-select" class="cat-sort-label">Sort by:</label>
+                            <label for="cat-sort-select" class="cat-sort-label" data-i18n="sortBy">Sort by:</label>
                             <div class="cat-sort-select-wrap">
                                 <select id="cat-sort-select" aria-label="Sort products">
                                     <option value="default" {{ ($currentSort ?? 'default') === 'default' ? 'selected' : '' }}>Default Sorting</option>
@@ -163,16 +199,48 @@
                 </div>
 
                 <!-- Pagination -->
-                @if($totalCount > 12)
-                    <nav class="cat-pagination-bar" aria-label="Product catalog pagination">
-                        <ul class="cat-pagination-list">
-                            <li><button type="button" class="cat-page-btn is-active" data-page="1" aria-current="page">1</button></li>
-                            <li><button type="button" class="cat-page-btn" data-page="2">2</button></li>
-                            <li><button type="button" class="cat-page-btn cat-page-next" data-page="2" aria-label="Next page"><x-icon name="arrow" /></button></li>
-                        </ul>
+                @if($totalCount > 12 || count($products) > 0)
+                    <nav class="cat-pagination" aria-label="Catalog pages">
+                        <button type="button" class="cat-page-btn cat-page-prev" data-page="1" disabled aria-disabled="true" aria-label="Previous page">
+                            <x-icon name="chevron" />
+                        </button>
+                        <div class="cat-page-numbers">
+                            <button type="button" class="cat-page-number is-active" data-page="1" aria-current="page">1</button>
+                            <button type="button" class="cat-page-number" data-page="2">2</button>
+                        </div>
+                        <button type="button" class="cat-page-btn cat-page-next" data-page="2" aria-label="Next page">
+                            <x-icon name="chevron" />
+                        </button>
                     </nav>
                 @endif
             </main>
+        </div>
+
+        <!-- Trust Assurance Badges -->
+        <div class="container">
+            <section class="cat-trust-features" aria-label="Store guarantees">
+                <div class="cat-trust-card">
+                    <div class="cat-trust-icon-box"><x-icon name="box" /></div>
+                    <div class="cat-trust-info">
+                        <h4 data-i18n="freeShipping">Free Shipping</h4>
+                        <p data-i18n="freeShippingDesc">Free shipping for order above $50</p>
+                    </div>
+                </div>
+                <div class="cat-trust-card">
+                    <div class="cat-trust-icon-box"><x-icon name="card" /></div>
+                    <div class="cat-trust-info">
+                        <h4 data-i18n="flexiblePayment">Flexible Payment</h4>
+                        <p data-i18n="flexiblePaymentDesc">Multiple secure payment options</p>
+                    </div>
+                </div>
+                <div class="cat-trust-card">
+                    <div class="cat-trust-icon-box"><x-icon name="phone" /></div>
+                    <div class="cat-trust-info">
+                        <h4 data-i18n="support247">24×7 Support</h4>
+                        <p data-i18n="support247Desc">We support online all days.</p>
+                    </div>
+                </div>
+            </section>
         </div>
     </div>
 </div>

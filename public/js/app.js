@@ -12,7 +12,7 @@
     sets: 'Sets'
   };
   function editProducts() {
-    return L.products.filter(p => p.category === editCategory).slice(0,3).map(L.productCard).join('');
+    return L.products.filter(p => p.category === editCategory).slice(0, 3).map(L.productCard).join('');
   }
   function home() {
     return `${L.renderHero()}
@@ -26,21 +26,21 @@
   }
   function information(page) {
     const content = {
-      shipping:{title:'Delivery & returns',label:'BEFORE YOU ORDER',body:'<h2>Details are being confirmed.</h2><p>Delivery coverage, fees, timing and returns conditions have not been supplied for this preview. No delivery or returns service is offered through this demo.</p><p>You can explore the address form and the order tracking interface. Saving a demo order does not arrange delivery. Approved store policies will be needed before a live launch.</p>'},
-      privacy:{title:'Your saved information',label:'ABOUT THIS PREVIEW',body:'<h2>On this device.</h2><p>Your shopping bag, saved products, demo profile and demo orders are stored in this browser. No account server, analytics or payment service is connected.</p><p>The contact form only shows a confirmation; it does not send or store your message. Use sample information while exploring account and checkout screens.</p><h2>You’re in control.</h2><p>Clear this site’s browser data to remove saved information. This describes the prototype’s behavior, not a privacy policy for a future live store.</p>'},
-      terms:{title:'The LIVA preview',label:'A COLLECTION IN PROGRESS',body:'<h2>A working design preview.</h2><p>This frontend demonstrates product discovery, comparison, saved items, a personal shelf, shopping bag, account, checkout and order history.</p><p>Product imagery, names, sizes and prices are illustrative. Ingredients, use instructions and product benefits require approved brand information. No customer ratings, reviews or certifications are presented.</p><h2>No purchase is made.</h2><p>Accounts, payment selections and orders are demonstrations. No SMS is sent, no payment is collected, no stock is reserved and no order is delivered. Delivery and returns policies and live customer care channels are not configured.</p>'}
+      shipping: { title: 'Delivery & returns', label: 'BEFORE YOU ORDER', body: '<h2>Details are being confirmed.</h2><p>Delivery coverage, fees, timing and returns conditions have not been supplied for this preview. No delivery or returns service is offered through this demo.</p><p>You can explore the address form and the order tracking interface. Saving a demo order does not arrange delivery. Approved store policies will be needed before a live launch.</p>' },
+      privacy: { title: 'Your saved information', label: 'ABOUT THIS PREVIEW', body: '<h2>On this device.</h2><p>Your shopping bag, saved products, demo profile and demo orders are stored in this browser. No account server, analytics or payment service is connected.</p><p>The contact form only shows a confirmation; it does not send or store your message. Use sample information while exploring account and checkout screens.</p><h2>You’re in control.</h2><p>Clear this site’s browser data to remove saved information. This describes the prototype’s behavior, not a privacy policy for a future live store.</p>' },
+      terms: { title: 'The LIVA preview', label: 'A COLLECTION IN PROGRESS', body: '<h2>A working design preview.</h2><p>This frontend demonstrates product discovery, comparison, saved items, a personal shelf, shopping bag, account, checkout and order history.</p><p>Product imagery, names, sizes and prices are illustrative. Ingredients, use instructions and product benefits require approved brand information. No customer ratings, reviews or certifications are presented.</p><h2>No purchase is made.</h2><p>Accounts, payment selections and orders are demonstrations. No SMS is sent, no payment is collected, no stock is reserved and no order is delivered. Delivery and returns policies and live customer care channels are not configured.</p>' }
     }[page];
     return `<section class="information-page container"><span class="eyebrow">${content.label}</span><h1>${content.title}</h1><div class="prose">${content.body}<a class="text-link" href="#contact">Help & contact ${icon('arrow')}</a></div></section>`;
   }
   function notFound() { return `<section class="container empty-state"><span class="eyebrow">PAGE NOT FOUND</span><h1>A fresh start?</h1><p>This page isn’t part of the collection.</p><a href="#shop" class="btn btn-primary">Explore the collection ${icon('arrow')}</a></section>`; }
   L.updateCounts = function () {
-    const totals=L.cartTotals(); $('.bag-count').text(totals.count);
-    $('.bag-toggle').attr('aria-label',`Shopping bag, ${totals.count} ${totals.count===1?'item':'items'}`);
-    $('.wishlist-count').text(L.state.wishlist.length).prop('hidden',!L.state.wishlist.length);
+    const totals = L.cartTotals(); $('.bag-count').text(totals.count);
+    $('.bag-toggle').attr('aria-label', `Shopping bag, ${totals.count} ${totals.count === 1 ? 'item' : 'items'}`);
+    $('.wishlist-count').text(L.state.wishlist.length).prop('hidden', !L.state.wishlist.length);
   };
   let isInitialLoad = true;
   L.render = function (forceRender) {
-    if(L.destroyHero)L.destroyHero();
+    if (L.destroyHero) L.destroyHero();
     let raw = window.location.hash.slice(1);
     const p = window.location.pathname.replace(/^\/|\/$/g, '');
     const currentRoute = p || 'home';
@@ -60,180 +60,183 @@
       }
     }
 
-    const [path,query]=(raw || currentRoute).split('?');
+    const [path, query] = (raw || currentRoute).split('?');
     if (!p && raw) {
       const parts = path.split('/');
       page = parts[0];
       id = parts[1];
     }
-    const params=new URLSearchParams(query || (window.location.search ? window.location.search.slice(1) : ''));
-    let html='';
-    const hasPreRenderedContent = $('#app').children().length > 0 && !forceRender;
+    const params = new URLSearchParams(query || (window.location.search ? window.location.search.slice(1) : ''));
+    let html = '';
+    const dynamicPages = ['account', 'shop', 'wishlist', 'compare', 'tracking', 'checkout'];
+    const isDynamicPage = dynamicPages.includes(page);
+    const hasPreRenderedContent = isInitialLoad && $('#app').children().length > 0 && !forceRender && !isDynamicPage;
     isInitialLoad = false;
 
-    if (!hasPreRenderedContent || forceRender) {
-      switch(page){
-        case 'home':editCategory='hair';html=home();break;
-        case 'shop':html=L.renderShop(params);break;
-        case 'product':html=L.renderProduct(id);break;
-        case 'compare':html=L.renderCompare();break;
-        case 'routine':html=L.renderRoutine();break;
-        case 'wishlist':html=L.renderWishlist();break;
-        case 'checkout':html=L.renderCheckout();break;
-        case 'account':html=L.renderAccount();break;
-        case 'tracking':html=L.renderTracking(id);break;
-        case 'contact':html=L.renderContact();break;
-        case 'confirmation':html=L.renderConfirmation(id);break;
-        case 'about':case 'journal':html=about();break;
-        case 'shipping':case 'privacy':case 'terms':html=information(page);break;
-        default:html=notFound();
-      }
-      $('#app').html(html);
-    }
-    document.body.dataset.page=page;
-    $('[data-nav]').removeClass('active').removeAttr('aria-current').filter(function(){return this.dataset.nav===(page==='product'?'shop':page);}).addClass('active').attr('aria-current','page');
-    const labels={shop:categoryNames[params.get('category')]||'The collection',product:L.getProduct(id)?.name||'Product',routine:'Build your shelf',compare:'Compare products',wishlist:'Saved products',checkout:'Checkout',account:'Your account',tracking:'Order tracking',contact:'Help & contact',confirmation:'Order saved',about:'About LIVA',shipping:'Delivery & returns',privacy:'Privacy',terms:'About this preview'};
-    document.title=page==='home'?'LIVA — The Daily Edit':`${labels[page]||'Explore'} — LIVA`;
-    L.updateCounts(); if(L.initCatalogPage)L.initCatalogPage(); if(L.initHero)L.initHero();
-    syncLanguage(L.getLang ? L.getLang() : 'en');
-  };
-  function syncLanguage(lang) {
-    lang = (lang === 'km' || lang === 'en') ? lang : (L.getLang ? L.getLang() : 'en');
-    $('html').attr('lang', lang);
-    $('[data-lang]').each(function () {
-      const isTarget = this.dataset.lang === lang;
-      $(this).toggleClass('active', isTarget).attr('aria-pressed', String(isTarget));
-    });
-    $('[data-i18n]').each(function () {
-      const key = this.dataset.i18n;
-      const translation = L.t(key);
-      if (translation) {
-        this.textContent = translation;
-      }
-    });
-    const searchInput = $('#header-search-input');
-    if (searchInput.length) {
-      searchInput.attr('placeholder', lang === 'km' ? 'សាប៊ូកក់សក់ សាប៊ូដុសខ្លួន និងច្រើនទៀត...' : 'Shampoo, body wash, a little of both…');
-    }
-    const mobileSearchInput = $('.mobile-nav-search-input');
-    if (mobileSearchInput.length) {
-      mobileSearchInput.attr('placeholder', lang === 'km' ? 'ស្វែងរកផលិតផល...' : 'Search products, rituals…');
-    }
-  }
-  function closeNavigation() {
-    $('.mobile-nav,.header-search').prop('hidden', true);
-    $('.mobile-menu-toggle,.header-actions .search-toggle').attr('aria-expanded', 'false');
-    $('.mobile-menu-toggle').attr('aria-label', 'Open menu').html(icon('menu'));
-    $('body').removeClass('menu-open');
-  }
-  $(function () {
-    $('[data-icon]').each(function () { this.innerHTML = icon(this.dataset.icon); });
-    L.state.cart = L.state.cart.filter(item => L.getProduct(item.id));
-    L.state.wishlist = L.state.wishlist.filter(id => L.getProduct(id));
-    syncLanguage(L.getLang ? L.getLang() : 'en');
-    L.render();
-    $(document).on('click', '[data-lang]', function (e) {
-      e.preventDefault();
-      const newLang = this.dataset.lang;
-      if (newLang && (newLang === 'en' || newLang === 'km')) {
-        L.setLang(newLang);
-        syncLanguage(newLang);
-        L.render();
-      }
-    });
-    $(document).on('liva:lang-changed', function (e) {
-      const lang = (e.detail && e.detail.lang) || (L.getLang ? L.getLang() : 'en');
-      syncLanguage(lang);
-    });
-    let previousPath = (window.location.hash || '#home').split('?')[0];
-    $(window).on('hashchange', function () {
-      const focused = document.activeElement, focusId = focused && focused.id;
-      const path = (window.location.hash || '#home').split('?')[0];
-      if (path === '#main-content') { document.getElementById('main-content').focus(); return; }
-      closeNavigation();
-      if (L.closeCart) L.closeCart();
-      const knownPages = ['shop', 'product', 'routine', 'about', 'contact', 'shipping', 'privacy', 'terms', 'wishlist', 'compare', 'account', 'tracking'];
-      const targetPage = path.slice(1).split('/')[0];
-      if (knownPages.includes(targetPage)) {
-        const currentPath = window.location.pathname.replace(/^\/|\/$/g, '');
-        if (currentPath !== path.slice(1)) {
-          window.location.href = '/' + path.slice(1);
-          return;
+      if (!hasPreRenderedContent || forceRender || isDynamicPage) {
+        switch (page) {
+          case 'home': editCategory = 'hair'; html = home(); break;
+          case 'shop': html = L.renderShop(params); break;
+          case 'product': html = L.renderProduct(id); break;
+          case 'compare': html = L.renderCompare(); break;
+          case 'routine': html = L.renderRoutine(); break;
+          case 'wishlist': html = L.renderWishlist(); break;
+          case 'checkout': html = L.renderCheckout(); break;
+          case 'account': html = L.renderAccount(); break;
+          case 'tracking': html = L.renderTracking(id); break;
+          case 'contact': html = L.renderContact(); break;
+          case 'confirmation': html = L.renderConfirmation(id); break;
+          case 'about': case 'journal': html = about(); break;
+          case 'shipping': case 'privacy': case 'terms': html = information(page); break;
+          default: html = notFound();
         }
+        $('#app').html(html);
       }
+      document.body.dataset.page = page;
+      $('[data-nav]').removeClass('active').removeAttr('aria-current').filter(function () { return this.dataset.nav === (page === 'product' ? 'shop' : page); }).addClass('active').attr('aria-current', 'page');
+      const labels = { shop: categoryNames[params.get('category')] || 'The collection', product: L.getProduct(id)?.name || 'Product', routine: 'Build your shelf', compare: 'Compare products', wishlist: 'Saved products', checkout: 'Checkout', account: 'Your account', tracking: 'Order tracking', contact: 'Help & contact', confirmation: 'Order saved', about: 'About LIVA', shipping: 'Delivery & returns', privacy: 'Privacy', terms: 'About this preview' };
+      document.title = page === 'home' ? 'LIVA — The Daily Edit' : `${labels[page] || 'Explore'} — LIVA`;
+      L.updateCounts(); if (L.initCatalogPage) L.initCatalogPage(); if (L.initHero) L.initHero();
+      syncLanguage(L.getLang ? L.getLang() : 'en');
+    };
+    function syncLanguage(lang) {
+      lang = (lang === 'km' || lang === 'en') ? lang : (L.getLang ? L.getLang() : 'en');
+      $('html').attr('lang', lang);
+      $('[data-lang]').each(function () {
+        const isTarget = this.dataset.lang === lang;
+        $(this).toggleClass('active', isTarget).attr('aria-pressed', String(isTarget));
+      });
+      $('[data-i18n]').each(function () {
+        const key = this.dataset.i18n;
+        const translation = L.t(key);
+        if (translation) {
+          this.textContent = translation;
+        }
+      });
+      const searchInput = $('#header-search-input');
+      if (searchInput.length) {
+        searchInput.attr('placeholder', lang === 'km' ? 'សាប៊ូកក់សក់ សាប៊ូដុសខ្លួន និងច្រើនទៀត...' : 'Shampoo, body wash, a little of both…');
+      }
+      const mobileSearchInput = $('.mobile-nav-search-input');
+      if (mobileSearchInput.length) {
+        mobileSearchInput.attr('placeholder', lang === 'km' ? 'ស្វែងរកផលិតផល...' : 'Search products, rituals…');
+      }
+    }
+    function closeNavigation() {
+      $('.mobile-nav,.header-search').prop('hidden', true);
+      $('.mobile-menu-toggle,.header-actions .search-toggle').attr('aria-expanded', 'false');
+      $('.mobile-menu-toggle').attr('aria-label', 'Open menu').html(icon('menu'));
+      $('body').removeClass('menu-open');
+    }
+    $(function () {
+      $('[data-icon]').each(function () { this.innerHTML = icon(this.dataset.icon); });
+      L.state.cart = L.state.cart.filter(item => L.getProduct(item.id));
+      L.state.wishlist = L.state.wishlist.filter(id => L.getProduct(id));
+      syncLanguage(L.getLang ? L.getLang() : 'en');
       L.render();
-      if (path !== previousPath) {
-        window.scrollTo({ top: 0, behavior: 'instant' });
-        document.getElementById('main-content').focus({ preventScroll: true });
-      } else if (path === '#shop') {
-        const control = focusId && document.getElementById(focusId);
-        if (control) control.focus({ preventScroll: true });
-        else document.getElementById('main-content').focus({ preventScroll: true });
-      }
-      previousPath = path;
-    });
-    $(document).on('liva:change liva:cart-updated', L.updateCounts);
-    $('.mobile-nav a,.header-search a').on('click', closeNavigation);
-    $('.bag-toggle').on('click', () => { closeNavigation(); L.openCart(); });
-    $('.mobile-menu-toggle').on('click', function () {
-      const isHidden = $('.mobile-nav').prop('hidden');
-      closeNavigation();
-      if (isHidden) {
-        const headerEl = document.querySelector('.site-header');
-        if (headerEl) {
-          const headerBottom = headerEl.getBoundingClientRect().bottom;
-          document.documentElement.style.setProperty('--mobile-header-bottom', headerBottom + 'px');
+      $(document).on('click', '[data-lang]', function (e) {
+        e.preventDefault();
+        const newLang = this.dataset.lang;
+        if (newLang && (newLang === 'en' || newLang === 'km')) {
+          L.setLang(newLang);
+          syncLanguage(newLang);
+          L.render(true);
         }
-        $('.mobile-nav').prop('hidden', false);
-        $(this).attr({ 'aria-expanded': 'true', 'aria-label': 'Close menu' }).html(icon('close'));
-        $('body').addClass('menu-open');
-      }
-    });
-    $('.search-toggle').on('click', function () {
-      const open = $('.header-search').prop('hidden');
-      closeNavigation();
-      $('.header-search').prop('hidden', !open);
-      $('.header-actions .search-toggle').attr('aria-expanded', String(open));
-      if (open) $('#header-search-input').trigger('focus');
-      else $('.header-actions .search-toggle').trigger('focus');
-    });
-    $('#search-form').on('submit', function (e) {
-      e.preventDefault();
-      const q = $('#header-search-input').val().trim();
-      L.navigate('#shop' + (q ? '?q=' + encodeURIComponent(q) : ''));
-      closeNavigation();
-    });
-    $(document).on('submit', '.mobile-nav-search-form', function (e) {
-      e.preventDefault();
-      const q = $(this).find('input').val().trim();
-      L.navigate('#shop' + (q ? '?q=' + encodeURIComponent(q) : ''));
-      closeNavigation();
-    });
-    $(document).on('keydown', function (e) {
-      if (e.key === 'Escape') {
-        const searchOpen = !$('.header-search').prop('hidden'), menuOpen = !$('.mobile-nav').prop('hidden');
+      });
+      $(document).on('liva:lang-changed', function (e) {
+        const lang = (e.detail && e.detail.lang) || (L.getLang ? L.getLang() : 'en');
+        syncLanguage(lang);
+        L.render(true);
+      });
+      let previousPath = (window.location.hash || '#home').split('?')[0];
+      $(window).on('hashchange', function () {
+        const focused = document.activeElement, focusId = focused && focused.id;
+        const path = (window.location.hash || '#home').split('?')[0];
+        if (path === '#main-content') { document.getElementById('main-content').focus(); return; }
         closeNavigation();
-        if (searchOpen) $('.header-actions .search-toggle').trigger('focus');
-        else if (menuOpen) $('.mobile-menu-toggle').trigger('focus');
-      }
+        if (L.closeCart) L.closeCart();
+        const knownPages = ['shop', 'product', 'routine', 'about', 'contact', 'shipping', 'privacy', 'terms', 'wishlist', 'compare', 'account', 'tracking'];
+        const targetPage = path.slice(1).split('/')[0];
+        if (knownPages.includes(targetPage)) {
+          const currentPath = window.location.pathname.replace(/^\/|\/$/g, '');
+          if (currentPath !== path.slice(1)) {
+            window.location.href = '/' + path.slice(1);
+            return;
+          }
+        }
+        L.render(true);
+        if (path !== previousPath) {
+          window.scrollTo({ top: 0, behavior: 'instant' });
+          document.getElementById('main-content').focus({ preventScroll: true });
+        } else if (path === '#shop') {
+          const control = focusId && document.getElementById(focusId);
+          if (control) control.focus({ preventScroll: true });
+          else document.getElementById('main-content').focus({ preventScroll: true });
+        }
+        previousPath = path;
+      });
+      $(document).on('liva:change liva:cart-updated', L.updateCounts);
+      $('.mobile-nav a,.header-search a').on('click', closeNavigation);
+      $('.bag-toggle').on('click', () => { closeNavigation(); L.openCart(); });
+      $('.mobile-menu-toggle').on('click', function () {
+        const isHidden = $('.mobile-nav').prop('hidden');
+        closeNavigation();
+        if (isHidden) {
+          const headerEl = document.querySelector('.site-header');
+          if (headerEl) {
+            const headerBottom = headerEl.getBoundingClientRect().bottom;
+            document.documentElement.style.setProperty('--mobile-header-bottom', headerBottom + 'px');
+          }
+          $('.mobile-nav').prop('hidden', false);
+          $(this).attr({ 'aria-expanded': 'true', 'aria-label': 'Close menu' }).html(icon('close'));
+          $('body').addClass('menu-open');
+        }
+      });
+      $('.search-toggle').on('click', function () {
+        const open = $('.header-search').prop('hidden');
+        closeNavigation();
+        $('.header-search').prop('hidden', !open);
+        $('.header-actions .search-toggle').attr('aria-expanded', String(open));
+        if (open) $('#header-search-input').trigger('focus');
+        else $('.header-actions .search-toggle').trigger('focus');
+      });
+      $('#search-form').on('submit', function (e) {
+        e.preventDefault();
+        const q = $('#header-search-input').val().trim();
+        L.navigate('#shop' + (q ? '?q=' + encodeURIComponent(q) : ''));
+        closeNavigation();
+      });
+      $(document).on('submit', '.mobile-nav-search-form', function (e) {
+        e.preventDefault();
+        const q = $(this).find('input').val().trim();
+        L.navigate('#shop' + (q ? '?q=' + encodeURIComponent(q) : ''));
+        closeNavigation();
+      });
+      $(document).on('keydown', function (e) {
+        if (e.key === 'Escape') {
+          const searchOpen = !$('.header-search').prop('hidden'), menuOpen = !$('.mobile-nav').prop('hidden');
+          closeNavigation();
+          if (searchOpen) $('.header-actions .search-toggle').trigger('focus');
+          else if (menuOpen) $('.mobile-menu-toggle').trigger('focus');
+        }
+      });
+      $(document).on('click', '[data-edit]', function () {
+        editCategory = this.dataset.edit;
+        $('[data-edit]').removeClass('active').attr('aria-pressed', 'false');
+        $(this).addClass('active').attr('aria-pressed', 'true');
+        if ($('#home-products .home-card-wrapper').length) {
+          $('#home-products .home-card-wrapper').each(function () {
+            const match = $(this).data('category') === editCategory;
+            $(this).toggle(match);
+          });
+        } else {
+          $('#home-products').html(editProducts());
+        }
+        if (L.initCatalogPage) L.initCatalogPage();
+      });
+      $('.skip-link').on('click', function (e) {
+        e.preventDefault();
+        document.getElementById('main-content').focus();
+      });
     });
-    $(document).on('click', '[data-edit]', function () {
-      editCategory = this.dataset.edit;
-      $('[data-edit]').removeClass('active').attr('aria-pressed', 'false');
-      $(this).addClass('active').attr('aria-pressed', 'true');
-      if ($('#home-products .home-card-wrapper').length) {
-        $('#home-products .home-card-wrapper').each(function () {
-          const match = $(this).data('category') === editCategory;
-          $(this).toggle(match);
-        });
-      } else {
-        $('#home-products').html(editProducts());
-      }
-      if (L.initCatalogPage) L.initCatalogPage();
-    });
-    $('.skip-link').on('click', function (e) {
-      e.preventDefault();
-      document.getElementById('main-content').focus();
-    });
-  });
-})(window,window.jQuery);
+  }) (window, window.jQuery);

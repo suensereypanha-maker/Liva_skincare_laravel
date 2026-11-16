@@ -52,19 +52,16 @@ class PagesTest extends TestCase
     }
 
     /**
-     * Test product page displays the real results section with community result cards.
+     * Test product page displays product details without real results section.
      */
-    public function test_product_page_displays_real_results_section(): void
+    public function test_product_page_displays_product_details(): void
     {
         $response = $this->get('/product/shampoo');
         $response->assertStatus(200);
-        $response->assertSee('cat-product-results');
-        $response->assertSee('REAL RESULTS');
-        $response->assertSee('cat-results-stats');
-        $response->assertSee('cat-results-grid');
-        $response->assertSee('assets/result-1.webp');
-        $response->assertSee('assets/result-2.webp');
-        $response->assertSee('assets/result-3.webp');
+        $response->assertSee('cat-product-detail');
+        $response->assertSee('SilkSculpt Shampoo');
+        $response->assertDontSee('cat-product-results');
+        $response->assertDontSee('REAL RESULTS');
     }
 
     /**
@@ -103,5 +100,23 @@ class PagesTest extends TestCase
         $response->assertStatus(200);
         $response->assertViewHas('faqs');
         $response->assertSee('Can I buy products here?');
+    }
+
+    /**
+     * Test account page renders authentication card, sign in and create profile mode buttons.
+     */
+    public function test_account_page_renders_auth_card_and_mode_buttons(): void
+    {
+        $response = $this->get('/account');
+        $response->assertStatus(200);
+        $response->assertSee('commerce-account-page');
+        $response->assertSee('commerce-auth-card');
+        $response->assertSee('commerce-account-mode');
+        $response->assertSee('data-mode="signin"', false);
+        $response->assertSee('data-mode="register"', false);
+        $response->assertSee('commerce-login-form');
+        $response->assertSee('commerce-name');
+        $response->assertSee('commerce-email');
+        $response->assertSee('commerce-phone');
     }
 }

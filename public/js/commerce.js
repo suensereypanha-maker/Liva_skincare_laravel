@@ -201,7 +201,58 @@
     if (L.state.profile) return renderProfile();
     var register = accountMode === 'register';
     var otp = accountStep === 'otp';
-    return '<section class="commerce-account-page container"><div class="commerce-account-intro"><p class="eyebrow">YOUR LIVA</p><h1>Your favourites.<br>Your orders.<br><em>All together.</em></h1><p>Save a selection, revisit local demo orders, and add your favourites again.</p><div class="commerce-account-benefits"><span>' + icon('heart') + ' Saved favourites</span><span>' + icon('bag') + ' Local order history</span><span>' + icon('leaf') + ' Saved checkout details</span></div><div class="commerce-account-signature"><span>LIVA</span></div></div><div class="commerce-auth-card"><p class="eyebrow">' + (otp ? 'DEMO ACCESS' : 'YOUR ACCOUNT') + '</p><h2>' + (otp ? 'Enter your demo code.' : register ? 'Create a demo profile.' : 'Welcome back.') + '</h2><p class="commerce-auth-description">' + (otp ? 'Enter the preview code for ' + e(pendingProfile.phone) + '.' : 'Keep your shopping details together on this device.') + '</p>' + (otp ? renderOtpForm() : '<div class="commerce-auth-tabs" role="group" aria-label="Account action"><button type="button" class="commerce-account-mode' + (!register ? ' is-active' : '') + '" data-mode="signin" aria-pressed="' + !register + '">Sign in</button><button type="button" class="commerce-account-mode' + (register ? ' is-active' : '') + '" data-mode="register" aria-pressed="' + register + '">Create a profile</button></div>' + renderSocialAuth() + '<form id="commerce-login-form">' + (register ? inputField('Your name', 'name', pendingProfile.name || '', 'type="text" required minlength="2" maxlength="100" autocomplete="name" placeholder="Your name"') + inputField('Email address', 'email', pendingProfile.email || '', 'type="email" required maxlength="120" autocomplete="email" placeholder="you@example.com"') : '') + inputField('Phone number', 'phone', pendingProfile.phone || '', 'type="tel" required autocomplete="tel" pattern="[+0-9][0-9 ]{7,17}" title="Enter a valid phone number, such as 012 345 678" placeholder="012 345 678"') + '<div id="commerce-login-error" class="commerce-form-error" role="alert"></div><button class="btn btn-primary" type="submit">Continue' + icon('arrow') + '</button></form>' + demoNotice('Demo account access only. No SMS is sent. You’ll use the preview code <strong>123456</strong>.')) + '</div></section>';
+    var t = function (key, fallback) { return (L && L.t && L.t(key)) || fallback; };
+    var isKm = L && L.getLang && L.getLang() === 'km';
+    var yourFavs = t('yourFavourites', 'Saved favourites');
+    var localHistory = t('localOrderHistory', 'Local order history');
+    var savedDetails = t('savedCheckoutDetails', 'Saved checkout details');
+    var cardEyebrow = otp ? t('demoAccess', 'DEMO ACCESS') : t('yourAccount', 'YOUR ACCOUNT');
+    var cardHeading = otp ? t('enterDemoCode', 'Enter your demo code.') : register ? t('createDemoProfile', 'Create a demo profile.') : t('welcomeBack', 'Welcome back.');
+    var cardDesc = otp ? (isKm ? 'បញ្ចូលកូដសាកល្បងសម្រាប់ ' + e(pendingProfile.phone) + '។' : 'Enter the preview code for ' + e(pendingProfile.phone) + '.') : t('keepDetailsTogether', 'Keep your shopping details together on this device.');
+    var signInLabel = t('signIn', 'Sign in');
+    var createProfileLabel = t('createProfile', 'Create a profile');
+    var yourNameLabel = t('yourName', 'Your name');
+    var emailLabel = t('emailAddress', 'Email address');
+    var phoneLabel = t('phoneNumber', 'Phone number');
+    var continueLabel = t('continue', 'Continue');
+    var demoNoticeText = t('demoNotice', 'Demo account access only. No SMS is sent. You’ll use the preview code <strong>123456</strong>.');
+
+    return '<section class="commerce-account-page container">' +
+      '<div class="commerce-account-intro">' +
+      '<p class="eyebrow">' + t('yourLiva', 'YOUR LIVA') + '</p>' +
+      '<h1>' + (isKm ? 'ទំនិញដែលអ្នកពេញចិត្ត។<br>ការកុម្ម៉ង់របស់អ្នក។<br><em>ទាំងអស់នៅកន្លែងតែមួយ។</em>' : 'Your favourites.<br>Your orders.<br><em>All together.</em>') + '</h1>' +
+      '<p>' + (isKm ? 'រក្សាទុកជម្រើសរបស់អ្នក ពិនិត្យការកុម្ម៉ង់សាកល្បង និងបន្ថែមទំនិញដែលពេញចិត្តម្តងទៀត។' : 'Save a selection, revisit local demo orders, and add your favourites again.') + '</p>' +
+      '<div class="commerce-account-benefits">' +
+      '<span>' + icon('heart') + ' <span data-i18n="yourFavourites">' + yourFavs + '</span></span>' +
+      '<span>' + icon('bag') + ' <span data-i18n="localOrderHistory">' + localHistory + '</span></span>' +
+      '<span>' + icon('leaf') + ' <span data-i18n="savedCheckoutDetails">' + savedDetails + '</span></span>' +
+      '</div>' +
+      '<div class="commerce-account-signature"><span>LIVA</span></div>' +
+      '</div>' +
+      '<div class="commerce-auth-card">' +
+      '<p class="eyebrow">' + cardEyebrow + '</p>' +
+      '<h2>' + cardHeading + '</h2>' +
+      '<p class="commerce-auth-description">' + cardDesc + '</p>' +
+      (otp ? renderOtpForm() :
+        '<div class="commerce-auth-tabs" role="group" aria-label="Account action">' +
+        '<button type="button" class="commerce-account-mode' + (!register ? ' is-active' : '') + '" data-mode="signin" data-i18n="signIn" aria-pressed="' + !register + '">' + signInLabel + '</button>' +
+        '<button type="button" class="commerce-account-mode' + (register ? ' is-active' : '') + '" data-mode="register" data-i18n="createProfile" aria-pressed="' + register + '">' + createProfileLabel + '</button>' +
+        '</div>' +
+        renderSocialAuth() +
+        '<form id="commerce-login-form">' +
+        (register ?
+          inputField(yourNameLabel, 'name', pendingProfile.name || '', 'type="text" required minlength="2" maxlength="100" autocomplete="name" placeholder="' + yourNameLabel + '"') +
+          inputField(emailLabel, 'email', pendingProfile.email || '', 'type="email" required maxlength="120" autocomplete="email" placeholder="you@example.com"') :
+          ''
+        ) +
+        inputField(phoneLabel, 'phone', pendingProfile.phone || '', 'type="tel" required autocomplete="tel" pattern="[+0-9][0-9 ]{7,17}" title="' + (isKm ? 'សូមបញ្ចូលលេខទូរស័ព្ទត្រឹមត្រូវ' : 'Enter a valid phone number, such as 012 345 678') + '" placeholder="012 345 678"') +
+        '<div id="commerce-login-error" class="commerce-form-error" role="alert"></div>' +
+        '<button class="btn btn-primary" type="submit">' + continueLabel + icon('arrow') + '</button>' +
+        '</form>' +
+        demoNotice(demoNoticeText)
+      ) +
+      '</div>' +
+      '</section>';
   };
 
   function renderOtpForm() {
@@ -212,7 +263,8 @@
     var p = L.state.profile;
     var orders = L.state.orders || [];
     var providerText = p.provider ? ((L && L.t ? L.t('connectedVia') : 'Connected via') + ' ' + p.provider) : 'LOCAL DEMO PROFILE';
-    return '<section class="commerce-page container">' + pageHeading('YOUR LIVA', 'Hello, ' + e((p.name || 'there').split(' ')[0]) + '.', 'Saved details and order history on this device.') + '<div class="commerce-profile-layout"><aside class="commerce-profile-sidebar"><div class="commerce-avatar">' + e((p.name || 'L').charAt(0).toUpperCase()) + '</div><h2>' + e(p.name || 'LIVA Guest') + '</h2><p>' + e(p.phone || p.email) + '</p><span class="commerce-profile-label">' + e(providerText) + '</span><a href="#wishlist">' + icon('heart') + ' Your favourites' + icon('arrow') + '</a><a href="#tracking">' + icon('truck') + ' Track an order' + icon('arrow') + '</a><button type="button" class="commerce-logout">Sign out</button></aside><div class="commerce-profile-content">' + demoNotice('Your profile and order history live on this device. This is not a real authenticated account.') + '<section class="commerce-profile-section"><div class="commerce-profile-section-head"><h2>Your details</h2><span>For demo checkout</span></div><form id="commerce-profile-form"><div class="commerce-field-grid">' + inputField('Full name', 'name', p.name, 'type="text" required minlength="2" maxlength="100" autocomplete="name"') + inputField('Email address', 'email', p.email || '', 'type="email" required maxlength="120" autocomplete="email"') + inputField('Phone number', 'phone', p.phone, 'type="tel" required pattern="[+0-9][0-9 ]{7,17}" title="Enter a valid phone number" autocomplete="tel"') + inputField('Delivery address (optional)', 'address', p.address || '', 'type="text" maxlength="240" autocomplete="street-address"') + selectCity(p.city || 'Phnom Penh') + '</div><div id="commerce-profile-error" class="commerce-form-error" role="alert"></div><div class="commerce-profile-save"><button type="submit" class="btn btn-secondary">Save your details</button><span id="commerce-profile-saved" role="status"></span></div></form></section><section class="commerce-profile-section"><div class="commerce-profile-section-head"><h2>Order history</h2><span>' + orders.length + ' ' + (orders.length === 1 ? 'order' : 'orders') + '</span></div>' + (orders.length ? '<div class="commerce-order-history">' + orders.slice().reverse().map(function (order) { return '<article class="commerce-history-order"><div><a href="#confirmation/' + e(order.id) + '">' + e(order.id) + '</a><p>' + dateLabel(order.createdAt) + ' · ' + order.items.reduce(function (n, item) { return n + item.qty; }, 0) + ' items</p></div><span class="commerce-status">' + e(order.status || 'Confirmed') + '</span><strong>' + money(orderSubtotal(order)) + '</strong>' + repeatButton(order) + '<a class="commerce-history-link" href="#confirmation/' + e(order.id) + '" aria-label="View order ' + e(order.id) + '">' + icon('arrow') + '</a></article>'; }).join('') + '</div>' : '<div class="commerce-orders-empty">' + icon('bag') + '<h3>No demo orders yet.</h3><p>Once you place a demo order, you’ll find it here.</p><a href="#shop" class="commerce-text-link">Explore the collection' + icon('arrow') + '</a></div>') + '</section></div></div></section>';
+    var signOutLabel = (L && L.t && L.t('signOut')) || 'Sign out';
+    return '<section class="commerce-page container">' + pageHeading('YOUR LIVA', 'Hello, ' + e((p.name || 'there').split(' ')[0]) + '.', 'Saved details and order history on this device.') + '<div class="commerce-profile-layout"><aside class="commerce-profile-sidebar"><div class="commerce-avatar">' + e((p.name || 'L').charAt(0).toUpperCase()) + '</div><h2>' + e(p.name || 'LIVA Guest') + '</h2><p>' + e(p.phone || p.email) + '</p><span class="commerce-profile-label">' + e(providerText) + '</span><a href="#wishlist">' + icon('heart') + ' Your favourites' + icon('arrow') + '</a><a href="#tracking">' + icon('truck') + ' Track an order' + icon('arrow') + '</a><button type="button" class="commerce-logout" data-i18n="signOut">' + signOutLabel + '</button></aside><div class="commerce-profile-content">' + demoNotice('Your profile and order history live on this device. This is not a real authenticated account.') + '<section class="commerce-profile-section"><div class="commerce-profile-section-head"><h2>Your details</h2><span>For demo checkout</span></div><form id="commerce-profile-form"><div class="commerce-field-grid">' + inputField('Full name', 'name', p.name, 'type="text" required minlength="2" maxlength="100" autocomplete="name"') + inputField('Email address', 'email', p.email || '', 'type="email" required maxlength="120" autocomplete="email"') + inputField('Phone number', 'phone', p.phone, 'type="tel" required pattern="[+0-9][0-9 ]{7,17}" title="Enter a valid phone number" autocomplete="tel"') + inputField('Delivery address (optional)', 'address', p.address || '', 'type="text" maxlength="240" autocomplete="street-address"') + selectCity(p.city || 'Phnom Penh') + '</div><div id="commerce-profile-error" class="commerce-form-error" role="alert"></div><div class="commerce-profile-save"><button type="submit" class="btn btn-secondary">Save your details</button><span id="commerce-profile-saved" role="status"></span></div></form></section><section class="commerce-profile-section"><div class="commerce-profile-section-head"><h2>Order history</h2><span>' + orders.length + ' ' + (orders.length === 1 ? 'order' : 'orders') + '</span></div>' + (orders.length ? '<div class="commerce-order-history">' + orders.slice().reverse().map(function (order) { return '<article class="commerce-history-order"><div><a href="#confirmation/' + e(order.id) + '">' + e(order.id) + '</a><p>' + dateLabel(order.createdAt) + ' · ' + order.items.reduce(function (n, item) { return n + item.qty; }, 0) + ' items</p></div><span class="commerce-status">' + e(order.status || 'Confirmed') + '</span><strong>' + money(orderSubtotal(order)) + '</strong>' + repeatButton(order) + '<a class="commerce-history-link" href="#confirmation/' + e(order.id) + '" aria-label="View order ' + e(order.id) + '">' + icon('arrow') + '</a></article>'; }).join('') + '</div>' : '<div class="commerce-orders-empty">' + icon('bag') + '<h3>No demo orders yet.</h3><p>Once you place a demo order, you’ll find it here.</p><a href="#shop" class="commerce-text-link">Explore the collection' + icon('arrow') + '</a></div>') + '</section></div></div></section>';
   }
 
   function sampleOrder() {
@@ -251,7 +303,7 @@
   function validateForm(form, errorId) {
     if (!form.reportValidity()) return false;
     var name = form.elements.namedItem('name');
-    if (name && name.value.trim().length < 2) { announceError(errorId, 'Please enter your name.'); name.focus(); return false; }
+    if (name && name.required && name.value.trim().length < 2) { announceError(errorId, 'Please enter your name.'); name.focus(); return false; }
     var phone = form.elements.namedItem('phone');
     if (phone && !/^[+]?[0-9 ]+$/.test(phone.value.trim())) { announceError(errorId, 'Please enter a valid phone number using numbers and spaces.'); phone.focus(); return false; }
     if (phone && (phone.value.replace(/[^0-9]/g, '').length < 8 || phone.value.replace(/[^0-9]/g, '').length > 15)) { announceError(errorId, 'Please enter a phone number with 8–15 digits.'); phone.focus(); return false; }
@@ -330,7 +382,7 @@
         };
         L.save();
         accountStep = 'phone';
-        L.render();
+        L.render(true);
         L.toast(L.getLang && L.getLang() === 'km' ? 'បានចូលដោយជោគជ័យជាមួយ Google' : 'Signed in with Google');
       } else if (provider === 'facebook') {
         L.state.profile = {
@@ -343,15 +395,15 @@
         };
         L.save();
         accountStep = 'phone';
-        L.render();
+        L.render(true);
         L.toast(L.getLang && L.getLang() === 'km' ? 'បានចូលដោយជោគជ័យជាមួយ Facebook' : 'Signed in with Facebook');
       }
       return;
     }
     var mode = event.target.closest('.commerce-account-mode');
-    if (mode) { accountMode = mode.dataset.mode; accountStep = 'phone'; L.render(); return; }
-    if (event.target.closest('.commerce-back-to-phone')) { accountStep = 'phone'; L.render(); return; }
-    if (event.target.closest('.commerce-logout')) { L.state.profile = null; pendingProfile = {}; accountStep = 'phone'; L.save(); L.render(); L.toast('You’ve signed out of your demo account.'); return; }
+    if (mode) { accountMode = mode.dataset.mode; accountStep = 'phone'; L.render(true); return; }
+    if (event.target.closest('.commerce-back-to-phone')) { accountStep = 'phone'; L.render(true); return; }
+    if (event.target.closest('.commerce-logout')) { L.state.profile = null; pendingProfile = {}; accountStep = 'phone'; L.save(); L.render(true); L.toast('You’ve signed out of your demo account.'); return; }
     if (event.target.closest('.commerce-sample-order')) { var input = document.getElementById('commerce-order-id'); input.value = 'LIVA-1024'; findOrder('LIVA-1024'); return; }
     if (event.target.closest('.commerce-contact-again')) { document.getElementById('commerce-contact-success').hidden = true; document.getElementById('commerce-contact-form').hidden = false; document.getElementById('commerce-contact-form').reset(); document.getElementById('commerce-name').focus(); }
   });
@@ -416,7 +468,7 @@
       var login = Object.fromEntries(new FormData(form).entries());
       pendingProfile = { phone: login.phone.trim(), name: (login.name || '').trim(), email: (login.email || '').trim() };
       accountStep = 'otp';
-      L.render();
+      L.render(true);
       var otp = document.getElementById('commerce-otp');
       if (otp) otp.focus();
       return;
@@ -427,7 +479,7 @@
       L.state.profile = { name: pendingProfile.name || 'LIVA Guest', email: pendingProfile.email || '', phone: pendingProfile.phone, address: '', city: 'Phnom Penh' };
       L.save();
       accountStep = 'phone';
-      L.render();
+      L.render(true);
       L.toast('Your demo profile is ready.');
       return;
     }

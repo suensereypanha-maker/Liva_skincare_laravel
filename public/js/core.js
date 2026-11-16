@@ -140,7 +140,25 @@
       signedInFacebook: 'Signed in with Facebook',
       realResults: 'Real Results',
       satisfaction: '96% Satisfaction',
-      verifiedBuyer: 'Verified Buyer'
+      verifiedBuyer: 'Verified Buyer',
+      yourLiva: 'YOUR LIVA',
+      yourAccount: 'YOUR ACCOUNT',
+      demoAccess: 'DEMO ACCESS',
+      signIn: 'Sign in',
+      createProfile: 'Create a profile',
+      welcomeBack: 'Welcome back.',
+      createDemoProfile: 'Create a demo profile.',
+      enterDemoCode: 'Enter your demo code.',
+      keepDetailsTogether: 'Keep your shopping details together on this device.',
+      yourName: 'Your name',
+      emailAddress: 'Email address',
+      phoneNumber: 'Phone number',
+      continue: 'Continue',
+      demoNotice: 'Demo account access only. No SMS is sent. You’ll use the preview code <strong>123456</strong>.',
+      signOut: 'Sign out',
+      yourFavourites: 'Saved favourites',
+      localOrderHistory: 'Local order history',
+      savedCheckoutDetails: 'Saved checkout details'
     },
     km: {
       realResults: 'លទ្ធផលពិតប្រាកដ',
@@ -241,7 +259,25 @@
       orWithPhone: 'ឬបន្តជាមួយលេខទូរស័ព្ទ',
       connectedVia: 'ភ្ជាប់តាមរយៈ',
       signedInGoogle: 'បានចូលដោយជោគជ័យជាមួយ Google',
-      signedInFacebook: 'បានចូលដោយជោគជ័យជាមួយ Facebook'
+      signedInFacebook: 'បានចូលដោយជោគជ័យជាមួយ Facebook',
+      yourLiva: 'កម្រងប្រចាំថ្ងៃ LIVA',
+      yourAccount: 'គណនីរបស់អ្នក',
+      demoAccess: 'ចូលប្រើសាកល្បង',
+      signIn: 'ចូលគណនី',
+      createProfile: 'បង្កើតគណនី',
+      welcomeBack: 'សូមស្វាគមន៍ការត្រឡប់មកវិញ។',
+      createDemoProfile: 'បង្កើតគណនីសាកល្បង។',
+      enterDemoCode: 'បញ្ចូលកូដសាកល្បងរបស់អ្នក។',
+      keepDetailsTogether: 'រក្សាទុកព័ត៌មានទិញទំនិញរបស់អ្នកនៅលើឧបករណ៍នេះ។',
+      yourName: 'ឈ្មោះរបស់អ្នក',
+      emailAddress: 'អាសយដ្ឋានអ៊ីមែល',
+      phoneNumber: 'លេខទូរស័ព្ទ',
+      continue: 'បន្ត',
+      demoNotice: 'ការចូលប្រើគណនីសាកល្បងប៉ុណ្ណោះ។ មិនមានការផ្ញើ SMS ទេ។ អ្នកនឹងប្រើកូដគំរូ <strong>123456</strong>។',
+      signOut: 'ចាកចេញ',
+      yourFavourites: 'ទំនិញរក្សាទុក',
+      localOrderHistory: 'ប្រវត្តិកុម្ម៉ង់ក្នុងឧបករណ៍នេះ',
+      savedCheckoutDetails: 'ព័ត៌មានទូទាត់ដែលបានរក្សាទុក'
     }
   };
 

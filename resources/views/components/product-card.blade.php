@@ -3,19 +3,47 @@
 @php
     $categoryName = \App\Models\Product::categoryName($product['category'] ?? '');
     $ratingVal = isset($product['rating']) ? number_format((float) $product['rating'], 1) : '4.9';
-    $hasHover = !empty($product['hoverImage']);
     $priceFormatted = '$' . number_format((float) $product['price'], 2);
     $origPriceFormatted = !empty($product['originalPrice']) ? ('$' . number_format((float) $product['originalPrice'], 2)) : null;
+    $catI18nMap = [
+        'skin-care' => 'skinCare',
+        'makeup' => 'makeup',
+        'hair' => 'hairCare',
+        'fragrances' => 'fragrances',
+        'nail-care' => 'nailCare',
+        'body' => 'bodyCare',
+        'sets' => 'sets',
+    ];
+    $rawImages = !empty($product['images']) ? $product['images'] : array_values(array_filter([$product['image'] ?? null, $product['hoverImage'] ?? null]));
+    $images = array_map(fn($img) => asset($img), $rawImages);
+    $hasMultiple = count($images) >= 2;
+    $primaryImg = $images[0] ?? asset($product['image'] ?? '');
+    $hoverImg = !empty($product['hoverImage']) ? asset($product['hoverImage']) : ($hasMultiple ? $images[1] : null);
 @endphp
 
 <article class="product-card" data-product-id="{{ $product['id'] }}">
     <div class="cat-card-media">
-        <a class="cat-card-image{{ $hasHover ? ' has-hover-image' : '' }}" href="{{ route('product.show', $product['id']) }}" aria-label="{{ $product['name'] }}">
-            <img class="cat-card-img-primary" src="{{ asset($product['image']) }}" alt="LIVA {{ $product['name'] }}" loading="{{ $eager ? 'eager' : 'lazy' }}" width="720" height="720">
-            @if($hasHover)
-                <img class="cat-card-img-hover" src="{{ asset($product['hoverImage']) }}" alt="LIVA {{ $product['name'] }} alternate view" loading="lazy" width="720" height="720">
+        <div class="cat-card-image-wrap{{ $hasMultiple ? ' has-multiple-images' : '' }}" data-images='@json($images)' data-current-idx="0">
+            <a class="cat-card-image{{ $hoverImg ? ' has-hover-image' : '' }}" href="{{ route('product.show', $product['id']) }}" aria-label="{{ $product['name'] }}">
+                <img class="cat-card-img-primary" src="{{ $primaryImg }}" alt="LIVA {{ $product['name'] }}" loading="{{ $eager ? 'eager' : 'lazy' }}" width="720" height="720">
+                @if($hoverImg)
+                    <img class="cat-card-img-hover" src="{{ $hoverImg }}" alt="LIVA {{ $product['name'] }} alternate view" loading="lazy" width="720" height="720">
+                @endif
+            </a>
+            @if($hasMultiple)
+                <button type="button" class="cat-card-nav cat-card-prev" aria-label="Previous image" data-action="prev-img">
+                    <x-icon name="chevron" />
+                </button>
+                <button type="button" class="cat-card-nav cat-card-next" aria-label="Next image" data-action="next-img">
+                    <x-icon name="chevron" />
+                </button>
+                <div class="cat-card-dots" role="tablist" aria-label="Product image slides">
+                    @foreach($images as $idx => $imgUrl)
+                        <button type="button" class="cat-card-dot{{ $idx === 0 ? ' is-active' : '' }}" data-idx="{{ $idx }}" aria-label="Slide {{ $idx + 1 }}"></button>
+                    @endforeach
+                </div>
             @endif
-        </a>
+        </div>
         @if(!empty($product['discount']))
             <span class="cat-card-badge">{{ $product['discount'] }}</span>
         @endif
@@ -33,7 +61,7 @@
     </div>
     <div class="cat-card-body">
         <div class="cat-card-meta-line">
-            <span class="cat-card-category">{{ $categoryName }}</span>
+            <span class="cat-card-category" data-i18n="{{ $catI18nMap[$product['category'] ?? ''] ?? '' }}">{{ $categoryName }}</span>
             <span class="cat-card-rating">
                 <x-icon name="starFill" />
                 {{ $ratingVal }}

@@ -45,73 +45,18 @@
                             <img id="cat-main-img" src="{{ asset($product['image']) }}" alt="LIVA {{ $product['name'] }}"
                                 loading="eager" width="720" height="720">
                             <span class="cat-photo-label">{{ $categoryName }}</span>
+                            @if (count($productImages) > 1)
+                                <button type="button" class="cat-photo-nav cat-photo-prev" id="cat-photo-prev" aria-label="Previous image">
+                                    <x-icon name="chevron" />
+                                </button>
+                                <button type="button" class="cat-photo-nav cat-photo-next" id="cat-photo-next" aria-label="Next image">
+                                    <x-icon name="chevron" />
+                                </button>
+                                <span class="cat-photo-counter" id="cat-photo-counter">1 / {{ count($productImages) }}</span>
+                            @endif
                         </div>
                     </div>
                     <p class="cat-photo-footnote">Sample packaging. Product details and sizes are illustrative.</p>
-
-                    <!-- Real Results Block -->
-                    @php
-                        $resultHeadline = $resultHeadline ?? 'Visible vitality from roots to ends.';
-                        $resultStats = $resultStats ?? [
-                            ['num' => '96%', 'text' => 'Noticeably softer texture & lasting hydration'],
-                            ['num' => '94%', 'text' => 'Balanced, calmed scalp & hair with zero buildup'],
-                            ['num' => '91%', 'text' => 'Visible shine and restored vitality within 14 days'],
-                        ];
-                        $resultCards = $resultCards ?? [
-                            [
-                                'img' => 'assets/result-1.webp',
-                                'tag' => 'Day 14 · Hydration',
-                                'quote' => '“Leaves a silky, nourished feel from the very first routine.”',
-                                'author' => 'Maya K.',
-                            ],
-                            [
-                                'img' => 'assets/result-2.webp',
-                                'tag' => 'Day 21 · Vitality',
-                                'quote' => '“Weightless absorption and clean finish. My everyday staple.”',
-                                'author' => 'Elena R.',
-                            ],
-                            [
-                                'img' => 'assets/result-3.webp',
-                                'tag' => 'Day 28 · Radiance',
-                                'quote' => '“Visible improvement in softness and natural radiance.”',
-                                'author' => 'Anya T.',
-                            ],
-                        ];
-                    @endphp
-
-                    <div class="cat-product-results" aria-label="Real Results">
-                        <div class="cat-results-top">
-                            <div class="cat-results-title-group">
-                                <span class="cat-results-eyebrow">REAL RESULTS</span>
-                                <h3>{{ $resultHeadline }}</h3>
-                            </div>
-                           
-                        </div>
-
-                        <div class="cat-results-stats">
-                           
-                        </div>
-
-                        <div class="cat-results-grid" role="list" aria-label="Community Result Stories">
-                            @foreach ($resultCards as $idx => $card)
-                                <button type="button" class="cat-result-card" data-idx="{{ $idx }}"
-                                    aria-label="View result story from {{ $card['author'] }}">
-                                    <div class="cat-result-thumb-wrap">
-                                        <img src="{{ asset($card['img']) }}"
-                                            alt="LIVA Real Result {{ $idx + 1 }} - {{ $card['author'] }}"
-                                            loading="lazy" width="300" height="225">
-                                        <span class="cat-result-tag">{{ $card['tag'] }}</span>
-                                    </div>
-                                   
-                                </button>
-                            @endforeach
-                        </div>
-
-                        <div class="cat-results-footnote">
-                            <span>Based on a 4-week independent consumer perception study across 120 users.</span>
-                            <span class="cat-results-note-verified">✓ Authentic unretouched photos</span>
-                        </div>
-                    </div>
                 </div>
 
                 <div class="cat-product-info">

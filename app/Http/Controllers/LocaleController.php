@@ -11,7 +11,7 @@ class LocaleController extends Controller
      */
     public function switch(string $lang): RedirectResponse
     {
-        if (in_array($lang, ['en', 'km'])) {
+        if (in_array($lang, ['en', 'km', 'kh'])) {
             session(['locale' => $lang]);
         }
 

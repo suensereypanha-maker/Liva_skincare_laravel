@@ -3,17 +3,17 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\View\View;
 
 class CartController extends Controller
 {
     /**
-     * Display the shopping bag page.
+     * Display the shopping bag page or redirect to storefront.
      */
-    public function index(): View
+    public function index(): RedirectResponse
     {
-        return view('pages.home');
+        return redirect()->route('home');
     }
 
     /**

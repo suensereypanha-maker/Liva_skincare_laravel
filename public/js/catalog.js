@@ -41,15 +41,21 @@
   const skinTypes = ['Normal', 'Oily', 'Dry', 'Combination', 'Sensitive'];
 
   const promotionsList = [
-    { id: 'new-arrival',
+    {
+      id: 'new-arrival',
       images: ["/assets/new-arrival.webp"],
-      stock: 20, en: 'New Arrivals', km: 'ទំនិញទើបមកដល់', label: 'New Arrivals' },
-    { id: 'best-seller',
+      stock: 20, en: 'New Arrivals', km: 'ទំនិញទើបមកដល់', label: 'New Arrivals'
+    },
+    {
+      id: 'best-seller',
       images: ["/assets/best-seller.webp"],
-      stock: 20, en: 'Best Sellers', km: 'លក់ដាច់បំផុត', label: 'Best Sellers' },
-    { id: 'on-sale',
+      stock: 20, en: 'Best Sellers', km: 'លក់ដាច់បំផុត', label: 'Best Sellers'
+    },
+    {
+      id: 'on-sale',
       images: ["/assets/on-sale.webp"],
-      stock: 20, en: 'On Sale', km: 'មានបញ្ចុះតម្លៃ', label: 'On Sale' }
+      stock: 20, en: 'On Sale', km: 'មានបញ្ចុះតម្លៃ', label: 'On Sale'
+    }
   ];
 
   const sortOptions = [
@@ -493,12 +499,29 @@
   }
 
   function productCardMedia(product, eager) {
-    const hoverSrc = asset(product.hoverImage || product.secondaryImage);
-    const hasHover = Boolean(hoverSrc);
-    return `<a class="cat-card-image${hasHover ? ' has-hover-image' : ''}" href="#product/${product.id}" aria-label="${esc(product.name)}">
-      <img class="cat-card-img-primary" src="${esc(asset(product.image))}" alt="LIVA ${esc(product.name)}" loading="${eager ? 'eager' : 'lazy'}" width="720" height="720">
-      ${hasHover ? `<img class="cat-card-img-hover" src="${esc(hoverSrc)}" alt="LIVA ${esc(product.name)} alternate view" loading="lazy" width="720" height="720">` : ''}
-    </a>`;
+    const rawImages = (product.images && product.images.length) ? product.images : [product.image, product.hoverImage].filter(Boolean);
+    const images = rawImages.map(asset);
+    const hasMultiple = images.length >= 2;
+    const hoverSrc = asset(product.hoverImage || product.secondaryImage || (hasMultiple ? images[1] : null));
+    const jsonImages = esc(JSON.stringify(images));
+
+    return `<div class="cat-card-image-wrap${hasMultiple ? ' has-multiple-images' : ''}" data-images="${jsonImages}" data-current-idx="0">
+      <a class="cat-card-image${hoverSrc ? ' has-hover-image' : ''}" href="/product/${product.id}" aria-label="${esc(product.name)}">
+        <img class="cat-card-img-primary" src="${esc(images[0])}" alt="LIVA ${esc(product.name)}" loading="${eager ? 'eager' : 'lazy'}" width="720" height="720">
+        ${hoverSrc ? `<img class="cat-card-img-hover" src="${esc(hoverSrc)}" alt="LIVA ${esc(product.name)} alternate view" loading="lazy" width="720" height="720">` : ''}
+      </a>
+      ${hasMultiple ? `
+        <button type="button" class="cat-card-nav cat-card-prev" aria-label="Previous image" data-action="prev-img">
+          ${icon('chevron')}
+        </button>
+        <button type="button" class="cat-card-nav cat-card-next" aria-label="Next image" data-action="next-img">
+          ${icon('chevron')}
+        </button>
+        <div class="cat-card-dots" role="tablist" aria-label="Product image slides">
+          ${images.map((_, idx) => `<button type="button" class="cat-card-dot${idx === 0 ? ' is-active' : ''}" data-idx="${idx}" aria-label="Slide ${idx + 1}"></button>`).join('')}
+        </div>
+      ` : ''}
+    </div>`;
   }
 
   function compareButton(product) {
@@ -537,7 +560,7 @@
           <span class="cat-card-category">${esc(categoryName)}</span>
           <span class="cat-card-rating">${icon('starFill')} ${ratingVal}</span>
         </div>
-        <h3 class="cat-card-name"><a href="#product/${product.id}">${esc(product.name)}</a></h3>
+        <h3 class="cat-card-name"><a href="/product/${product.id}">${esc(product.name)}</a></h3>
         <div class="cat-card-price-line">
           <span class="cat-card-price">${money(product.price)}</span>
           ${product.originalPrice ? `<span class="cat-card-orig-price">${money(product.originalPrice)}</span>` : ''}
@@ -983,63 +1006,7 @@
   ];
 
   function renderResultsSection(product) {
-    const isKm = L.getLang && L.getLang() === 'km';
-    const cat = (product && product.category) || 'hair';
-
-    let stats = [
-      { num: '96%', text: isKm ? 'មានអារម្មណ៍ទន់រលោង និងផ្តល់សំណើមយូរអង្វែង' : 'Noticeably softer texture & lasting hydration' },
-      { num: '94%', text: isKm ? 'ស្បែកក្បាល និងសក់មានតុល្យភាព មិនស្អិត' : 'Balanced, calmed scalp & hair with zero buildup' },
-      { num: '91%', text: isKm ? 'មើលឃើញសក់ភ្លឺរលោង និងរស់រវើកក្នុង ១៤ ថ្ងៃ' : 'Visible shine & restored vitality within 14 days' }
-    ];
-
-    let headline = isKm ? 'ភាពរស់រវើកជាក់ស្តែងពីគល់ដល់ចុងសក់' : 'Visible vitality from roots to ends.';
-
-    if (cat === 'body') {
-      headline = isKm ? 'ភាពទន់រលោង និងផាសុកភាពសម្រាប់ស្បែកប្រចាំថ្ងៃ' : 'Deep comfort and silky care for everyday skin.';
-      stats = [
-        { num: '97%', text: isKm ? 'ផ្តល់សំណើមភ្លាមៗ និងមានអារម្មណ៍ទន់ល្មើយ' : 'Instant moisture & long-lasting softness' },
-        { num: '95%', text: isKm ? 'ជួយសម្រាល និងចិញ្ចឹមរបាំងការពារស្បែក' : 'Calmed, nourished skin barrier feel' },
-        { num: '92%', text: isKm ? 'ស្បែកមានសំណើម និងផាសុកភាពពេញមួយថ្ងៃ' : 'Skin stays comfortable & hydrated all day' }
-      ];
-    } else if (cat === 'skin-care') {
-      headline = isKm ? 'ភាពរស់រវើកជាក់ស្តែងលើស្បែកប្រចាំថ្ងៃ' : 'Visible vitality in everyday skin.';
-      stats = [
-        { num: '96%', text: isKm ? 'ផ្តល់សំណើមជ្រៅ និងស្បែកទន់រលោងភ្លាមៗ' : 'Felt instant hydration & noticeably smoother texture' },
-        { num: '94%', text: isKm ? 'ជួយស្បែកស្ងប់ ស្រាលស្រទន់ មិនបង្កឱ្យធ្ងន់មុខ' : 'Replenished moisture barrier with zero heaviness' },
-        { num: '91%', text: isKm ? 'មើលឃើញស្បែកភ្លឺថ្លាបែបធម្មជាតិក្នុង ១៤ ថ្ងៃ' : 'Renewed natural, healthy glow in 14 days' }
-      ];
-    }
-
-    return `
-      <div class="cat-product-results" aria-label="${isKm ? 'លទ្ធផលពិតប្រាកដ' : 'Real Results'}">
-        <div class="cat-results-top">
-          <div class="cat-results-title-group">
-            <span class="cat-results-eyebrow">${isKm ? 'លទ្ធផលពិតប្រាកដ' : 'REAL RESULTS'}</span>
-            <h3>${esc(headline)}</h3>
-          </div>
-         
-        </div>
-
-      
-
-        <div class="cat-results-grid" role="list" aria-label="${isKm ? 'រូបភាពលទ្ធផលពិត' : 'Community Result Stories'}">
-          ${resultStories.map((c, idx) => `
-            <button type="button" class="cat-result-card" data-idx="${idx}" aria-label="View result story from ${esc(c.author)}">
-              <div class="cat-result-thumb-wrap">
-                <img src="${asset(c.img)}" alt="LIVA Real Result ${idx + 1} - ${esc(c.author)}" loading="lazy" width="300" height="225">
-                <span class="cat-result-tag">${esc(isKm ? c.tagKm : c.tag)}</span>
-              </div>
-              
-            </button>
-          `).join('')}
-        </div>
-
-        <div class="cat-results-footnote">
-          <span>${isKm ? 'ផ្អែកលើការសិក្សាលើអ្នកប្រើប្រាស់រយៈពេល ៤ សប្តាហ៍។' : 'Based on a 4-week independent consumer perception study across 120 users.'}</span>
-          <span class="cat-results-note-verified">✓ ${isKm ? 'រូបថត និងមតិពិត' : 'Authentic unretouched photos'}</span>
-        </div>
-      </div>
-    `;
+    return '';
   }
 
   function openResultModal(idx) {
@@ -1131,7 +1098,7 @@
     ` : '';
 
     return `<div class="cat-product-page container"><nav class="cat-breadcrumb" aria-label="Breadcrumb"><a href="#shop">${L.t('theCollection')}</a><span aria-hidden="true">/</span><a href="#shop?category=${product.category}">${categoryName}</a><span aria-hidden="true">/</span><span aria-current="page">${esc(product.name)}</span></nav>
-      <section class="cat-product-detail" aria-labelledby="cat-product-title"><div class="cat-product-gallery"><div class="cat-gallery-layout">${thumbnailsHtml}<div class="cat-product-photo"><img id="cat-main-img" src="${esc(asset(product.image))}" alt="LIVA ${esc(product.name)}" loading="eager" width="720" height="720"><span class="cat-photo-label">${categoryName}</span></div></div><p class="cat-photo-footnote">${L.t('samplePackaging')}</p>${renderResultsSection(product)}</div><div class="cat-product-info"><p class="eyebrow">LIVA / ${categoryName.toUpperCase()}</p><div class="cat-product-title-row"><h1 id="cat-product-title">${esc(product.name)}</h1><button class="icon-button cat-wishlist cat-detail-wishlist${isSaved ? ' is-saved' : ''}" type="button" data-id="${id}" aria-label="${isSaved ? 'Remove' : 'Save'} ${esc(product.name)} ${isSaved ? 'from' : 'to'} wishlist" aria-pressed="${isSaved}">${icon('heart')}</button></div><div class="cat-product-price-row"><p class="cat-product-price" id="cat-display-price">${money(product.price)}</p></div><p class="cat-description">${esc(product.description)}</p>
+      <section class="cat-product-detail" aria-labelledby="cat-product-title"><div class="cat-product-gallery"><div class="cat-gallery-layout">${thumbnailsHtml}<div class="cat-product-photo"><img id="cat-main-img" src="${esc(asset(product.image))}" alt="LIVA ${esc(product.name)}" loading="eager" width="720" height="720"><span class="cat-photo-label">${categoryName}</span></div></div><p class="cat-photo-footnote">${L.t('samplePackaging')}</p></div><div class="cat-product-info"><p class="eyebrow">LIVA / ${categoryName.toUpperCase()}</p><div class="cat-product-title-row"><h1 id="cat-product-title">${esc(product.name)}</h1><button class="icon-button cat-wishlist cat-detail-wishlist${isSaved ? ' is-saved' : ''}" type="button" data-id="${id}" aria-label="${isSaved ? 'Remove' : 'Save'} ${esc(product.name)} ${isSaved ? 'from' : 'to'} wishlist" aria-pressed="${isSaved}">${icon('heart')}</button></div><div class="cat-product-price-row"><p class="cat-product-price" id="cat-display-price">${money(product.price)}</p></div><p class="cat-description">${esc(product.description)}</p>
       <dl class="cat-product-facts"><div><dt>${L.t('format')}</dt><dd>${esc(product.format)}</dd></div><div><dt>${L.t('size')}</dt><dd id="cat-fact-size">${esc(product.size)}</dd></div><div><dt>Stock</dt><dd id="cat-fact-stock">${product.stock || 20} available</dd></div>${product.contents ? `<div><dt>${L.t('included')}</dt><dd>${esc(product.contents)}</dd></div>` : ''}</dl>
       <form id="cat-product-form" data-id="${product.id}" data-selected-size="${esc(product.size)}" data-selected-price="${product.price}">
         ${sizeSelectorHtml}
@@ -1159,7 +1126,7 @@
   function compareContent() {
     const items = L.comparison.map(findProduct).filter(Boolean);
     if (items.length < 2) return `<div class="cat-empty"><h2>${items.length ? 'Choose one more product.' : 'Start with two products.'}</h2><p>Select up to three products from the collection to compare their category, format, size and price.</p>${items.length ? `<p class="cat-comparison-kept">Selected: <strong>${esc(items[0].name)}</strong><button type="button" class="cat-compare-remove" data-id="${items[0].id}" aria-label="Remove ${esc(items[0].name)} from comparison">Remove ${icon('close')}</button></p>` : ''}<a href="#shop" class="btn btn-primary">Choose products ${icon('arrow')}</a></div>`;
-    return `${items.length > 2 ? '<p class="cat-compare-swipe">Swipe across to compare all three products →</p>' : ''}<div class="cat-comparison-scroll" tabindex="0" role="region" aria-label="Product comparison table. Scroll horizontally on smaller screens."><table class="cat-comparison-table" data-count="${items.length}"><caption>Compare sample product formats and prices</caption><thead><tr><th scope="col">Your shortlist</th>${items.map(product => `<th scope="col"><button class="cat-compare-remove" type="button" data-id="${product.id}" aria-label="Remove ${esc(product.name)} from comparison">Remove ${icon('close')}</button><a href="#product/${product.id}" class="cat-compare-product">${productImage(product)}<span>${esc(product.name)}</span></a></th>`).join('')}</tr></thead><tbody>${[['Category', p => categories[p.category] || p.category], ['Format', p => p.format], ['Size', p => p.size], ['Price', p => money(p.price)], ['Included', p => p.contents || p.name]].map(([label, value]) => `<tr><th scope="row">${label}</th>${items.map(product => `<td>${esc(value(product))}</td>`).join('')}</tr>`).join('')}<tr><th scope="row">Product details</th>${items.map(() => `<td>${pendingDetails}</td>`).join('')}</tr><tr class="cat-comparison-buy"><th scope="row"><span class="cat-visually-hidden">Add to bag</span></th>${items.map(product => `<td>${addButton(product)}</td>`).join('')}</tr></tbody></table></div>`;
+    return `${items.length > 2 ? '<p class="cat-compare-swipe">Swipe across to compare all three products →</p>' : ''}<div class="cat-comparison-scroll" tabindex="0" role="region" aria-label="Product comparison table. Scroll horizontally on smaller screens."><table class="cat-comparison-table" data-count="${items.length}"><caption>Compare sample product formats and prices</caption><thead><tr><th scope="col">Your shortlist</th>${items.map(product => `<th scope="col"><button class="cat-compare-remove" type="button" data-id="${product.id}" aria-label="Remove ${esc(product.name)} from comparison">Remove ${icon('close')}</button><a href="/product/${product.id}" class="cat-compare-product">${productImage(product)}<span>${esc(product.name)}</span></a></th>`).join('')}</tr></thead><tbody>${[['Category', p => categories[p.category] || p.category], ['Format', p => p.format], ['Size', p => p.size], ['Price', p => money(p.price)], ['Included', p => p.contents || p.name]].map(([label, value]) => `<tr><th scope="row">${label}</th>${items.map(product => `<td>${esc(value(product))}</td>`).join('')}</tr>`).join('')}<tr><th scope="row">Product details</th>${items.map(() => `<td>${pendingDetails}</td>`).join('')}</tr><tr class="cat-comparison-buy"><th scope="row"><span class="cat-visually-hidden">Add to bag</span></th>${items.map(product => `<td>${addButton(product)}</td>`).join('')}</tr></tbody></table></div>`;
   }
 
   L.renderCompare = function () {
@@ -1296,7 +1263,7 @@
                     <span>${L.t('addToBag')}</span> ${icon('plus')}
                   </button>
                 </div>
-                <a href="#product/${product.id}" class="btn btn-secondary cat-quickview-full">
+                <a href="/product/${product.id}" class="btn btn-secondary cat-quickview-full">
                   <span>${L.t('fullDetails')}</span> ${icon('arrow')}
                 </a>
               </div>
@@ -1381,6 +1348,70 @@
       $mainImg.attr('src', newSrc);
       setTimeout(() => $mainImg.css('opacity', '1'), 100);
     }
+  });
+
+  $(document).on('click', '#cat-main-img', function () {
+    const $thumbs = $('.cat-gallery-thumb');
+    if ($thumbs.length <= 1) return;
+    const activeIdx = $thumbs.index($thumbs.filter('.is-active'));
+    const total = $thumbs.length;
+    const nextIdx = (activeIdx + 1) % total;
+    $thumbs.eq(nextIdx).trigger('click');
+    $('#cat-photo-counter').text(`${nextIdx + 1} / ${total}`);
+  });
+
+  $(document).on('click', '.cat-photo-nav', function (e) {
+    e.preventDefault();
+    const isNext = $(this).hasClass('cat-photo-next');
+    const $thumbs = $('.cat-gallery-thumb');
+    if ($thumbs.length <= 1) return;
+    const activeIdx = $thumbs.index($thumbs.filter('.is-active'));
+    const total = $thumbs.length;
+    const targetIdx = isNext ? (activeIdx + 1) % total : (activeIdx - 1 + total) % total;
+    $thumbs.eq(targetIdx).trigger('click');
+    $('#cat-photo-counter').text(`${targetIdx + 1} / ${total}`);
+  });
+
+  $(document).on('click', '.cat-card-nav, .cat-card-dot', function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const $wrap = $(this).closest('.cat-card-image-wrap');
+    if (!$wrap.length) return;
+
+    let images = $wrap.data('images');
+    if (typeof images === 'string') {
+      try { images = JSON.parse(images); } catch (_) { images = []; }
+    }
+    if (!Array.isArray(images) || images.length < 2) return;
+
+    let currentIdx = parseInt($wrap.attr('data-current-idx'), 10) || 0;
+    const total = images.length;
+
+    if ($(this).hasClass('cat-card-dot')) {
+      currentIdx = parseInt($(this).data('idx'), 10) || 0;
+    } else if ($(this).data('action') === 'next-img' || $(this).hasClass('cat-card-next')) {
+      currentIdx = (currentIdx + 1) % total;
+    } else if ($(this).data('action') === 'prev-img' || $(this).hasClass('cat-card-prev')) {
+      currentIdx = (currentIdx - 1 + total) % total;
+    }
+
+    $wrap.attr('data-current-idx', currentIdx);
+    const newSrc = images[currentIdx];
+
+    const $primary = $wrap.find('.cat-card-img-primary');
+    const $hover = $wrap.find('.cat-card-img-hover');
+
+    $primary.css('opacity', '0.4');
+    $primary.attr('src', newSrc);
+    setTimeout(() => $primary.css('opacity', '1'), 80);
+
+    if ($hover.length) {
+      const nextHoverIdx = (currentIdx + 1) % total;
+      $hover.attr('src', images[nextHoverIdx]);
+    }
+
+    $wrap.find('.cat-card-dot').removeClass('is-active').eq(currentIdx).addClass('is-active');
   });
 
   $(document).on('click', '.cat-qv-qty-btn', function () {
