@@ -1,0 +1,271 @@
+@extends('layouts.app')
+
+@php
+    $product = $product ?? \App\Models\Product::all()->first();
+    $categoryName = $categoryName ?? \App\Models\Product::categoryName($product['category'] ?? '');
+    $related = $related ?? \App\Models\Product::whereCategory($product['category'] ?? 'hair')->where('id', '!=', $product['id'])->take(3);
+    $productSizes = $productSizes ?? ($product['sizes'] ?? [$product['size'] ?? '250 mL']);
+    $productImages = $productImages ?? ($product['images'] ?? array_values(array_filter([$product['image'] ?? null, $product['hoverImage'] ?? null, 'assets/daily-edit-detail.webp'])));
+@endphp
+
+@section('title', ($product['name'] ?? 'Product Details') . ' — LIVA')
+
+@section('content')
+    <div id="app">
+        <div class="cat-product-page container">
+            <!-- Breadcrumb -->
+            <nav class="cat-breadcrumb" aria-label="Breadcrumb">
+                <a href="{{ route('shop') }}">The Collection</a>
+                <span aria-hidden="true">/</span>
+                <a href="{{ route('shop', ['category' => $product['category'] ?? '']) }}">{{ $categoryName }}</a>
+                <span aria-hidden="true">/</span>
+                <span aria-current="page">{{ $product['name'] }}</span>
+            </nav>
+
+            <!-- Product Detail Main -->
+            <section class="cat-product-detail" aria-labelledby="cat-product-title">
+                <div class="cat-product-gallery">
+                    <div class="cat-gallery-layout">
+                        @if (count($productImages) > 1)
+                            <div class="cat-gallery-thumbs" role="tablist" aria-label="Product image thumbnails">
+                                @foreach ($productImages as $index => $img)
+                                    <button type="button" class="cat-gallery-thumb{{ $index === 0 ? ' is-active' : '' }}"
+                                        data-image="{{ asset($img) }}" role="tab"
+                                        aria-selected="{{ $index === 0 ? 'true' : 'false' }}"
+                                        aria-label="View product image {{ $index + 1 }}">
+                                        <img src="{{ asset($img) }}"
+                                            alt="{{ $product['name'] }} thumbnail {{ $index + 1 }}" loading="lazy"
+                                            width="120" height="135">
+                                    </button>
+                                @endforeach
+                            </div>
+                        @endif
+
+                        <div class="cat-product-photo">
+                            <img id="cat-main-img" src="{{ asset($product['image']) }}" alt="LIVA {{ $product['name'] }}"
+                                loading="eager" width="720" height="720">
+                            <span class="cat-photo-label">{{ $categoryName }}</span>
+                        </div>
+                    </div>
+                    <p class="cat-photo-footnote">Sample packaging. Product details and sizes are illustrative.</p>
+
+                    <!-- Real Results Block -->
+                    @php
+                        $resultHeadline = $resultHeadline ?? 'Visible vitality from roots to ends.';
+                        $resultStats = $resultStats ?? [
+                            ['num' => '96%', 'text' => 'Noticeably softer texture & lasting hydration'],
+                            ['num' => '94%', 'text' => 'Balanced, calmed scalp & hair with zero buildup'],
+                            ['num' => '91%', 'text' => 'Visible shine and restored vitality within 14 days'],
+                        ];
+                        $resultCards = $resultCards ?? [
+                            [
+                                'img' => 'assets/result-1.webp',
+                                'tag' => 'Day 14 · Hydration',
+                                'quote' => '“Leaves a silky, nourished feel from the very first routine.”',
+                                'author' => 'Maya K.',
+                            ],
+                            [
+                                'img' => 'assets/result-2.webp',
+                                'tag' => 'Day 21 · Vitality',
+                                'quote' => '“Weightless absorption and clean finish. My everyday staple.”',
+                                'author' => 'Elena R.',
+                            ],
+                            [
+                                'img' => 'assets/result-3.webp',
+                                'tag' => 'Day 28 · Radiance',
+                                'quote' => '“Visible improvement in softness and natural radiance.”',
+                                'author' => 'Anya T.',
+                            ],
+                        ];
+                    @endphp
+
+                    <div class="cat-product-results" aria-label="Real Results">
+                        <div class="cat-results-top">
+                            <div class="cat-results-title-group">
+                                <span class="cat-results-eyebrow">REAL RESULTS</span>
+                                <h3>{{ $resultHeadline }}</h3>
+                            </div>
+                           
+                        </div>
+
+                        <div class="cat-results-stats">
+                           
+                        </div>
+
+                        <div class="cat-results-grid" role="list" aria-label="Community Result Stories">
+                            @foreach ($resultCards as $idx => $card)
+                                <button type="button" class="cat-result-card" data-idx="{{ $idx }}"
+                                    aria-label="View result story from {{ $card['author'] }}">
+                                    <div class="cat-result-thumb-wrap">
+                                        <img src="{{ asset($card['img']) }}"
+                                            alt="LIVA Real Result {{ $idx + 1 }} - {{ $card['author'] }}"
+                                            loading="lazy" width="300" height="225">
+                                        <span class="cat-result-tag">{{ $card['tag'] }}</span>
+                                    </div>
+                                   
+                                </button>
+                            @endforeach
+                        </div>
+
+                        <div class="cat-results-footnote">
+                            <span>Based on a 4-week independent consumer perception study across 120 users.</span>
+                            <span class="cat-results-note-verified">✓ Authentic unretouched photos</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="cat-product-info">
+                    <p class="eyebrow">LIVA / {{ strtoupper($categoryName) }}</p>
+                    <div class="cat-product-title-row">
+                        <h1 id="cat-product-title">{{ $product['name'] }}</h1>
+                        <button class="icon-button cat-wishlist cat-detail-wishlist" type="button"
+                            data-id="{{ $product['id'] }}" aria-label="Save {{ $product['name'] }} to wishlist"
+                            aria-pressed="false">
+                            <x-icon name="heart" />
+                        </button>
+                    </div>
+
+                    <div class="cat-product-price-row">
+                        <p class="cat-product-price" id="cat-display-price">
+                            ${{ number_format((float) $product['price'], 2) }}</p>
+                      
+                    </div>
+
+                    <p class="cat-description">{{ $product['description'] }}</p>
+
+                    <dl class="cat-product-facts">
+                        <div>
+                            <dt>Format</dt>
+                            <dd>{{ $product['format'] }}</dd>
+                        </div>
+                        <div>
+                            <dt>Size</dt>
+                            <dd id="cat-fact-size">{{ $product['size'] }}</dd>
+                        </div>
+                        <div>
+                            <dt>Stock</dt>
+                            <dd id="cat-fact-stock">{{ $product['stock'] ?? 20 }} available</dd>
+                        </div>
+                        @if (!empty($product['contents']))
+                            <div>
+                                <dt>Included</dt>
+                                <dd>{{ $product['contents'] }}</dd>
+                            </div>
+                        @endif
+                    </dl>
+
+                    <form id="cat-product-form" data-id="{{ $product['id'] }}" data-selected-size="{{ $product['size'] }}"
+                        data-selected-price="{{ $product['price'] }}">
+                        @if (count($productSizes) > 1)
+                            <div class="cat-size-selector-wrap">
+                                <div class="cat-size-selector-header">
+                                    <span class="cat-size-selector-label">Select size</span>
+                                    <strong id="cat-current-size-name">{{ $product['size'] }}</strong>
+                                </div>
+                                <div class="cat-size-pills" role="radiogroup" aria-label="Select size">
+                                    @foreach ($productSizes as $s)
+                                        @php
+                                            $p = $product['sizePrices'][$s] ?? $product['price'];
+                                            $isSelected = $s === $product['size'];
+                                        @endphp
+                                        <button type="button" class="cat-size-pill{{ $isSelected ? ' is-active' : '' }}"
+                                            data-size="{{ $s }}" data-price="{{ $p }}"
+                                            role="radio" aria-checked="{{ $isSelected ? 'true' : 'false' }}">
+                                            <span class="cat-size-vol">{{ $s }}</span>
+                                        </button>
+                                    @endforeach
+                                </div>
+                            </div>
+                        @endif
+
+                        <div class="cat-purchase-label">
+                            <label for="cat-product-qty">Quantity</label>
+                            <span>USD</span>
+                        </div>
+
+                        <div class="cat-purchase-row">
+                            <div class="cat-quantity">
+                                <button type="button" class="cat-qty-change" data-delta="-1"
+                                    aria-label="Decrease quantity">
+                                    <x-icon name="minus" />
+                                </button>
+                                <input id="cat-product-qty" name="quantity" type="number" min="1" max="99"
+                                    step="1" value="1" inputmode="numeric">
+                                <button type="button" class="cat-qty-change" data-delta="1" aria-label="Increase quantity">
+                                    <x-icon name="plus" />
+                                </button>
+                            </div>
+                            <button class="cat-detail-add" type="submit">
+                                <span>Add to bag</span>
+                                <span data-cat-total>${{ number_format((float) $product['price'], 2) }}</span>
+                                <x-icon name="arrow" />
+                            </button>
+                        </div>
+                    </form>
+
+                    <div class="cat-product-compare">
+                        <button class="cat-compare-toggle" type="button" data-id="{{ $product['id'] }}"
+                            aria-pressed="false" aria-label="Add {{ $product['name'] }} to comparison">
+                            <span class="cat-compare-check" aria-hidden="true"></span>
+                            <span class="cat-compare-label">Compare</span>
+                        </button>
+                        <a class="cat-text-link"
+                            href="{{ url('/shop?category=' . $product['category']) }}#shop?category={{ $product['category'] }}">
+                            Explore {{ $categoryName }} <x-icon name="arrow" />
+                        </a>
+                    </div>
+
+                    <div class="cat-preview-note cat-product-preview">
+                        <strong>Sample product</strong>
+                        <span>This is a storefront preview. Product details and prices are subject to confirmation; checkout
+                            is a demonstration.</span>
+                    </div>
+
+                    <div class="cat-product-accordions">
+                        @foreach (['Formula & ingredients', 'Suitability', 'How to use'] as $label)
+                            <details>
+                                <summary>{{ $label }} <x-icon name="plus" /></summary>
+                                <p>Brand-confirmed details will be added before launch.</p>
+                            </details>
+                        @endforeach
+                    </div>
+                </div>
+            </section>
+
+            <!-- Mobile Purchase Sticky Bar -->
+            <div class="cat-mobile-purchase" id="cat-mobile-purchase" aria-label="Product purchase">
+                <div>
+                    <strong>{{ $product['name'] }}</strong>
+                    <span id="cat-mobile-size-display">{{ $product['size'] }} · <span data-cat-quantity>1</span>
+                        selected</span>
+                </div>
+                <button type="submit" form="cat-product-form">
+                    <span>Add to bag</span>
+                    <span data-cat-total>${{ number_format((float) $product['price'], 2) }}</span>
+                </button>
+            </div>
+
+            <!-- Related Products Section -->
+            @if (count($related))
+                <section class="cat-related" aria-labelledby="cat-related-title">
+                    <div class="cat-section-heading">
+                        <div>
+                            <p class="eyebrow">CONTINUE EXPLORING</p>
+                            <h2 id="cat-related-title">More in {{ $categoryName }}</h2>
+                            <p>Other products from this category.</p>
+                        </div>
+                        <a class="cat-text-link"
+                            href="{{ route('shop', ['category' => $product['category'] ?? '']) }}">
+                            View collection <x-icon name="arrow" />
+                        </a>
+                    </div>
+                    <div class="cat-product-grid">
+                        @foreach ($related as $rel)
+                            <x-product-card :product="$rel" />
+                        @endforeach
+                    </div>
+                </section>
+            @endif
+        </div>
+    </div>
+@endsection

@@ -1,0 +1,716 @@
+[
+  {
+    "id": "shampoo",
+    "name": "SilkSculpt Shampoo",
+    "category": "hair",
+    "price": 18,
+    "originalPrice": 36,
+    "discount": "50% off",
+    "size": "250 mL",
+    "sizes": [
+      "100 mL",
+      "250 mL",
+      "500 mL"
+    ],
+    "sizePrices": {
+      "100 mL": 10,
+      "250 mL": 18,
+      "500 mL": 30
+    },
+    "image": "assets/shampoo.webp",
+    "hoverImage": "assets/shampoo-hover.webp",
+    "rating": 4.9,
+    "reviewsCount": 142,
+    "skinType": [
+      "Normal",
+      "Oily"
+    ],
+    "promo": [
+      "best-seller",
+      "on-sale"
+    ],
+    "inStock": true,
+    "format": "Single product",
+    "description": "Gentle clarifying shampoo formulated for daily hair vitality and balanced scalp hydration.",
+    "stock": 24,
+    "images": [
+      "assets/shampoo.webp",
+      "assets/shampoo-hover.webp",
+      "assets/daily-edit-detail.webp",
+      "assets/campaign/hair-pair.webp"
+    ]
+  },
+  {
+    "id": "conditioner",
+    "name": "SilkSkin Conditioner",
+    "category": "hair",
+    "price": 20,
+    "originalPrice": 25,
+    "discount": "20% off",
+    "size": "250 mL",
+    "sizes": [
+      "100 mL",
+      "250 mL",
+      "500 mL"
+    ],
+    "sizePrices": {
+      "100 mL": 12,
+      "250 mL": 20,
+      "500 mL": 34
+    },
+    "image": "assets/conditioner.webp",
+    "hoverImage": "assets/conditioner-hover.webp",
+    "rating": 4.8,
+    "reviewsCount": 98,
+    "skinType": [
+      "Normal",
+      "Dry"
+    ],
+    "promo": [
+      "best-seller"
+    ],
+    "inStock": true,
+    "format": "Single product",
+    "description": "Deep nourishing conditioner that restores softness and natural moisture balance without weight.",
+    "stock": 18,
+    "images": [
+      "assets/conditioner.webp",
+      "assets/conditioner-hover.webp",
+      "assets/daily-edit.webp",
+      "assets/campaign/hair-pair.webp"
+    ]
+  },
+  {
+    "id": "hair-mask",
+    "name": "Argan Glow Hair Mask",
+    "category": "hair",
+    "price": 26,
+    "originalPrice": 37,
+    "discount": "30% off",
+    "size": "200 mL",
+    "sizes": [
+      "100 mL",
+      "200 mL",
+      "400 mL"
+    ],
+    "sizePrices": {
+      "100 mL": 16,
+      "200 mL": 26,
+      "400 mL": 44
+    },
+    "image": "assets/hair-mask.webp",
+    "hoverImage": "assets/botanical.webp",
+    "rating": 5,
+    "reviewsCount": 184,
+    "skinType": [
+      "Dry",
+      "Sensitive"
+    ],
+    "promo": [
+      "best-seller",
+      "on-sale"
+    ],
+    "inStock": true,
+    "format": "Single product",
+    "description": "Intensive botanical argan restorative mask for rich cuticle hydration and silky luster.",
+    "stock": 32,
+    "images": [
+      "assets/hair-mask.webp",
+      "assets/botanical.webp",
+      "assets/daily-edit-detail.webp",
+      "assets/campaign/hair-pair.webp"
+    ]
+  },
+  {
+    "id": "body-wash",
+    "name": "Nephrolepis Body Wash",
+    "category": "body",
+    "price": 16,
+    "originalPrice": 18,
+    "discount": "10% off",
+    "size": "250 mL",
+    "sizes": [
+      "100 mL",
+      "250 mL",
+      "500 mL"
+    ],
+    "sizePrices": {
+      "100 mL": 9,
+      "250 mL": 16,
+      "500 mL": 28
+    },
+    "image": "assets/body-wash.webp",
+    "hoverImage": "assets/travel-set.webp",
+    "rating": 5,
+    "reviewsCount": 112,
+    "skinType": [
+      "Normal",
+      "Dry",
+      "Sensitive"
+    ],
+    "promo": [
+      "new-arrival"
+    ],
+    "inStock": true,
+    "format": "Single product",
+    "description": "Refreshing botanical body wash infused with gentle fern and clean mineral notes.",
+    "stock": 15,
+    "images": [
+      "assets/body-wash.webp",
+      "assets/travel-set.webp",
+      "assets/daily-edit.webp"
+    ]
+  },
+  {
+    "id": "smooth-foundation",
+    "name": "Smooth Foundation",
+    "category": "makeup",
+    "price": 20,
+    "originalPrice": 40,
+    "discount": "50% off",
+    "size": "30 mL",
+    "sizes": [
+      "30 mL",
+      "50 mL"
+    ],
+    "sizePrices": {
+      "30 mL": 20,
+      "50 mL": 32
+    },
+    "image": "assets/botanical.webp",
+    "hoverImage": "assets/daily-edit.webp",
+    "rating": 5,
+    "reviewsCount": 220,
+    "skinType": [
+      "Normal",
+      "Combination"
+    ],
+    "promo": [
+      "on-sale",
+      "best-seller"
+    ],
+    "inStock": true,
+    "format": "Glass bottle",
+    "description": "Lightweight buildable foundation with a natural velvet finish that blends like a dream.",
+    "stock": 40,
+    "images": [
+      "assets/botanical.webp",
+      "assets/daily-edit.webp",
+      "assets/daily-edit-detail.webp"
+    ]
+  },
+  {
+    "id": "body-lotion",
+    "name": "Smooth Body Cream",
+    "category": "body",
+    "price": 22,
+    "originalPrice": 44,
+    "discount": "50% off",
+    "size": "250 mL",
+    "sizes": [
+      "100 mL",
+      "250 mL",
+      "400 mL"
+    ],
+    "sizePrices": {
+      "100 mL": 12,
+      "250 mL": 22,
+      "400 mL": 36
+    },
+    "image": "assets/body-lotion.webp",
+    "hoverImage": "assets/daily-edit-detail.webp",
+    "rating": 5,
+    "reviewsCount": 165,
+    "skinType": [
+      "Dry",
+      "Sensitive"
+    ],
+    "promo": [
+      "best-seller",
+      "on-sale"
+    ],
+    "inStock": true,
+    "format": "Single product",
+    "description": "Rich nourishing body cream with restorative shea and botanical oils for lasting comfort.",
+    "stock": 28,
+    "images": [
+      "assets/body-lotion.webp",
+      "assets/daily-edit-detail.webp",
+      "assets/daily-edit.webp"
+    ]
+  },
+  {
+    "id": "shower-gel",
+    "name": "AquaAura Wellness Gel",
+    "category": "body",
+    "price": 16,
+    "originalPrice": 32,
+    "discount": "50% off",
+    "size": "250 mL",
+    "sizes": [
+      "100 mL",
+      "250 mL",
+      "500 mL"
+    ],
+    "sizePrices": {
+      "100 mL": 9,
+      "250 mL": 16,
+      "500 mL": 28
+    },
+    "image": "assets/shower-gel.webp",
+    "hoverImage": "assets/travel-set.webp",
+    "rating": 4.8,
+    "reviewsCount": 76,
+    "skinType": [
+      "Normal",
+      "Oily"
+    ],
+    "promo": [
+      "best-seller",
+      "on-sale"
+    ],
+    "inStock": true,
+    "format": "Single product",
+    "description": "Aromatic foaming body gel with marine minerals and calming botanical extracts.",
+    "stock": 12,
+    "images": [
+      "assets/shower-gel.webp",
+      "assets/travel-set.webp",
+      "assets/daily-edit-detail.webp"
+    ]
+  },
+  {
+    "id": "velvet-rose",
+    "name": "Velvet Rose Tint",
+    "category": "makeup",
+    "price": 10,
+    "originalPrice": 20,
+    "discount": "50% off",
+    "size": "15 mL",
+    "sizes": [
+      "15 mL",
+      "30 mL"
+    ],
+    "sizePrices": {
+      "15 mL": 10,
+      "30 mL": 18
+    },
+    "image": "assets/daily-edit.webp",
+    "hoverImage": "assets/daily-edit-detail.webp",
+    "rating": 4.9,
+    "reviewsCount": 138,
+    "skinType": [
+      "Normal",
+      "Dry",
+      "Sensitive"
+    ],
+    "promo": [
+      "on-sale"
+    ],
+    "inStock": true,
+    "format": "Dropper bottle",
+    "description": "Dual-action rose serum tint offering sheer radiance and gentle cheek-and-lip moisture.",
+    "stock": 35,
+    "images": [
+      "assets/daily-edit.webp",
+      "assets/daily-edit-detail.webp",
+      "assets/botanical.webp"
+    ]
+  },
+  {
+    "id": "herbal-haven",
+    "name": "Herbal Haven Cleanser",
+    "category": "body",
+    "price": 10,
+    "originalPrice": 20,
+    "discount": "50% off",
+    "size": "120 g",
+    "sizes": [
+      "60 g",
+      "120 g",
+      "240 g"
+    ],
+    "sizePrices": {
+      "60 g": 6,
+      "120 g": 10,
+      "240 g": 18
+    },
+    "image": "assets/campaign/everyday-poster.webp",
+    "hoverImage": "assets/botanical.webp",
+    "rating": 5,
+    "reviewsCount": 94,
+    "skinType": [
+      "Oily",
+      "Sensitive"
+    ],
+    "promo": [
+      "best-seller",
+      "on-sale"
+    ],
+    "inStock": true,
+    "format": "Solid bar",
+    "description": "Artisanal cold-pressed herbal cleansing bar enriched with olive oil and green tea extract.",
+    "stock": 22,
+    "images": [
+      "assets/campaign/everyday-poster.webp",
+      "assets/botanical.webp",
+      "assets/daily-edit.webp"
+    ]
+  },
+  {
+    "id": "essence-body-gel",
+    "name": "Essence Body Gel",
+    "category": "body",
+    "price": 30,
+    "originalPrice": 60,
+    "discount": "50% off",
+    "size": "300 mL",
+    "sizes": [
+      "150 mL",
+      "300 mL",
+      "500 mL"
+    ],
+    "sizePrices": {
+      "150 mL": 18,
+      "300 mL": 30,
+      "500 mL": 46
+    },
+    "image": "assets/daily-edit-detail.webp",
+    "hoverImage": "assets/body-lotion.webp",
+    "rating": 4.8,
+    "reviewsCount": 88,
+    "skinType": [
+      "Normal",
+      "Combination"
+    ],
+    "promo": [
+      "on-sale"
+    ],
+    "inStock": true,
+    "format": "Pump bottle",
+    "description": "Hydrating cooling gel essence designed for quick absorption and all-day dewiness.",
+    "stock": 19,
+    "images": [
+      "assets/daily-edit-detail.webp",
+      "assets/body-lotion.webp",
+      "assets/travel-set.webp"
+    ]
+  },
+  {
+    "id": "hydraluxe-serum",
+    "name": "HydraLuxe Serum",
+    "category": "skin-care",
+    "price": 20,
+    "originalPrice": 40,
+    "discount": "50% off",
+    "size": "50 mL",
+    "sizes": [
+      "30 mL",
+      "50 mL",
+      "100 mL"
+    ],
+    "sizePrices": {
+      "30 mL": 14,
+      "50 mL": 20,
+      "100 mL": 35
+    },
+    "image": "assets/campaign/hair-pair.webp",
+    "hoverImage": "assets/hero.webp",
+    "rating": 4.9,
+    "reviewsCount": 310,
+    "skinType": [
+      "Dry",
+      "Sensitive",
+      "Combination"
+    ],
+    "promo": [
+      "best-seller",
+      "on-sale"
+    ],
+    "inStock": true,
+    "format": "Glass dropper",
+    "description": "Concentrated hyaluronic and peptide serum for luminous plumping and cellular barrier repair.",
+    "stock": 16,
+    "images": [
+      "assets/campaign/hair-pair.webp",
+      "assets/hero.webp",
+      "assets/daily-edit-detail.webp"
+    ]
+  },
+  {
+    "id": "oceanmist-moisturizer",
+    "name": "OceanMist Moisturizer",
+    "category": "skin-care",
+    "price": 20,
+    "originalPrice": 40,
+    "discount": "50% off",
+    "size": "60 mL",
+    "sizes": [
+      "30 mL",
+      "60 mL",
+      "100 mL"
+    ],
+    "sizePrices": {
+      "30 mL": 13,
+      "60 mL": 20,
+      "100 mL": 32
+    },
+    "image": "assets/campaign/your-moment.webp",
+    "hoverImage": "assets/daily-edit.webp",
+    "rating": 4.8,
+    "reviewsCount": 156,
+    "skinType": [
+      "Normal",
+      "Dry"
+    ],
+    "promo": [
+      "new-arrival",
+      "on-sale"
+    ],
+    "inStock": true,
+    "format": "Glass jar",
+    "description": "Velvety cream moisturizer infused with deep sea algae and botanical squalane.",
+    "stock": 25,
+    "images": [
+      "assets/campaign/your-moment.webp",
+      "assets/daily-edit.webp",
+      "assets/botanical.webp"
+    ]
+  },
+  {
+    "id": "silksculpt-serum",
+    "name": "SilkSculpt Serum",
+    "category": "skin-care",
+    "price": 35,
+    "originalPrice": 70,
+    "discount": "50% off",
+    "size": "50 mL",
+    "sizes": [
+      "30 mL",
+      "50 mL",
+      "100 mL"
+    ],
+    "sizePrices": {
+      "30 mL": 24,
+      "50 mL": 35,
+      "100 mL": 60
+    },
+    "image": "assets/hero.webp",
+    "hoverImage": "assets/campaign/hair-pair.webp",
+    "rating": 4.9,
+    "reviewsCount": 240,
+    "skinType": [
+      "Normal",
+      "Combination"
+    ],
+    "promo": [
+      "best-seller",
+      "on-sale"
+    ],
+    "inStock": true,
+    "format": "Glass bottle",
+    "description": "Firming daily antioxidant facial serum that visibly smooths skin texture and enhances glow.",
+    "stock": 14,
+    "images": [
+      "assets/hero.webp",
+      "assets/campaign/hair-pair.webp",
+      "assets/daily-edit-detail.webp"
+    ]
+  },
+  {
+    "id": "ritual-duo",
+    "name": "Hair Pair Duo Set",
+    "category": "sets",
+    "price": 38,
+    "originalPrice": 76,
+    "discount": "50% off",
+    "size": "2 \u00d7 250 mL",
+    "sizes": [
+      "2 \u00d7 250 mL"
+    ],
+    "sizePrices": {
+      "2 \u00d7 250 mL": 38
+    },
+    "image": "assets/ritual-duo.webp",
+    "hoverImage": "assets/campaign/hair-pair.webp",
+    "rating": 5,
+    "reviewsCount": 340,
+    "skinType": [
+      "Normal",
+      "Oily",
+      "Dry"
+    ],
+    "promo": [
+      "best-seller",
+      "on-sale"
+    ],
+    "inStock": true,
+    "format": "Two-product set",
+    "description": "Shampoo and Conditioner together in a sample set. Two 250 mL products, at the same total price as the individual formats.",
+    "contents": "Shampoo \u00b7 250 mL; Conditioner \u00b7 250 mL",
+    "stock": 8,
+    "images": [
+      "assets/ritual-duo.webp",
+      "assets/campaign/hair-pair.webp",
+      "assets/daily-edit.webp"
+    ]
+  },
+  {
+    "id": "travel-set",
+    "name": "Botanical Travel Set",
+    "category": "sets",
+    "price": 28,
+    "originalPrice": 40,
+    "discount": "30% off",
+    "size": "4 \u00d7 75 mL",
+    "sizes": [
+      "4 \u00d7 75 mL"
+    ],
+    "sizePrices": {
+      "4 \u00d7 75 mL": 28
+    },
+    "image": "assets/travel-set.webp",
+    "hoverImage": "assets/shower-gel.webp",
+    "rating": 4.9,
+    "reviewsCount": 205,
+    "skinType": [
+      "Combination",
+      "Normal"
+    ],
+    "promo": [
+      "on-sale"
+    ],
+    "inStock": true,
+    "format": "Four-product set",
+    "description": "A sample assortment of Shampoo, Conditioner, Body Wash and Shower Gel. Four products in 75 mL formats.",
+    "contents": "Shampoo, Conditioner, Body Wash and Shower Gel \u00b7 75 mL each",
+    "stock": 11,
+    "images": [
+      "assets/travel-set.webp",
+      "assets/shower-gel.webp",
+      "assets/daily-edit-detail.webp"
+    ]
+  },
+  {
+    "id": "botanical-fragrance",
+    "name": "Wild Flora Mist",
+    "category": "fragrances",
+    "price": 42,
+    "originalPrice": 60,
+    "discount": "30% off",
+    "size": "100 mL",
+    "sizes": [
+      "50 mL",
+      "100 mL",
+      "200 mL"
+    ],
+    "sizePrices": {
+      "50 mL": 26,
+      "100 mL": 42,
+      "200 mL": 72
+    },
+    "image": "assets/botanical.webp",
+    "hoverImage": "assets/campaign/your-moment.webp",
+    "rating": 4.9,
+    "reviewsCount": 118,
+    "skinType": [
+      "Normal",
+      "Dry",
+      "Sensitive",
+      "Combination",
+      "Oily"
+    ],
+    "promo": [
+      "new-arrival",
+      "on-sale"
+    ],
+    "inStock": true,
+    "format": "Glass spray bottle",
+    "description": "Subtle uplifting fragrance mist with hints of wild bergamot, cedarwood and morning dew.",
+    "stock": 27,
+    "images": [
+      "assets/botanical.webp",
+      "assets/campaign/your-moment.webp",
+      "assets/daily-edit.webp"
+    ]
+  },
+  {
+    "id": "nail-elixir",
+    "name": "Botanical Nail Elixir",
+    "category": "nail-care",
+    "price": 15,
+    "originalPrice": 20,
+    "discount": "25% off",
+    "size": "15 mL",
+    "sizes": [
+      "15 mL",
+      "30 mL"
+    ],
+    "sizePrices": {
+      "15 mL": 15,
+      "30 mL": 25
+    },
+    "image": "assets/daily-edit.webp",
+    "hoverImage": "assets/daily-edit-detail.webp",
+    "rating": 4.7,
+    "reviewsCount": 62,
+    "skinType": [
+      "Normal",
+      "Dry",
+      "Sensitive",
+      "Combination",
+      "Oily"
+    ],
+    "promo": [
+      "on-sale"
+    ],
+    "inStock": true,
+    "format": "Dropper bottle",
+    "description": "Strengthening cuticle and nail serum with organic jojoba and cold-pressed botanical vitamin E.",
+    "stock": 30,
+    "images": [
+      "assets/daily-edit.webp",
+      "assets/daily-edit-detail.webp",
+      "assets/botanical.webp"
+    ]
+  },
+  {
+    "id": "soothing-toner",
+    "name": "Calm Sage Facial Mist",
+    "category": "skin-care",
+    "price": 24,
+    "originalPrice": 30,
+    "discount": "20% off",
+    "size": "150 mL",
+    "sizes": [
+      "75 mL",
+      "150 mL",
+      "300 mL"
+    ],
+    "sizePrices": {
+      "75 mL": 15,
+      "150 mL": 24,
+      "300 mL": 42
+    },
+    "image": "assets/daily-edit-detail.webp",
+    "hoverImage": "assets/botanical.webp",
+    "rating": 4.8,
+    "reviewsCount": 89,
+    "skinType": [
+      "Sensitive",
+      "Dry"
+    ],
+    "promo": [
+      "new-arrival"
+    ],
+    "inStock": true,
+    "format": "Mist bottle",
+    "description": "Balancing alcohol-free facial toner mist that relieves redness and primes the skin.",
+    "stock": 21,
+    "images": [
+      "assets/daily-edit-detail.webp",
+      "assets/botanical.webp",
+      "assets/campaign/your-moment.webp"
+    ]
+  }
+]
