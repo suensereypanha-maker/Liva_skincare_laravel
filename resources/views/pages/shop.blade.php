@@ -118,19 +118,19 @@
                     <h3 class="cat-filter-heading" data-i18n="byPromotions">By Promotions</h3>
                     <div class="cat-checkbox-group">
                         <label class="cat-custom-checkbox">
-                            <input type="checkbox" class="cat-promo-toggle" value="new-arrival">
+                            <input type="checkbox" class="cat-promo-toggle" value="new-arrival" {{ ($selectedPromo ?? '') === 'new-arrival' ? 'checked' : '' }}>
                             <span class="cat-checkbox-mark"></span>
                             <span class="cat-checkbox-text" data-i18n="newArrivals">New Arrivals</span>
                         </label>
                         <label class="cat-custom-checkbox">
-                            <input type="checkbox" class="cat-promo-toggle" value="best-seller">
+                            <input type="checkbox" class="cat-promo-toggle" value="best-seller" {{ ($selectedPromo ?? '') === 'best-seller' ? 'checked' : '' }}>
                             <span class="cat-checkbox-mark"></span>
                             <span class="cat-checkbox-text" data-i18n="bestSellers">Best Sellers</span>
                         </label>
                         <label class="cat-custom-checkbox">
-                            <input type="checkbox" class="cat-promo-toggle" value="on-sale">
+                            <input type="checkbox" class="cat-promo-toggle" value="on-sale" {{ in_array($selectedPromo ?? '', ['on-sale', 'promotion', 'promotions']) ? 'checked' : '' }}>
                             <span class="cat-checkbox-mark"></span>
-                            <span class="cat-checkbox-text" data-i18n="onSale">On Sale</span>
+                            <span class="cat-checkbox-text" data-i18n="promotions">Promotions</span>
                         </label>
                     </div>
                 </div>

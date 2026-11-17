@@ -54,7 +54,7 @@
     {
       id: 'on-sale',
       images: ["/assets/on-sale.webp"],
-      stock: 20, en: 'On Sale', km: 'មានបញ្ចុះតម្លៃ', label: 'On Sale'
+      stock: 20, en: 'Promotions', km: 'ការផ្សព្វផ្សាយ', label: 'Promotions'
     }
   ];
 
@@ -589,7 +589,10 @@
       if (skinType && !product.skinType.includes(skinType) && !product.skinType.includes('All')) return false;
       if (product.price < minPrice || product.price > maxPrice) return false;
       if (rating > 0 && (product.rating || 0) < rating) return false;
-      if (promo && (!product.promo || !product.promo.includes(promo))) return false;
+      if (promo) {
+        const targetPromo = (promo === 'promotion' || promo === 'promotions') ? 'on-sale' : promo;
+        if (!product.promo || (!product.promo.includes(targetPromo) && !product.promo.includes(promo))) return false;
+      }
       if (stock === 'in-stock' && !product.inStock) return false;
       if (stock === 'out-of-stock' && product.inStock) return false;
       if (query) {
@@ -719,7 +722,7 @@
         <h3 class="cat-filter-heading">${L.t('byPromotions')}</h3>
         <div class="cat-checkbox-group">
           ${promotionsList.map(item => {
-      const isChecked = promo === item.id;
+      const isChecked = promo === item.id || (item.id === 'on-sale' && (promo === 'promotion' || promo === 'promotions'));
       const label = item[L.getLang()] || item.en || item.label;
       return `<label class="cat-custom-checkbox">
               <input type="checkbox" class="cat-promo-toggle" value="${item.id}"${isChecked ? ' checked' : ''}>
@@ -765,7 +768,7 @@
       chips.push({ key: 'price', label: `${L.t('price')} : $${minPrice.toFixed(2)} - $${maxPrice.toFixed(2)}` });
     }
     if (promo) {
-      const pObj = promotionsList.find(x => x.id === promo);
+      const pObj = promotionsList.find(x => x.id === promo || (x.id === 'on-sale' && (promo === 'promotion' || promo === 'promotions')));
       chips.push({ key: 'promo', label: pObj ? (pObj[L.getLang()] || pObj.en || pObj.label) : promo });
     }
     if (stock) {
@@ -1098,7 +1101,7 @@
     ` : '';
 
     return `<div class="cat-product-page container"><nav class="cat-breadcrumb" aria-label="Breadcrumb"><a href="#shop">${L.t('theCollection')}</a><span aria-hidden="true">/</span><a href="#shop?category=${product.category}">${categoryName}</a><span aria-hidden="true">/</span><span aria-current="page">${esc(product.name)}</span></nav>
-      <section class="cat-product-detail" aria-labelledby="cat-product-title"><div class="cat-product-gallery"><div class="cat-gallery-layout">${thumbnailsHtml}<div class="cat-product-photo"><img id="cat-main-img" src="${esc(asset(product.image))}" alt="LIVA ${esc(product.name)}" loading="eager" width="720" height="720"><span class="cat-photo-label">${categoryName}</span></div></div><p class="cat-photo-footnote">${L.t('samplePackaging')}</p></div><div class="cat-product-info"><p class="eyebrow">LIVA / ${categoryName.toUpperCase()}</p><div class="cat-product-title-row"><h1 id="cat-product-title">${esc(product.name)}</h1><button class="icon-button cat-wishlist cat-detail-wishlist${isSaved ? ' is-saved' : ''}" type="button" data-id="${id}" aria-label="${isSaved ? 'Remove' : 'Save'} ${esc(product.name)} ${isSaved ? 'from' : 'to'} wishlist" aria-pressed="${isSaved}">${icon('heart')}</button></div><div class="cat-product-price-row"><p class="cat-product-price" id="cat-display-price">${money(product.price)}</p></div><p class="cat-description">${esc(product.description)}</p>
+      <section class="cat-product-detail" aria-labelledby="cat-product-title"><div class="cat-product-gallery"><div class="cat-gallery-layout">${thumbnailsHtml}<div class="cat-product-photo"><img id="cat-main-img" src="${esc(asset(product.image))}" alt="LIVA ${esc(product.name)}" loading="eager" width="720" height="720"><span class="cat-photo-label">${categoryName}</span></div></div><p class="cat-photo-footnote">${L.t('samplePackaging')}</p></div><div class="cat-product-info"><p class="eyebrow">LIVA / ${categoryName.toUpperCase()}</p><div class="cat-product-title-row"><h1 id="cat-product-title">${esc(product.name)}</h1><div class="cat-product-actions"><button class="icon-button cat-detail-action cat-detail-share" id="cat-detail-share" type="button" data-id="${id}" data-name="${esc(product.name)}" data-url="${(window.__IS_STATIC__ ? '#' : '/') + 'product/' + id}" aria-label="Share ${esc(product.name)}" title="Share ${esc(product.name)}">${icon('share')}</button><button class="icon-button cat-wishlist cat-detail-wishlist${isSaved ? ' is-saved' : ''}" type="button" data-id="${id}" aria-label="${isSaved ? 'Remove' : 'Save'} ${esc(product.name)} ${isSaved ? 'from' : 'to'} wishlist" aria-pressed="${isSaved}" title="Save to wishlist">${icon('heart')}</button></div></div><div class="cat-product-price-row"><p class="cat-product-price" id="cat-display-price">${money(product.price)}</p></div><p class="cat-description">${esc(product.description)}</p>
       <dl class="cat-product-facts"><div><dt>${L.t('format')}</dt><dd>${esc(product.format)}</dd></div><div><dt>${L.t('size')}</dt><dd id="cat-fact-size">${esc(product.size)}</dd></div><div><dt>Stock</dt><dd id="cat-fact-stock">${product.stock || 20} available</dd></div>${product.contents ? `<div><dt>${L.t('included')}</dt><dd>${esc(product.contents)}</dd></div>` : ''}</dl>
       <form id="cat-product-form" data-id="${product.id}" data-selected-size="${esc(product.size)}" data-selected-price="${product.price}">
         ${sizeSelectorHtml}
@@ -1111,6 +1114,7 @@
       <div class="cat-product-compare">${compareButton(product)}<a class="cat-text-link" href="#shop?category=${product.category}">${L.t('explore')} ${categoryName} ${icon('arrow')}</a></div><div class="cat-preview-note cat-product-preview"><strong>Sample product</strong><span>This is a storefront preview. Product details and prices are subject to confirmation; checkout is a demonstration.</span></div>
       <div class="cat-product-accordions">${['Formula & ingredients', 'Suitability', 'How to use'].map(label => `<details><summary>${label}${icon('plus')}</summary><p>${pendingDetails}</p></details>`).join('')}</div></div></section>
       ${comparisonSlot()}<div class="cat-mobile-purchase" id="cat-mobile-purchase" aria-label="Product purchase"><div><strong>${esc(product.name)}</strong><span id="cat-mobile-size-display">${esc(product.size)} · <span data-cat-quantity>1</span> selected</span></div><button type="submit" form="cat-product-form"><span>${L.t('addToBag')}</span><span data-cat-total>${money(product.price)}</span></button></div>
+      <section class="cat-product-videos" aria-label="Product video reels"><div class="cat-video-grid"><div class="cat-video-card"><video src="${asset('media/videos/video-1.mp4')}" poster="${asset('media/videos/thumb1.jpg')}" playsinline webkit-playsinline loop muted autoplay preload="metadata"></video><button type="button" class="cat-video-sound-toggle" aria-label="Toggle sound"><svg class="sound-off-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg><svg class="sound-on-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display: none;"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg></button><div class="cat-video-play-indicator" aria-hidden="true"><svg viewBox="0 0 24 24" width="32" height="32" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"></polygon></svg></div></div><div class="cat-video-card"><video src="${asset('media/videos/video-2.mp4')}" poster="${asset('media/videos/thumb2.jpg')}" playsinline webkit-playsinline loop muted autoplay preload="metadata"></video><button type="button" class="cat-video-sound-toggle" aria-label="Toggle sound"><svg class="sound-off-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg><svg class="sound-on-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display: none;"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg></button><div class="cat-video-play-indicator" aria-hidden="true"><svg viewBox="0 0 24 24" width="32" height="32" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"></polygon></svg></div></div><div class="cat-video-card"><video src="${asset('media/videos/video-3.mp4')}" poster="${asset('media/videos/thumb3.jpg')}" playsinline webkit-playsinline loop muted autoplay preload="metadata"></video><button type="button" class="cat-video-sound-toggle" aria-label="Toggle sound"><svg class="sound-off-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg><svg class="sound-on-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display: none;"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg></button><div class="cat-video-play-indicator" aria-hidden="true"><svg viewBox="0 0 24 24" width="32" height="32" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"></polygon></svg></div></div></div></section>
       <section class="cat-related" aria-labelledby="cat-related-title"><div class="cat-section-heading"><div><p class="eyebrow">${L.t('continueExploring')}</p><h2 id="cat-related-title">${L.t('moreInCategory')}</h2><p>${L.t('otherProducts')}</p></div><a class="cat-text-link" href="#shop?category=${product.category}">${L.t('viewCollection')} ${icon('arrow')}</a></div><div class="cat-product-grid">${related.map(L.productCard).join('')}</div></section></div>`;
   };
 
@@ -1316,6 +1320,74 @@
     syncWishlist();
   });
 
+  $(document).on('click', '.cat-detail-share', function (e) {
+    e.preventDefault();
+    const $btn = $(this);
+    const name = $btn.data('name') || $('#cat-product-title').text().trim() || 'LIVA';
+    const url = $btn.data('url') || window.location.href;
+    const isKm = window.Liva && window.Liva.getLang && window.Liva.getLang() === 'km';
+    const copiedText = isKm ? (window.Liva.t('linkCopied') || 'បានចម្លងតំណភ្ជាប់ផលិតផល!') : (window.Liva.t('linkCopied') || 'Product link copied to clipboard!');
+    const originalHtml = $btn.html();
+
+    const triggerFeedback = () => {
+      if (window.Liva && typeof window.Liva.toast === 'function') {
+        window.Liva.toast(copiedText);
+      }
+      $btn.addClass('is-shared');
+      if (window.Liva && typeof window.Liva.icon === 'function') {
+        $btn.html(window.Liva.icon('check'));
+      }
+      setTimeout(() => {
+        $btn.removeClass('is-shared');
+        $btn.html(originalHtml);
+      }, 2000);
+    };
+
+    if (navigator.share) {
+      navigator.share({
+        title: `${name} | LIVA Skincare`,
+        text: `Check out ${name} on LIVA`,
+        url: url
+      }).catch(err => {
+        if (!err || err.name !== 'AbortError') {
+          copyTextFallback(url, triggerFeedback);
+        }
+      });
+    } else {
+      copyTextFallback(url, triggerFeedback);
+    }
+  });
+
+  function copyTextFallback(text, onSuccess) {
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(text).then(onSuccess).catch(() => execCopy(text, onSuccess));
+    } else {
+      execCopy(text, onSuccess);
+    }
+  }
+
+  function execCopy(text, onSuccess) {
+    try {
+      const el = document.createElement('textarea');
+      el.value = text;
+      el.setAttribute('readonly', '');
+      el.style.position = 'fixed';
+      el.style.left = '-9999px';
+      el.style.top = '0';
+      document.body.appendChild(el);
+      el.select();
+      const successful = document.execCommand('copy');
+      document.body.removeChild(el);
+      if (successful && onSuccess) {
+        onSuccess();
+      }
+    } catch (_) {
+      if (window.Liva && typeof window.Liva.toast === 'function') {
+        window.Liva.toast('Unable to copy link');
+      }
+    }
+  }
+
   $(document).on('click', '.cat-card-add, .cat-quick-add', function () {
     let qvQty = 1;
     if ($(this).closest('#cat-quickview-backdrop').length) {
@@ -1412,6 +1484,54 @@
     }
 
     $wrap.find('.cat-card-dot').removeClass('is-active').eq(currentIdx).addClass('is-active');
+  });
+
+  // Product Video Reels: sound toggle & play/pause
+  $(document).on('click', '.cat-video-sound-toggle', function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const $btn = $(this);
+    const $card = $btn.closest('.cat-video-card');
+    const video = $card.find('video')[0];
+    if (!video) return;
+
+    if (video.muted) {
+      // Mute other videos so audio doesn't clash
+      $('.cat-video-card video').each(function () {
+        this.muted = true;
+      });
+      $('.cat-video-card .sound-off-icon').show();
+      $('.cat-video-card .sound-on-icon').hide();
+
+      video.muted = false;
+      $btn.find('.sound-off-icon').hide();
+      $btn.find('.sound-on-icon').show();
+      if (video.paused) {
+        video.play().catch(function () {});
+        $card.removeClass('is-paused');
+      }
+    } else {
+      video.muted = true;
+      $btn.find('.sound-off-icon').show();
+      $btn.find('.sound-on-icon').hide();
+    }
+  });
+
+  $(document).on('click', '.cat-video-card', function (e) {
+    if ($(e.target).closest('.cat-video-sound-toggle').length) return;
+
+    const $card = $(this);
+    const video = $card.find('video')[0];
+    if (!video) return;
+
+    if (video.paused) {
+      video.play().catch(function () {});
+      $card.removeClass('is-paused');
+    } else {
+      video.pause();
+      $card.addClass('is-paused');
+    }
   });
 
   $(document).on('click', '.cat-qv-qty-btn', function () {

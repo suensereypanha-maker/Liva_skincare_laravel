@@ -93,8 +93,27 @@
         $('#app').html(html);
       }
       document.body.dataset.page = page;
-      $('[data-nav]').removeClass('active').removeAttr('aria-current').filter(function () { return this.dataset.nav === (page === 'product' ? 'shop' : page); }).addClass('active').attr('aria-current', 'page');
-      const labels = { shop: categoryNames[params.get('category')] || 'The collection', product: L.getProduct(id)?.name || 'Product', routine: 'Build your shelf', compare: 'Compare products', wishlist: 'Saved products', checkout: 'Checkout', account: 'Your account', tracking: 'Order tracking', contact: 'Help & contact', confirmation: 'Order saved', about: 'About LIVA', shipping: 'Delivery & returns', privacy: 'Privacy', terms: 'About this preview' };
+      let targetNav = (page === 'product' ? 'shop' : page);
+      if (page === 'shop') {
+        const promoVal = params.get('promo');
+        if (promoVal === 'new-arrival') {
+          targetNav = 'new-arrival';
+        } else if (promoVal === 'best-seller') {
+          targetNav = 'best-seller';
+        } else if (promoVal === 'on-sale' || promoVal === 'promotion' || promoVal === 'promotions') {
+          targetNav = 'promotion';
+        } else if (!params.get('category')) {
+          targetNav = 'shop';
+        } else {
+          targetNav = null;
+        }
+      }
+      $('[data-nav]').removeClass('active').removeAttr('aria-current');
+      if (targetNav) {
+        $('[data-nav]').filter(function () { return this.dataset.nav === targetNav; }).addClass('active').attr('aria-current', 'page');
+      }
+      const promoTitles = { 'new-arrival': 'New Arrivals', 'best-seller': 'Best Sellers', 'on-sale': 'Promotions', 'promotion': 'Promotions', 'promotions': 'Promotions' };
+      const labels = { shop: promoTitles[params.get('promo')] || categoryNames[params.get('category')] || 'The collection', product: L.getProduct(id)?.name || 'Product', routine: 'Build your shelf', compare: 'Compare products', wishlist: 'Saved products', checkout: 'Checkout', account: 'Your account', tracking: 'Order tracking', contact: 'Help & contact', confirmation: 'Order saved', about: 'About LIVA', shipping: 'Delivery & returns', privacy: 'Privacy', terms: 'About this preview' };
       document.title = page === 'home' ? 'LIVA — The Daily Edit' : `${labels[page] || 'Explore'} — LIVA`;
       L.updateCounts(); if (L.initCatalogPage) L.initCatalogPage(); if (L.initHero) L.initHero();
       syncLanguage(L.getLang ? L.getLang() : 'en');

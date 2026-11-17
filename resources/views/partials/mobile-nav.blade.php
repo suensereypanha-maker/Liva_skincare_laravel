@@ -31,6 +31,18 @@
                 <span class="mobile-nav-link-text" data-i18n="shopAll">Shop all</span>
                 <span class="mobile-nav-pill">18</span>
             </a>
+            <a href="{{ route('shop', ['promo' => 'new-arrival']) }}" class="mobile-nav-link">
+                <span class="mobile-nav-link-text" data-i18n="newArrivals">New Arrivals</span>
+                <span class="mobile-nav-pill">04</span>
+            </a>
+            <a href="{{ route('shop', ['promo' => 'best-seller']) }}" class="mobile-nav-link">
+                <span class="mobile-nav-link-text" data-i18n="bestSellers">Best Sellers</span>
+                <span class="mobile-nav-pill">10</span>
+            </a>
+            <a href="{{ route('shop', ['promo' => 'on-sale']) }}" class="mobile-nav-link">
+                <span class="mobile-nav-link-text" data-i18n="promotions">Promotions</span>
+                <span class="mobile-nav-pill">15</span>
+            </a>
             <a href="{{ route('shop', ['category' => 'skin-care']) }}" class="mobile-nav-link">
                 <span class="mobile-nav-link-text" data-i18n="skinCare">Skin Care</span>
                 <span class="mobile-nav-pill">04</span>

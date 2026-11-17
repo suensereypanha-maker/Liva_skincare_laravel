@@ -11,12 +11,10 @@
 
         <nav class="desktop-nav" aria-label="Main navigation">
             <a href="{{ route('home') }}" data-nav="home" data-i18n="home" class="{{ request()->routeIs('home') ? 'active' : '' }}" {{ request()->routeIs('home') ? 'aria-current=page' : '' }}>Home</a>
-            <a href="{{ route('shop') }}" data-nav="shop" data-i18n="shopAll" class="{{ request()->routeIs('shop*') && !request('category') ? 'active' : '' }}">Shop all</a>
-            <a href="{{ route('shop', ['category' => 'skin-care']) }}" data-i18n="skinCare" class="{{ request('category') === 'skin-care' ? 'active' : '' }}">Skin Care</a>
-            <a href="{{ route('shop', ['category' => 'hair']) }}" data-i18n="hair" class="{{ request('category') === 'hair' ? 'active' : '' }}">Hair</a>
-            <a href="{{ route('shop', ['category' => 'body']) }}" data-i18n="body" class="{{ request('category') === 'body' ? 'active' : '' }}">Body</a>
-            <a href="{{ route('shop', ['category' => 'makeup']) }}" data-i18n="makeup" class="{{ request('category') === 'makeup' ? 'active' : '' }}">Makeup</a>
-            <a href="{{ route('shop', ['category' => 'sets']) }}" data-i18n="sets" class="{{ request('category') === 'sets' ? 'active' : '' }}">Sets</a>
+            <a href="{{ route('shop') }}" data-nav="shop" data-i18n="shopAll" class="{{ request()->routeIs('shop*') && !request('category') && !request('promo') ? 'active' : '' }}" {{ request()->routeIs('shop*') && !request('category') && !request('promo') ? 'aria-current=page' : '' }}>Shop all</a>
+            <a href="{{ route('shop', ['promo' => 'new-arrival']) }}" data-nav="new-arrival" data-i18n="newArrivals" class="{{ request('promo') === 'new-arrival' ? 'active' : '' }}" {{ request('promo') === 'new-arrival' ? 'aria-current=page' : '' }}>New Arrivals</a>
+            <a href="{{ route('shop', ['promo' => 'best-seller']) }}" data-nav="best-seller" data-i18n="bestSellers" class="{{ request('promo') === 'best-seller' ? 'active' : '' }}" {{ request('promo') === 'best-seller' ? 'aria-current=page' : '' }}>Best Sellers</a>
+            <a href="{{ route('shop', ['promo' => 'on-sale']) }}" data-nav="promotion" data-i18n="promotions" class="{{ in_array(request('promo'), ['on-sale', 'promotion', 'promotions']) ? 'active' : '' }}" {{ in_array(request('promo'), ['on-sale', 'promotion', 'promotions']) ? 'aria-current=page' : '' }}>Promotions</a>
             <a href="{{ route('routine') }}" data-nav="routine" class="{{ request()->routeIs('routine') ? 'active' : '' }}" {{ request()->routeIs('routine') ? 'aria-current=page' : '' }}>
                 <span data-i18n="buildYourShelf">Build your shelf</span>
                 <span aria-hidden="true">↗</span>

@@ -29,7 +29,7 @@
             </div>
             <div class="selection-intro">
                 <p>Start with what you came for.<br>Make room for something else.</p>
-                <a href="{{ route('shop') }}" class="text-link">Explore all products <x-icon name="arrow" /></a>
+                <a href="{{ route('shop') }}" class="text-link"> All products <x-icon name="arrow" /></a>
             </div>
         </div>
 
@@ -43,7 +43,6 @@
                 <div class="edit-note">
                     <span class="eyebrow">A CLOSER LOOK</span>
                     <p>Size, price, format.<br>The details that help you choose.</p>
-                    <a class="text-link" href="{{ route('shop') }}">Compare the collection <x-icon name="arrow" /></a>
                 </div>
             </aside>
 
@@ -66,7 +65,6 @@
                     @endforeach
                 </div>
                 <div id="comparison-tray"></div>
-                <p class="sample-caption">Brand-confirmed details will be added before launch.</p>
             </div>
         </div>
     </section>

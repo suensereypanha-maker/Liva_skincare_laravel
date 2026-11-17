@@ -52,7 +52,28 @@ class PagesTest extends TestCase
     }
 
     /**
-     * Test product page displays product details without real results section.
+     * Test header navigation contains promotional links and filters products.
+     */
+    public function test_header_navigation_and_promo_filtering(): void
+    {
+        $response = $this->get('/');
+        $response->assertStatus(200);
+        $response->assertSee('New Arrivals');
+        $response->assertSee('Best Sellers');
+        $response->assertSee('Promotions');
+
+        $promoResponse = $this->get('/shop?promo=new-arrival');
+        $promoResponse->assertStatus(200);
+        $promoResponse->assertViewHas('selectedPromo', 'new-arrival');
+
+        $bestSellerResponse = $this->get('/shop?promo=best-seller');
+        $bestSellerResponse->assertStatus(200);
+        $bestSellerResponse->assertSee('data-nav="best-seller" data-i18n="bestSellers" class="active"', false);
+        $bestSellerResponse->assertDontSee('data-nav="shop" data-i18n="shopAll" class="active"', false);
+    }
+
+    /**
+     * Test product page displays product details without real results section, with video reels and related products.
      */
     public function test_product_page_displays_product_details(): void
     {
@@ -60,8 +81,17 @@ class PagesTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee('cat-product-detail');
         $response->assertSee('SilkSculpt Shampoo');
+        $response->assertSee('cat-detail-share');
+        $response->assertSee('cat-product-actions');
         $response->assertDontSee('cat-product-results');
         $response->assertDontSee('REAL RESULTS');
+        $response->assertSee('cat-product-videos');
+        $response->assertSee('media/videos/video-1.mp4');
+        $response->assertSee('media/videos/video-2.mp4');
+        $response->assertSee('media/videos/video-3.mp4');
+        $response->assertSee('cat-related');
+        $response->assertSee('CONTINUE EXPLORING');
+        $response->assertSee('More in Hair Care');
     }
 
     /**

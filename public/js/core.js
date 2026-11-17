@@ -31,7 +31,8 @@
     card: '<rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/>',
     support: '<path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/>',
     filter: '<polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>',
-    starFill: '<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="currentColor" stroke="none"/>'
+    starFill: '<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="currentColor" stroke="none"/>',
+    share: '<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>'
   };
   const langKey = 'liva-lang-v1';
   let currentLang = 'en';
@@ -82,6 +83,8 @@
       star: 'Star',
       andAbove: '& Above',
       byPromotions: 'By Promotions',
+      promotions: 'Promotions',
+      promotion: 'Promotion',
       newArrivals: 'New Arrivals',
       bestSellers: 'Best Sellers',
       onSale: 'On Sale',
@@ -158,7 +161,10 @@
       signOut: 'Sign out',
       yourFavourites: 'Saved favourites',
       localOrderHistory: 'Local order history',
-      savedCheckoutDetails: 'Saved checkout details'
+      savedCheckoutDetails: 'Saved checkout details',
+      share: 'Share',
+      shareProduct: 'Share this product',
+      linkCopied: 'Product link copied to clipboard!'
     },
     km: {
       realResults: 'លទ្ធផលពិតប្រាកដ',
@@ -204,6 +210,8 @@
       star: 'ផ្កាយ',
       andAbove: 'ឡើងទៅ',
       byPromotions: 'ការផ្សព្វផ្សាយ',
+      promotions: 'ការផ្សព្វផ្សាយ',
+      promotion: 'ការផ្សព្វផ្សាយ',
       newArrivals: 'ទំនិញទើបមកដល់',
       bestSellers: 'លក់ដាច់បំផុត',
       onSale: 'មានបញ្ចុះតម្លៃ',
@@ -277,7 +285,10 @@
       signOut: 'ចាកចេញ',
       yourFavourites: 'ទំនិញរក្សាទុក',
       localOrderHistory: 'ប្រវត្តិកុម្ម៉ង់ក្នុងឧបករណ៍នេះ',
-      savedCheckoutDetails: 'ព័ត៌មានទូទាត់ដែលបានរក្សាទុក'
+      savedCheckoutDetails: 'ព័ត៌មានទូទាត់ដែលបានរក្សាទុក',
+      share: 'ចែករំលែក',
+      shareProduct: 'ចែករំលែកផលិតផលនេះ',
+      linkCopied: 'បានចម្លងតំណភ្ជាប់ផលិតផល!'
     }
   };
 

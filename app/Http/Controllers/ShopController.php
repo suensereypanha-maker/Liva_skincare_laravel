@@ -42,7 +42,8 @@ class ShopController extends Controller
 
         $promo = $request->query('promo');
         if (! empty($promo)) {
-            $products = $products->filter(fn (array $p) => in_array($promo, $p['promo'] ?? []));
+            $targetPromo = ($promo === 'promotion' || $promo === 'promotions') ? 'on-sale' : $promo;
+            $products = $products->filter(fn (array $p) => in_array($targetPromo, $p['promo'] ?? []) || in_array($promo, $p['promo'] ?? []));
         }
 
         $inStock = $request->query('stock');
@@ -72,6 +73,7 @@ class ShopController extends Controller
             'totalCount' => $totalCount,
             'totalAll' => $totalAll,
             'currentSort' => $sort,
+            'selectedPromo' => $promo,
             'minPrice' => $minPrice,
             'maxPrice' => $maxPrice,
         ]);

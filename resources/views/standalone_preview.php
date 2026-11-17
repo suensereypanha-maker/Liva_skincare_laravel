@@ -1,17 +1,20 @@
 <?php
 // Simple asset helper function for standalone PHP preview mode
-if (!function_exists('asset')) {
-    function asset($path) {
-        return '/' . ltrim($path, '/');
+if (! function_exists('asset')) {
+    function asset($path)
+    {
+        return '/'.ltrim($path, '/');
     }
 }
-if (!function_exists('csrf_token')) {
-    function csrf_token() {
+if (! function_exists('csrf_token')) {
+    function csrf_token()
+    {
         return 'mock-csrf-token';
     }
 }
-if (!function_exists('config')) {
-    function config($key, $default = null) {
+if (! function_exists('config')) {
+    function config($key, $default = null)
+    {
         return $default;
     }
 }
@@ -65,11 +68,9 @@ if (!function_exists('config')) {
             <nav class="desktop-nav" aria-label="Main navigation">
                 <a href="#home" data-nav="home" data-i18n="home">Home</a>
                 <a href="#shop" data-nav="shop" data-i18n="shopAll">Shop all</a>
-                <a href="#shop?category=skin-care" data-i18n="skinCare">Skin Care</a>
-                <a href="#shop?category=hair" data-i18n="hair">Hair</a>
-                <a href="#shop?category=body" data-i18n="body">Body</a>
-                <a href="#shop?category=makeup" data-i18n="makeup">Makeup</a>
-                <a href="#shop?category=sets" data-i18n="sets">Sets</a>
+                <a href="#shop?promo=new-arrival" data-nav="new-arrival" data-i18n="newArrivals">New Arrivals</a>
+                <a href="#shop?promo=best-seller" data-nav="best-seller" data-i18n="bestSellers">Best Sellers</a>
+                <a href="#shop?promo=on-sale" data-nav="promotion" data-i18n="promotions">Promotions</a>
                 <a href="#routine" data-nav="routine">
                     <span data-i18n="buildYourShelf">Build your shelf</span> <span aria-hidden="true">↗</span>
                 </a>
@@ -94,9 +95,9 @@ if (!function_exists('config')) {
             </div>
         </div>
 
-        <?php if (file_exists(__DIR__ . '/partials/mobile-nav.blade.php')) {
+        <?php if (file_exists(__DIR__.'/partials/mobile-nav.blade.php')) {
             // Render mobile navigation
-            include __DIR__ . '/partials/mobile-nav.blade.php';
+            include __DIR__.'/partials/mobile-nav.blade.php';
         } ?>
 
         <div id="site-search" class="header-search" hidden>
@@ -114,12 +115,12 @@ if (!function_exists('config')) {
         <div id="app"></div>
     </main>
 
-    <?php if (file_exists(__DIR__ . '/partials/footer.blade.php')) {
-        include __DIR__ . '/partials/footer.blade.php';
+    <?php if (file_exists(__DIR__.'/partials/footer.blade.php')) {
+        include __DIR__.'/partials/footer.blade.php';
     } ?>
 
-    <?php if (file_exists(__DIR__ . '/partials/floating-social.blade.php')) {
-        include __DIR__ . '/partials/floating-social.blade.php';
+    <?php if (file_exists(__DIR__.'/partials/floating-social.blade.php')) {
+        include __DIR__.'/partials/floating-social.blade.php';
     } ?>
 
     <div id="overlay" class="overlay"></div>
