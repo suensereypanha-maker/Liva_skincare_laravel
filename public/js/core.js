@@ -300,7 +300,15 @@
     money: value => '$' + Number(value || 0).toFixed(2),
     escape: value => String(value == null ? '' : value).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])),
     icon: name => '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.45" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (icons[name] || icons.leaf) + '</svg>',
-    asset: path => (!path ? '' : (/^(https?:|\/\/|data:|\/)/.test(path) ? path : '/' + path)),
+    asset: path => {
+      if (!path) return '';
+      if (/^(https?:|\/\/|data:)/.test(path)) return path;
+      const clean = path.replace(/^\/+/, '');
+      if (typeof window !== 'undefined' && window.__LIVA_BASE__) {
+        return window.__LIVA_BASE__ + clean;
+      }
+      return '/' + clean;
+    },
     getProduct: id => Liva.products.find(p => p.id === id),
     save: () => {
       try { localStorage.setItem(key, JSON.stringify(state)); } catch (_) { }

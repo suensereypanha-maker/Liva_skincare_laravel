@@ -506,7 +506,7 @@
     const jsonImages = esc(JSON.stringify(images));
 
     return `<div class="cat-card-image-wrap${hasMultiple ? ' has-multiple-images' : ''}" data-images="${jsonImages}" data-current-idx="0">
-      <a class="cat-card-image${hoverSrc ? ' has-hover-image' : ''}" href="/product/${product.id}" aria-label="${esc(product.name)}">
+      <a class="cat-card-image${hoverSrc ? ' has-hover-image' : ''}" href="${(window.__IS_STATIC__ ? '#' : '/') + 'product/' + product.id}" aria-label="${esc(product.name)}">
         <img class="cat-card-img-primary" src="${esc(images[0])}" alt="LIVA ${esc(product.name)}" loading="${eager ? 'eager' : 'lazy'}" width="720" height="720">
         ${hoverSrc ? `<img class="cat-card-img-hover" src="${esc(hoverSrc)}" alt="LIVA ${esc(product.name)} alternate view" loading="lazy" width="720" height="720">` : ''}
       </a>
@@ -560,7 +560,7 @@
           <span class="cat-card-category">${esc(categoryName)}</span>
           <span class="cat-card-rating">${icon('starFill')} ${ratingVal}</span>
         </div>
-        <h3 class="cat-card-name"><a href="/product/${product.id}">${esc(product.name)}</a></h3>
+        <h3 class="cat-card-name"><a href="${(window.__IS_STATIC__ ? '#' : '/') + 'product/' + product.id}">${esc(product.name)}</a></h3>
         <div class="cat-card-price-line">
           <span class="cat-card-price">${money(product.price)}</span>
           ${product.originalPrice ? `<span class="cat-card-orig-price">${money(product.originalPrice)}</span>` : ''}
@@ -1126,7 +1126,7 @@
   function compareContent() {
     const items = L.comparison.map(findProduct).filter(Boolean);
     if (items.length < 2) return `<div class="cat-empty"><h2>${items.length ? 'Choose one more product.' : 'Start with two products.'}</h2><p>Select up to three products from the collection to compare their category, format, size and price.</p>${items.length ? `<p class="cat-comparison-kept">Selected: <strong>${esc(items[0].name)}</strong><button type="button" class="cat-compare-remove" data-id="${items[0].id}" aria-label="Remove ${esc(items[0].name)} from comparison">Remove ${icon('close')}</button></p>` : ''}<a href="#shop" class="btn btn-primary">Choose products ${icon('arrow')}</a></div>`;
-    return `${items.length > 2 ? '<p class="cat-compare-swipe">Swipe across to compare all three products →</p>' : ''}<div class="cat-comparison-scroll" tabindex="0" role="region" aria-label="Product comparison table. Scroll horizontally on smaller screens."><table class="cat-comparison-table" data-count="${items.length}"><caption>Compare sample product formats and prices</caption><thead><tr><th scope="col">Your shortlist</th>${items.map(product => `<th scope="col"><button class="cat-compare-remove" type="button" data-id="${product.id}" aria-label="Remove ${esc(product.name)} from comparison">Remove ${icon('close')}</button><a href="/product/${product.id}" class="cat-compare-product">${productImage(product)}<span>${esc(product.name)}</span></a></th>`).join('')}</tr></thead><tbody>${[['Category', p => categories[p.category] || p.category], ['Format', p => p.format], ['Size', p => p.size], ['Price', p => money(p.price)], ['Included', p => p.contents || p.name]].map(([label, value]) => `<tr><th scope="row">${label}</th>${items.map(product => `<td>${esc(value(product))}</td>`).join('')}</tr>`).join('')}<tr><th scope="row">Product details</th>${items.map(() => `<td>${pendingDetails}</td>`).join('')}</tr><tr class="cat-comparison-buy"><th scope="row"><span class="cat-visually-hidden">Add to bag</span></th>${items.map(product => `<td>${addButton(product)}</td>`).join('')}</tr></tbody></table></div>`;
+    return `${items.length > 2 ? '<p class="cat-compare-swipe">Swipe across to compare all three products →</p>' : ''}<div class="cat-comparison-scroll" tabindex="0" role="region" aria-label="Product comparison table. Scroll horizontally on smaller screens."><table class="cat-comparison-table" data-count="${items.length}"><caption>Compare sample product formats and prices</caption><thead><tr><th scope="col">Your shortlist</th>${items.map(product => `<th scope="col"><button class="cat-compare-remove" type="button" data-id="${product.id}" aria-label="Remove ${esc(product.name)} from comparison">Remove ${icon('close')}</button><a href="${(window.__IS_STATIC__ ? '#' : '/') + 'product/' + product.id}" class="cat-compare-product">${productImage(product)}<span>${esc(product.name)}</span></a></th>`).join('')}</tr></thead><tbody>${[['Category', p => categories[p.category] || p.category], ['Format', p => p.format], ['Size', p => p.size], ['Price', p => money(p.price)], ['Included', p => p.contents || p.name]].map(([label, value]) => `<tr><th scope="row">${label}</th>${items.map(product => `<td>${esc(value(product))}</td>`).join('')}</tr>`).join('')}<tr><th scope="row">Product details</th>${items.map(() => `<td>${pendingDetails}</td>`).join('')}</tr><tr class="cat-comparison-buy"><th scope="row"><span class="cat-visually-hidden">Add to bag</span></th>${items.map(product => `<td>${addButton(product)}</td>`).join('')}</tr></tbody></table></div>`;
   }
 
   L.renderCompare = function () {
@@ -1263,7 +1263,7 @@
                     <span>${L.t('addToBag')}</span> ${icon('plus')}
                   </button>
                 </div>
-                <a href="/product/${product.id}" class="btn btn-secondary cat-quickview-full">
+                <a href="${(window.__IS_STATIC__ ? '#' : '/') + 'product/' + product.id}" class="btn btn-secondary cat-quickview-full">
                   <span>${L.t('fullDetails')}</span> ${icon('arrow')}
                 </a>
               </div>

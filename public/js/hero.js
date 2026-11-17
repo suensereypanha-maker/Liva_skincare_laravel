@@ -199,9 +199,11 @@
     });
     const pauseText = isKm ? 'ផ្អាក' : 'Pause';
 
+    const asset = path => (window.Liva && window.Liva.asset ? window.Liva.asset(path) : path);
+
     return `<section class="campaign-hero" id="liva-campaign" role="region" aria-roledescription="carousel" aria-label="LIVA collection stories" data-theme="dark" style="--hero-progress:0">
       <div class="campaign-stage">${activeSlides.map((slide, index) => `<article class="campaign-slide${index === 0 ? ' is-active' : ''}" data-slide="${index}" data-theme="${slide.theme}" role="group" aria-roledescription="slide" aria-label="${index + 1} of 3: ${slide.chapter}"${index ? ' inert aria-hidden="true"' : ' aria-hidden="false"'}>
-        <div class="campaign-media"><img class="campaign-poster" src="${slide.image}" alt="${slide.alt}" width="${index === 0 ? 1280 : 1672}" height="${index === 0 ? 720 : 941}"${index === 0 ? ' fetchpriority="high" loading="eager"' : ' loading="lazy"'} decoding="async">${slide.video ? `<video class="campaign-video" muted playsinline loop preload="none" poster="${slide.image}" aria-hidden="true" tabindex="-1" disablepictureinpicture></video>` : ''}</div>
+        <div class="campaign-media"><img class="campaign-poster" src="${asset(slide.image)}" alt="${slide.alt}" width="${index === 0 ? 1280 : 1672}" height="${index === 0 ? 720 : 941}"${index === 0 ? ' fetchpriority="high" loading="eager"' : ' loading="lazy"'} decoding="async">${slide.video ? `<video class="campaign-video" muted playsinline loop preload="none" poster="${asset(slide.image)}" aria-hidden="true" tabindex="-1" disablepictureinpicture></video>` : ''}</div>
         <div class="campaign-copy"><p class="campaign-eyebrow">${slide.eyebrow}</p><${index ? 'h2' : 'h1'} class="campaign-title">${slide.title}</${index ? 'h2' : 'h1'}><p class="campaign-description">${slide.description}</p><a class="btn campaign-cta" href="${slide.href}">${slide.cta} ${arrow}</a><span class="campaign-note">${slide.note}</span></div>
       </article>`).join('')}</div>
       <div class="campaign-footer"><div class="campaign-pagination" role="group" aria-label="Choose a collection story">${activeSlides.map((slide, index) => `<button type="button" class="campaign-chapter" data-hero-go="${index}" aria-label="Show story ${index + 1}: ${slide.chapter}"${index === 0 ? ' aria-current="true"' : ''}><span class="chapter-number" aria-hidden="true">0${index + 1}</span><span class="chapter-name">${slide.chapter}</span><span class="chapter-progress" aria-hidden="true"><span></span></span></button>`).join('')}</div>
@@ -248,7 +250,8 @@
       prepare() {
         if (video.hasAttribute('src')) return;
         video.muted = true;
-        video.src = mobileQuery.matches ? slides[0].mobileVideo : slides[0].video;
+        const asset = path => (window.Liva && window.Liva.asset ? window.Liva.asset(path) : path);
+        video.src = mobileQuery.matches ? asset(slides[0].mobileVideo) : asset(slides[0].video);
       },
       onVisible(value) { video.classList.toggle('is-playing', value); }
     });
