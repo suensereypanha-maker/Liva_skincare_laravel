@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class CartController extends Controller
 {
@@ -14,6 +15,14 @@ class CartController extends Controller
     public function index(): RedirectResponse
     {
         return redirect()->route('home');
+    }
+
+    /**
+     * Display the checkout page.
+     */
+    public function checkout(): View
+    {
+        return view('pages.checkout');
     }
 
     /**

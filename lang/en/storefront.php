@@ -87,7 +87,6 @@ return [
     'selected' => 'Selected',
     'fullDetails' => 'Full Details',
     'explore' => 'Explore',
-    'samplePackaging' => 'Sample packaging shown. Final presentation may change.',
     'realResults' => 'Real Results',
     'satisfaction' => '96% Satisfaction',
     'verifiedBuyer' => 'Verified Buyer',

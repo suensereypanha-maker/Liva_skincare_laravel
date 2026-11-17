@@ -1101,7 +1101,7 @@
     ` : '';
 
     return `<div class="cat-product-page container"><nav class="cat-breadcrumb" aria-label="Breadcrumb"><a href="#shop">${L.t('theCollection')}</a><span aria-hidden="true">/</span><a href="#shop?category=${product.category}">${categoryName}</a><span aria-hidden="true">/</span><span aria-current="page">${esc(product.name)}</span></nav>
-      <section class="cat-product-detail" aria-labelledby="cat-product-title"><div class="cat-product-gallery"><div class="cat-gallery-layout">${thumbnailsHtml}<div class="cat-product-photo"><img id="cat-main-img" src="${esc(asset(product.image))}" alt="LIVA ${esc(product.name)}" loading="eager" width="720" height="720"><span class="cat-photo-label">${categoryName}</span></div></div><p class="cat-photo-footnote">${L.t('samplePackaging')}</p></div><div class="cat-product-info"><p class="eyebrow">LIVA / ${categoryName.toUpperCase()}</p><div class="cat-product-title-row"><h1 id="cat-product-title">${esc(product.name)}</h1><div class="cat-product-actions"><button class="icon-button cat-detail-action cat-detail-share" id="cat-detail-share" type="button" data-id="${id}" data-name="${esc(product.name)}" data-url="${(window.__IS_STATIC__ ? '#' : '/') + 'product/' + id}" aria-label="Share ${esc(product.name)}" title="Share ${esc(product.name)}">${icon('share')}</button><button class="icon-button cat-wishlist cat-detail-wishlist${isSaved ? ' is-saved' : ''}" type="button" data-id="${id}" aria-label="${isSaved ? 'Remove' : 'Save'} ${esc(product.name)} ${isSaved ? 'from' : 'to'} wishlist" aria-pressed="${isSaved}" title="Save to wishlist">${icon('heart')}</button></div></div><div class="cat-product-price-row"><p class="cat-product-price" id="cat-display-price">${money(product.price)}</p></div><p class="cat-description">${esc(product.description)}</p>
+      <section class="cat-product-detail" aria-labelledby="cat-product-title"><div class="cat-product-gallery"><div class="cat-gallery-layout">${thumbnailsHtml}<div class="cat-product-photo"><img id="cat-main-img" src="${esc(asset(product.image))}" alt="LIVA ${esc(product.name)}" loading="eager" width="720" height="720"><span class="cat-photo-label">${categoryName}</span></div></div></div><div class="cat-product-info"><p class="eyebrow">LIVA / ${categoryName.toUpperCase()}</p><div class="cat-product-title-row"><h1 id="cat-product-title">${esc(product.name)}</h1><div class="cat-product-actions"><button class="icon-button cat-detail-action cat-detail-share" id="cat-detail-share" type="button" data-id="${id}" data-name="${esc(product.name)}" data-url="${(window.__IS_STATIC__ ? '#' : '/') + 'product/' + id}" aria-label="Share ${esc(product.name)}" title="Share ${esc(product.name)}">${icon('share')}</button><button class="icon-button cat-wishlist cat-detail-wishlist${isSaved ? ' is-saved' : ''}" type="button" data-id="${id}" aria-label="${isSaved ? 'Remove' : 'Save'} ${esc(product.name)} ${isSaved ? 'from' : 'to'} wishlist" aria-pressed="${isSaved}" title="Save to wishlist">${icon('heart')}</button></div></div><div class="cat-product-price-row"><p class="cat-product-price" id="cat-display-price">${money(product.price)}</p></div><p class="cat-description">${esc(product.description)}</p>
       <dl class="cat-product-facts"><div><dt>${L.t('format')}</dt><dd>${esc(product.format)}</dd></div><div><dt>${L.t('size')}</dt><dd id="cat-fact-size">${esc(product.size)}</dd></div><div><dt>Stock</dt><dd id="cat-fact-stock">${product.stock || 20} available</dd></div>${product.contents ? `<div><dt>${L.t('included')}</dt><dd>${esc(product.contents)}</dd></div>` : ''}</dl>
       <form id="cat-product-form" data-id="${product.id}" data-selected-size="${esc(product.size)}" data-selected-price="${product.price}">
         ${sizeSelectorHtml}
@@ -1111,10 +1111,10 @@
           <button class="cat-detail-add" type="submit"><span>${L.t('addToBag')}</span><span data-cat-total>${money(product.price)}</span>${icon('arrow')}</button>
         </div>
       </form>
-      <div class="cat-product-compare">${compareButton(product)}<a class="cat-text-link" href="#shop?category=${product.category}">${L.t('explore')} ${categoryName} ${icon('arrow')}</a></div><div class="cat-preview-note cat-product-preview"><strong>Sample product</strong><span>This is a storefront preview. Product details and prices are subject to confirmation; checkout is a demonstration.</span></div>
+      <div class="cat-preview-note cat-product-preview"><strong>Sample product</strong><span>This is a storefront preview. Product details and prices are subject to confirmation; checkout is a demonstration.</span></div>
       <div class="cat-product-accordions">${['Formula & ingredients', 'Suitability', 'How to use'].map(label => `<details><summary>${label}${icon('plus')}</summary><p>${pendingDetails}</p></details>`).join('')}</div></div></section>
       ${comparisonSlot()}<div class="cat-mobile-purchase" id="cat-mobile-purchase" aria-label="Product purchase"><div><strong>${esc(product.name)}</strong><span id="cat-mobile-size-display">${esc(product.size)} · <span data-cat-quantity>1</span> selected</span></div><button type="submit" form="cat-product-form"><span>${L.t('addToBag')}</span><span data-cat-total>${money(product.price)}</span></button></div>
-      <section class="cat-product-videos" aria-label="Product video reels"><div class="cat-video-grid"><div class="cat-video-card"><video src="${asset('media/videos/video-1.mp4')}" poster="${asset('media/videos/thumb1.jpg')}" playsinline webkit-playsinline loop muted autoplay preload="metadata"></video><button type="button" class="cat-video-sound-toggle" aria-label="Toggle sound"><svg class="sound-off-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg><svg class="sound-on-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display: none;"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg></button><div class="cat-video-play-indicator" aria-hidden="true"><svg viewBox="0 0 24 24" width="32" height="32" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"></polygon></svg></div></div><div class="cat-video-card"><video src="${asset('media/videos/video-2.mp4')}" poster="${asset('media/videos/thumb2.jpg')}" playsinline webkit-playsinline loop muted autoplay preload="metadata"></video><button type="button" class="cat-video-sound-toggle" aria-label="Toggle sound"><svg class="sound-off-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg><svg class="sound-on-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display: none;"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg></button><div class="cat-video-play-indicator" aria-hidden="true"><svg viewBox="0 0 24 24" width="32" height="32" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"></polygon></svg></div></div><div class="cat-video-card"><video src="${asset('media/videos/video-3.mp4')}" poster="${asset('media/videos/thumb3.jpg')}" playsinline webkit-playsinline loop muted autoplay preload="metadata"></video><button type="button" class="cat-video-sound-toggle" aria-label="Toggle sound"><svg class="sound-off-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg><svg class="sound-on-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display: none;"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg></button><div class="cat-video-play-indicator" aria-hidden="true"><svg viewBox="0 0 24 24" width="32" height="32" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"></polygon></svg></div></div></div></section>
+      <section class="cat-product-videos" aria-label="Product video reels"><div class="cat-video-grid"><div class="cat-video-card"><video src="${asset('media/videos/video-1.mp4')}" poster="${asset('media/videos/thumb1.jpg')}" playsinline webkit-playsinline loop muted autoplay preload="metadata"></video><button type="button" class="cat-video-sound-toggle" aria-label="Toggle sound"><svg class="sound-off-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg><svg class="sound-on-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display: none;"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg></button><div class="cat-video-play-indicator" aria-hidden="true"><svg viewBox="0 0 24 24" width="32" height="32" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"></polygon></svg></div></div><div class="cat-video-card"><video src="${asset('media/videos/video-2.mp4')}" poster="${asset('media/videos/thumb2.jpg')}" playsinline webkit-playsinline loop muted autoplay preload="metadata"></video><button type="button" class="cat-video-sound-toggle" aria-label="Toggle sound"><svg class="sound-off-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg><svg class="sound-on-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display: none;"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg></button><div class="cat-video-play-indicator" aria-hidden="true"><svg viewBox="0 0 24 24" width="32" height="32" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"></polygon></svg></div></div><div class="cat-video-card"><video src="${asset('media/videos/video-3.mp4')}" poster="${asset('media/videos/thumb3.jpg')}" playsinline webkit-playsinline loop muted autoplay preload="metadata"></video><button type="button" class="cat-video-sound-toggle" aria-label="Toggle sound"><svg class="sound-off-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg><svg class="sound-on-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display: none;"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg></button><div class="cat-video-play-indicator" aria-hidden="true"><svg viewBox="0 0 24 24" width="32" height="32" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"></polygon></svg></div></div><div class="cat-video-card"><video src="${asset('media/videos/video-4.mp4')}" poster="${asset('media/videos/thumb4.jpg')}" playsinline webkit-playsinline loop muted autoplay preload="metadata"></video><button type="button" class="cat-video-sound-toggle" aria-label="Toggle sound"><svg class="sound-off-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg><svg class="sound-on-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display: none;"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg></button><div class="cat-video-play-indicator" aria-hidden="true"><svg viewBox="0 0 24 24" width="32" height="32" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"></polygon></svg></div></div></div></section>
       <section class="cat-related" aria-labelledby="cat-related-title"><div class="cat-section-heading"><div><p class="eyebrow">${L.t('continueExploring')}</p><h2 id="cat-related-title">${L.t('moreInCategory')}</h2><p>${L.t('otherProducts')}</p></div><a class="cat-text-link" href="#shop?category=${product.category}">${L.t('viewCollection')} ${icon('arrow')}</a></div><div class="cat-product-grid">${related.map(L.productCard).join('')}</div></section></div>`;
   };
 
@@ -1320,42 +1320,157 @@
     syncWishlist();
   });
 
+  function closeShareModal() {
+    const $backdrop = $('#cat-share-modal-backdrop');
+    if (!$backdrop.length) return;
+    $backdrop.removeClass('is-open');
+    setTimeout(() => $backdrop.remove(), 220);
+  }
+
+  function openShareModal(name, url) {
+    $('#cat-share-modal-backdrop').remove();
+
+    const encodedUrl = encodeURIComponent(url);
+    const encodedText = encodeURIComponent(`Check out ${name} on LIVA: ${url}`);
+
+    const fbUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
+    const tgUrl = `https://t.me/share/url?url=${encodedUrl}&text=${encodeURIComponent(`Check out ${name} on LIVA`)}`;
+
+    const isKm = window.Liva && window.Liva.getLang && window.Liva.getLang() === 'km';
+    const shareTitle = isKm ? 'ចែករំលែកផលិតផល' : 'Share this product';
+    const copyLabel = isKm ? 'ចម្លង' : 'Copy link';
+    const closeLabel = isKm ? 'បិទ' : 'Close';
+
+    const modalHtml = `
+      <div id="cat-share-modal-backdrop" class="cat-share-backdrop" role="dialog" aria-modal="true" aria-labelledby="cat-share-title">
+        <div class="cat-share-modal">
+          <div class="cat-share-header">
+            <div>
+              <h2 id="cat-share-title" class="cat-share-title">${shareTitle}</h2>
+              <p class="cat-share-product-name">${esc(name)}</p>
+            </div>
+            <button type="button" class="icon-button cat-share-close" aria-label="${closeLabel}">
+              ${icon('close')}
+            </button>
+          </div>
+
+          <div class="cat-share-channels">
+            <!-- Facebook -->
+            <a href="${fbUrl}" target="_blank" rel="noopener noreferrer" class="cat-share-channel cat-share-fb" aria-label="Share on Facebook">
+              <span class="cat-share-icon cat-share-icon-fb">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true">
+                  <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                </svg>
+              </span>
+              <span>Facebook</span>
+            </a>
+
+            <!-- Telegram -->
+            <a href="${tgUrl}" target="_blank" rel="noopener noreferrer" class="cat-share-channel cat-share-tg" aria-label="Share on Telegram">
+              <span class="cat-share-icon cat-share-icon-tg">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 0 0-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .36z"/>
+                </svg>
+              </span>
+              <span>Telegram</span>
+            </a>
+
+            <!-- Instagram -->
+            <button type="button" class="cat-share-channel cat-share-ig" aria-label="Share on Instagram">
+              <span class="cat-share-icon cat-share-icon-ig">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <rect x="3" y="3" width="18" height="18" rx="5"/>
+                  <circle cx="12" cy="12" r="4"/>
+                  <path d="M17.5 6.5h.01"/>
+                </svg>
+              </span>
+              <span>Instagram</span>
+            </button>
+          </div>
+
+          <div class="cat-share-copy-box">
+            <input type="text" class="cat-share-url-input" value="${esc(url)}" readonly aria-label="Product URL">
+            <button type="button" class="btn btn-secondary cat-share-copy-btn">
+              ${icon('share')} <span class="cat-share-copy-text">${copyLabel}</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+
+    $('body').append(modalHtml);
+    setTimeout(() => {
+      $('#cat-share-modal-backdrop').addClass('is-open');
+    }, 10);
+  }
+
   $(document).on('click', '.cat-detail-share', function (e) {
     e.preventDefault();
     const $btn = $(this);
     const name = $btn.data('name') || $('#cat-product-title').text().trim() || 'LIVA';
-    const url = $btn.data('url') || window.location.href;
-    const isKm = window.Liva && window.Liva.getLang && window.Liva.getLang() === 'km';
-    const copiedText = isKm ? (window.Liva.t('linkCopied') || 'បានចម្លងតំណភ្ជាប់ផលិតផល!') : (window.Liva.t('linkCopied') || 'Product link copied to clipboard!');
-    const originalHtml = $btn.html();
+    let url = $btn.data('url') || window.location.href;
+    if (url.startsWith('/')) {
+      url = window.location.origin + url;
+    } else if (url.startsWith('#')) {
+      url = window.location.origin + '/' + url;
+    }
+    openShareModal(name, url);
+  });
 
-    const triggerFeedback = () => {
+  $(document).on('click', '.cat-share-close', function (e) {
+    e.preventDefault();
+    closeShareModal();
+  });
+
+  $(document).on('click', '#cat-share-modal-backdrop', function (e) {
+    if (e.target === this) {
+      closeShareModal();
+    }
+  });
+
+  $(document).on('keydown', function (e) {
+    if (e.key === 'Escape' && $('#cat-share-modal-backdrop.is-open').length) {
+      closeShareModal();
+    }
+  });
+
+  $(document).on('click', '.cat-share-fb, .cat-share-tg', function (e) {
+    e.preventDefault();
+    const shareUrl = $(this).attr('href');
+    window.open(shareUrl, '_blank', 'width=620,height=560,toolbar=no,menubar=no,scrollbars=yes,resizable=yes');
+  });
+
+  $(document).on('click', '.cat-share-ig', function (e) {
+    e.preventDefault();
+    const url = $('.cat-share-url-input').val();
+    const isKm = window.Liva && window.Liva.getLang && window.Liva.getLang() === 'km';
+    const msg = isKm ? 'បានចម្លងតំណភ្ជាប់! បើក Instagram ដើម្បីចែករំលែក' : 'Link copied! Open Instagram to share with friends.';
+    copyTextFallback(url, function () {
+      if (window.Liva && typeof window.Liva.toast === 'function') {
+        window.Liva.toast(msg);
+      }
+      window.open('https://www.instagram.com/', '_blank');
+    });
+  });
+
+  $(document).on('click', '.cat-share-copy-btn', function (e) {
+    e.preventDefault();
+    const $btn = $(this);
+    const url = $('.cat-share-url-input').val();
+    const isKm = window.Liva && window.Liva.getLang && window.Liva.getLang() === 'km';
+    const copiedText = isKm ? 'បានចម្លងតំណភ្ជាប់ផលិតផល!' : 'Product link copied to clipboard!';
+    const copyLabel = isKm ? 'ចម្លង' : 'Copy link';
+    const copiedLabel = isKm ? 'បានចម្លង!' : 'Copied!';
+
+    copyTextFallback(url, function () {
       if (window.Liva && typeof window.Liva.toast === 'function') {
         window.Liva.toast(copiedText);
       }
-      $btn.addClass('is-shared');
-      if (window.Liva && typeof window.Liva.icon === 'function') {
-        $btn.html(window.Liva.icon('check'));
-      }
+      $btn.addClass('is-copied').html((window.Liva && window.Liva.icon ? window.Liva.icon('check') : '✓') + ' ' + copiedLabel);
       setTimeout(() => {
-        $btn.removeClass('is-shared');
-        $btn.html(originalHtml);
-      }, 2000);
-    };
-
-    if (navigator.share) {
-      navigator.share({
-        title: `${name} | LIVA Skincare`,
-        text: `Check out ${name} on LIVA`,
-        url: url
-      }).catch(err => {
-        if (!err || err.name !== 'AbortError') {
-          copyTextFallback(url, triggerFeedback);
-        }
-      });
-    } else {
-      copyTextFallback(url, triggerFeedback);
-    }
+        $btn.removeClass('is-copied').html((window.Liva && window.Liva.icon ? window.Liva.icon('share') : '') + ' ' + copyLabel);
+      }, 2500);
+    });
   });
 
   function copyTextFallback(text, onSuccess) {

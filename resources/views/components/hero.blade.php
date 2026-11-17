@@ -3,8 +3,10 @@
         <!-- Slide 01: Everyday -->
         <article class="campaign-slide is-active" data-slide="0" data-theme="dark" role="group" aria-roledescription="slide" aria-label="1 of 3: Everyday" aria-hidden="false">
             <div class="campaign-media">
-                <img class="campaign-poster" src="{{ asset('assets/campaign/everyday-poster.webp') }}" alt="LIVA hair and body essentials in warm, sculptural light" width="1280" height="720" fetchpriority="high" loading="eager" decoding="async">
-                <video class="campaign-video" muted playsinline loop preload="none" poster="{{ asset('assets/campaign/everyday-poster.webp') }}" aria-hidden="true" tabindex="-1" disablepictureinpicture></video>
+                <img class="campaign-poster" src="{{ asset('assets/campaign/slide-1-poster.webp') }}" alt="LIVA hair and body essentials in warm, sculptural light" width="1280" height="720" fetchpriority="high" loading="eager" decoding="async">
+                <video class="campaign-video is-playing" autoplay muted playsinline loop preload="auto" src="{{ asset('assets/campaign/slide-1-everyday.mp4') }}" poster="{{ asset('assets/campaign/slide-1-poster.webp') }}" aria-hidden="true" tabindex="-1" disablepictureinpicture>
+                    <source src="{{ asset('assets/campaign/slide-1-everyday.mp4') }}" type="video/mp4">
+                </video>
             </div>
             <div class="campaign-copy">
                 <p class="campaign-eyebrow">THE LIVA DAILY EDIT</p>
@@ -18,7 +20,10 @@
         <!-- Slide 02: The hair pair -->
         <article class="campaign-slide" data-slide="1" data-theme="light" role="group" aria-roledescription="slide" aria-label="2 of 3: The hair pair" inert aria-hidden="true">
             <div class="campaign-media">
-                <img class="campaign-poster" src="{{ asset('assets/campaign/hair-pair.webp') }}" alt="LIVA shampoo and conditioner paired on a sunlit stone surface" width="1672" height="941" loading="lazy" decoding="async">
+                <img class="campaign-poster" src="{{ asset('assets/campaign/slide-2-poster.webp') }}" alt="LIVA shampoo and conditioner paired on a sunlit stone surface" width="1280" height="720" loading="lazy" decoding="async">
+                <video class="campaign-video" muted playsinline loop preload="auto" src="{{ asset('assets/campaign/slide-2-hair-pair.mp4') }}" poster="{{ asset('assets/campaign/slide-2-poster.webp') }}" aria-hidden="true" tabindex="-1" disablepictureinpicture>
+                    <source src="{{ asset('assets/campaign/slide-2-hair-pair.mp4') }}" type="video/mp4">
+                </video>
             </div>
             <div class="campaign-copy">
                 <p class="campaign-eyebrow">THE HAIR PAIR</p>
@@ -32,7 +37,10 @@
         <!-- Slide 03: Your moment -->
         <article class="campaign-slide" data-slide="2" data-theme="dark" role="group" aria-roledescription="slide" aria-label="3 of 3: Your moment" inert aria-hidden="true">
             <div class="campaign-media">
-                <img class="campaign-poster" src="{{ asset('assets/campaign/your-moment.webp') }}" alt="A quiet moment of personal care in warm afternoon light" width="1672" height="941" loading="lazy" decoding="async">
+                <img class="campaign-poster" src="{{ asset('assets/campaign/slide-3-poster.webp') }}" alt="A quiet moment of personal care in warm afternoon light" width="1280" height="720" loading="lazy" decoding="async">
+                <video class="campaign-video" muted playsinline loop preload="auto" src="{{ asset('assets/campaign/slide-3-your-moment.mp4') }}" poster="{{ asset('assets/campaign/slide-3-poster.webp') }}" aria-hidden="true" tabindex="-1" disablepictureinpicture>
+                    <source src="{{ asset('assets/campaign/slide-3-your-moment.mp4') }}" type="video/mp4">
+                </video>
             </div>
             <div class="campaign-copy">
                 <p class="campaign-eyebrow">A MOMENT, JUST YOURS</p>
@@ -75,4 +83,3 @@
     </div>
     <p class="campaign-status sr-only" role="status" aria-atomic="true"></p>
 </section>
-

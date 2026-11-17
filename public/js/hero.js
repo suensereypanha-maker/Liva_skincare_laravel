@@ -2,9 +2,9 @@
   'use strict';
 
   const slides = [
-    { id: 'everyday', theme: 'dark', image: '/assets/campaign/everyday-poster.webp', video: '/assets/campaign/everyday-film.mp4', mobileVideo: '/assets/campaign/everyday-film-mobile.mp4', duration: 10000, eyebrow: 'THE LIVA DAILY EDIT', title: 'The art of<br><em>the everyday.</em>', description: 'Hair and body essentials.<br> A little space for yourself.', cta: 'Shop the collection', href: '#shop', note: 'HAIR + BODY CARE', chapter: 'Everyday', alt: 'LIVA hair and body essentials in warm, sculptural light' },
-    { id: 'pair', theme: 'light', image: '/assets/campaign/hair-pair.webp', duration: 8000, eyebrow: 'THE HAIR PAIR', title: 'Good things<br>come <em>in pairs.</em>', description: 'Shampoo &amp; conditioner.<br> Two essentials, one place to begin.', cta: 'Discover the pair', href: '#product/ritual-duo', note: '2 × 250 mL · $38.00 · Sample collection', chapter: 'The hair pair', alt: 'LIVA shampoo and conditioner paired on a sunlit stone surface' },
-    { id: 'moment', theme: 'dark', image: '/assets/campaign/your-moment.webp', duration: 8000, eyebrow: 'A MOMENT, JUST YOURS', title: 'A little time.<br><em>Entirely yours.</em>', description: 'Make room for the things<br> that belong in your everyday.', cta: 'Build your shelf', href: '#routine', note: 'CURATED BY YOU', chapter: 'Your moment', alt: 'A quiet moment of personal care in warm afternoon light' }
+    { id: 'everyday', theme: 'dark', image: '/assets/campaign/slide-1-poster.webp', video: '/assets/campaign/slide-1-everyday.mp4', mobileVideo: '/assets/campaign/slide-1-everyday.mp4', duration: 8000, eyebrow: 'THE LIVA DAILY EDIT', title: 'The art of<br><em>the everyday.</em>', description: 'Hair and body essentials.<br> A little space for yourself.', cta: 'Shop the collection', href: '#shop', note: 'HAIR + BODY CARE', chapter: 'Everyday', alt: 'LIVA hair and body essentials in warm, sculptural light' },
+    { id: 'pair', theme: 'light', image: '/assets/campaign/slide-2-poster.webp', video: '/assets/campaign/slide-2-hair-pair.mp4', mobileVideo: '/assets/campaign/slide-2-hair-pair.mp4', duration: 8000, eyebrow: 'THE HAIR PAIR', title: 'Good things<br>come <em>in pairs.</em>', description: 'Shampoo &amp; conditioner.<br> Two essentials, one place to begin.', cta: 'Discover the pair', href: '#product/ritual-duo', note: '2 × 250 mL · $38.00 · Sample collection', chapter: 'The hair pair', alt: 'LIVA shampoo and conditioner paired on a sunlit stone surface' },
+    { id: 'moment', theme: 'dark', image: '/assets/campaign/slide-3-poster.webp', video: '/assets/campaign/slide-3-your-moment.mp4', mobileVideo: '/assets/campaign/slide-3-your-moment.mp4', duration: 8000, eyebrow: 'A MOMENT, JUST YOURS', title: 'A little time.<br><em>Entirely yours.</em>', description: 'Make room for the things<br> that belong in your everyday.', cta: 'Build your shelf', href: '#routine', note: 'CURATED BY YOU', chapter: 'Your moment', alt: 'A quiet moment of personal care in warm afternoon light' }
   ];
 
   const kmSlideMap = {
@@ -41,7 +41,7 @@
     const now = options.now;
     const blocked = new Set(options.suspended || []);
     let index = 0, elapsed = 0, frame = null, destroyed = false;
-    let userPaused = !!(options.reducedMotion || options.saveData);
+    let userPaused = false;
     let running = !userPaused && blocked.size === 0;
     let lastTime = now();
 
@@ -85,7 +85,7 @@
         if (destroyed || !Number.isFinite(nextIndex)) return;
         const previousIndex = index;
         index = ((Math.trunc(nextIndex) % durations.length) + durations.length) % durations.length;
-        userPaused = true;
+        userPaused = false;
         elapsed = 0;
         lastTime = now();
         reconcile({ manual: true, previousIndex });
@@ -234,7 +234,7 @@
     const motionButton = root.querySelector('[data-hero-motion]');
     const status = root.querySelector('.campaign-status');
     const counter = root.querySelector('.campaign-counter');
-    const video = root.querySelector('video');
+    const videos = slideNodes.map(slide => slide.querySelector('video'));
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     const mobileQuery = window.matchMedia('(max-width: 760px)');
     const connection = window.navigator.connection;
@@ -246,14 +246,18 @@
       target.addEventListener(name, callback, options);
       cleanup.push(() => target.removeEventListener(name, callback, options));
     }
-    const playback = createVideoPlayback(video, {
-      prepare() {
-        if (video.hasAttribute('src')) return;
-        video.muted = true;
-        const asset = path => (window.Liva && window.Liva.asset ? window.Liva.asset(path) : path);
-        video.src = mobileQuery.matches ? asset(slides[0].mobileVideo) : asset(slides[0].video);
-      },
-      onVisible(value) { video.classList.toggle('is-playing', value); }
+    const playbacks = videos.map((vid, idx) => {
+      if (!vid) return null;
+      return createVideoPlayback(vid, {
+        prepare() {
+          if (vid.hasAttribute('src')) return;
+          vid.muted = true;
+          const asset = path => (window.Liva && window.Liva.asset ? window.Liva.asset(path) : path);
+          const videoSrc = slides[idx] && (slides[idx].video || slides[idx].mobileVideo);
+          if (videoSrc) vid.src = asset(videoSrc);
+        },
+        onVisible(value) { vid.classList.toggle('is-playing', value); }
+      });
     });
     function applyState(state, change) {
       change = change || {};
@@ -277,10 +281,15 @@
       motionButton.classList.toggle('is-paused', state.userPaused);
       counter.textContent = `0${state.index + 1} / 03`;
       if (change.manual) status.textContent = isKm ? `រឿងរ៉ាវទី ${state.index + 1} នៃ 3: ${(kmSlideMap[slides[state.index].id] || {}).chapter || slides[state.index].chapter}` : `Story ${state.index + 1} of 3: ${slides[state.index].chapter}`;
-      if ((change.restart || change.previousIndex !== undefined) && state.index === 0 && video.hasAttribute('src')) {
-        try { video.currentTime = 0; } catch (_) { }
-      }
-      playback.sync(state.running && state.index === 0);
+      playbacks.forEach((playback, idx) => {
+        if (!playback) return;
+        const active = idx === state.index;
+        const vid = videos[idx];
+        if (active && (change.restart || change.previousIndex !== undefined) && vid && vid.hasAttribute('src')) {
+          try { vid.currentTime = 0; } catch (_) { }
+        }
+        playback.sync(state.running && active);
+      });
     }
     const rect = root.getBoundingClientRect();
     const suspended = [];
@@ -302,10 +311,6 @@
     });
     applyState(controller.snapshot());
 
-    listen(root, 'pointerenter', event => {
-      if (event.pointerType === 'mouse' || event.pointerType === 'pen') controller.pause();
-    });
-    listen(root, 'focusin', () => controller.pause());
     listen(motionButton, 'pointerdown', () => { motionIntent = controller.snapshot().userPaused ? 'play' : 'pause'; });
     listen(root, 'click', event => {
       if (window.performance.now() < ignoreClickUntil) { event.preventDefault(); return; }
@@ -359,9 +364,14 @@
         destroyed = true;
         controller.destroy();
         cleanup.forEach(remove => remove());
-        playback.destroy();
-        video.removeAttribute('src');
-        video.load();
+        playbacks.forEach((pb, idx) => {
+          if (pb) pb.destroy();
+          const vid = videos[idx];
+          if (vid) {
+            vid.removeAttribute('src');
+            vid.load();
+          }
+        });
       }
     };
   };

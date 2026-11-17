@@ -93,5 +93,8 @@
             <a class="text-link" href="{{ route('about') }}">A little more about LIVA <x-icon name="arrow" /></a>
         </div>
     </section>
+
+    <!-- Product Video Reels -->
+    @include('partials.video-reels')
 </div>
 @endsection

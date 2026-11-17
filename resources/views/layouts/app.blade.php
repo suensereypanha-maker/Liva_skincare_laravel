@@ -29,10 +29,10 @@
     @stack('styles')
 </head>
 
-<body data-page="{{ request()->routeIs('home') ? 'home' : (request()->routeIs('shop*') ? 'shop' : (request()->routeIs('product*') ? 'product' : (request()->routeIs('routine') ? 'routine' : (request()->routeIs('about') ? 'about' : (request()->routeIs('contact') ? 'contact' : (request()->routeIs('account*') ? 'account' : (request()->routeIs('wishlist') ? 'wishlist' : (request()->routeIs('compare') ? 'compare' : (request()->routeIs('tracking') ? 'tracking' : 'default'))))))))) }}">
+<body data-page="{{ request()->routeIs('home') ? 'home' : (request()->routeIs('shop*') ? 'shop' : (request()->routeIs('product*') ? 'product' : (request()->routeIs('routine') ? 'routine' : (request()->routeIs('about') ? 'about' : (request()->routeIs('contact') ? 'contact' : (request()->routeIs('account*') ? 'account' : (request()->routeIs('wishlist') ? 'wishlist' : (request()->routeIs('compare') ? 'compare' : (request()->routeIs('tracking') ? 'tracking' : (request()->routeIs('checkout*') ? 'checkout' : 'default')))))))))) }}">
     <a class="skip-link" href="#main-content">Skip to content</a>
 
-    {{-- @include('partials.announcement') --}}
+    @include('partials.announcement')
     @include('partials.header')
 
     <main id="main-content" tabindex="-1">

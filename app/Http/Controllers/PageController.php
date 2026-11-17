@@ -105,4 +105,12 @@ class PageController extends Controller
             'orderNumber' => $request->query('order'),
         ]);
     }
+
+    /**
+     * Display Checkout page.
+     */
+    public function checkout(): View
+    {
+        return view('pages.checkout');
+    }
 }

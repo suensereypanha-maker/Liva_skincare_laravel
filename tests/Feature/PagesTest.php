@@ -26,6 +26,7 @@ class PagesTest extends TestCase
             '/tracking',
             '/wishlist',
             '/compare',
+            '/checkout',
         ];
 
         foreach ($urls as $url) {
@@ -89,6 +90,7 @@ class PagesTest extends TestCase
         $response->assertSee('media/videos/video-1.mp4');
         $response->assertSee('media/videos/video-2.mp4');
         $response->assertSee('media/videos/video-3.mp4');
+        $response->assertSee('media/videos/video-4.mp4');
         $response->assertSee('cat-related');
         $response->assertSee('CONTINUE EXPLORING');
         $response->assertSee('More in Hair Care');
@@ -106,6 +108,10 @@ class PagesTest extends TestCase
         $response->assertViewHas('bodyProducts');
         $response->assertViewHas('setsProducts');
         $response->assertSee('SilkSculpt Shampoo');
+        $response->assertSee('campaign-hero');
+        $response->assertSee('slide-1-poster.webp');
+        $response->assertSee('slide-2-poster.webp');
+        $response->assertSee('slide-3-poster.webp');
     }
 
     /**
@@ -148,5 +154,52 @@ class PagesTest extends TestCase
         $response->assertSee('commerce-name');
         $response->assertSee('commerce-email');
         $response->assertSee('commerce-phone');
+    }
+
+    /**
+     * Test search modal markup and search query handling in catalog.
+     */
+    public function test_search_modal_and_query_filtering(): void
+    {
+        $response = $this->get('/');
+        $response->assertStatus(200);
+        $response->assertSee('site-search');
+        $response->assertSee('search-capsule');
+        $response->assertSee('header-search-input');
+        $response->assertSee('header-search-clear');
+        $response->assertSee('search-live-results');
+
+        // Test search query on shop
+        $searchResponse = $this->get('/shop?q=conditioner');
+        $searchResponse->assertStatus(200);
+        $searchResponse->assertSee('SilkSkin Conditioner');
+        $searchResponse->assertViewHas('searchQuery', 'conditioner');
+    }
+
+    /**
+     * Test checkout page renders correctly with container and data attributes.
+     */
+    public function test_checkout_page_renders_successfully(): void
+    {
+        $response = $this->get('/checkout');
+        $response->assertStatus(200);
+        $response->assertSee('data-page="checkout"', false);
+        $response->assertSee('commerce-page container', false);
+        $response->assertSee('commerce-heading');
+        $response->assertSee('Checkout');
+        $response->assertSee('Back to the collection');
+        $response->assertSee('cart-drawer');
+    }
+
+    /**
+     * Test home page displays video product reels above the footer.
+     */
+    public function test_home_page_displays_video_product_reels(): void
+    {
+        $response = $this->get('/');
+        $response->assertStatus(200);
+        $response->assertSee('cat-product-videos');
+        $response->assertSee('cat-video-grid');
+        $response->assertSee('media/videos/video-1.mp4');
     }
 }

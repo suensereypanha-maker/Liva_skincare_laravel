@@ -25,6 +25,24 @@ class ShopController extends Controller
         // Apply filters
         $products = $all;
 
+        $searchQuery = $request->query('q') ?? $request->query('search');
+        if (! empty($searchQuery)) {
+            $queryLower = mb_strtolower(trim($searchQuery));
+            $products = $products->filter(function (array $p) use ($queryLower) {
+                $name = mb_strtolower($p['name'] ?? '');
+                $desc = mb_strtolower($p['description'] ?? '');
+                $cat = mb_strtolower($p['category'] ?? '');
+                $contents = mb_strtolower($p['contents'] ?? '');
+                $size = mb_strtolower($p['size'] ?? '');
+
+                return str_contains($name, $queryLower)
+                    || str_contains($desc, $queryLower)
+                    || str_contains($cat, $queryLower)
+                    || str_contains($contents, $queryLower)
+                    || str_contains($size, $queryLower);
+            });
+        }
+
         if (! empty($selectedCategory)) {
             $products = $products->filter(fn (array $p) => ($p['category'] ?? '') === $selectedCategory);
         }
@@ -74,6 +92,7 @@ class ShopController extends Controller
             'totalAll' => $totalAll,
             'currentSort' => $sort,
             'selectedPromo' => $promo,
+            'searchQuery' => $searchQuery,
             'minPrice' => $minPrice,
             'maxPrice' => $maxPrice,
         ]);

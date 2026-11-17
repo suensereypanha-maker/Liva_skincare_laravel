@@ -47,9 +47,11 @@
 
   function linesHtml(t) {
     var subtotal = t.items ? orderSubtotal(t) : t.subtotal;
-    return '<div class="commerce-totals"><div><span>Products</span><span>' + money(subtotal) + '</span></div>' +
-      '<div><span>Delivery</span><span>Not configured</span></div>' +
-      '<div class="commerce-total"><strong>Illustrative subtotal</strong><strong>' + money(subtotal) + '<small> USD</small></strong></div></div>';
+    return '<div class="commerce-totals">' +
+      '<div class="commerce-subtotal-row"><span>Subtotal</span><strong>' + money(subtotal) + '</strong></div>' +
+      '<div class="commerce-shipping-row"><span>Shipping</span><span class="commerce-free">Free</span></div>' +
+      '<div class="commerce-total"><strong>Total</strong><strong>' + money(subtotal) + '<small> USD</small></strong></div>' +
+      '</div>';
   }
 
   function repeatButton(order) {
@@ -75,7 +77,7 @@
     drawer.setAttribute('aria-hidden', drawer.classList.contains('is-open') ? 'false' : 'true');
     drawer.inert = !drawer.classList.contains('is-open');
     drawer.innerHTML = '<div class="commerce-cart-header"><h2 id="commerce-cart-title">Your bag <span>(' + t.count + ')</span></h2><button class="icon-button commerce-cart-close" type="button" aria-label="Close shopping bag">' + icon('close') + '</button></div>' +
-      (items.length ? '<div class="commerce-shipping-message">' + icon('bag') + '<p>Review your selection. Prices and sizes are illustrative.</p></div><div class="commerce-cart-list">' + items.map(function (entry) { return cartRow(entry, L.state.cart.indexOf(entry.item)); }).join('') + '</div><div class="commerce-cart-footer">' + linesHtml(t) + '<p class="commerce-delivery-note">Delivery fees, coverage and timing are not configured.</p><a href="#checkout" class="btn btn-primary commerce-cart-route commerce-checkout-link">Continue to checkout' + icon('arrow') + '</a><button type="button" class="commerce-text-button commerce-cart-close">Continue shopping</button><p class="commerce-cart-assurance">Demo checkout. No payment or delivery.</p></div>' : '<div class="commerce-cart-empty">' + emptyState('Your bag is empty.', 'Explore hair care, body care and sets to start your selection.') + '</div>');
+      (items.length ? '<div class="commerce-shipping-message">' + icon('bag') + '<p>Review your selection. Prices and sizes are illustrative.</p></div><div class="commerce-cart-list">' + items.map(function (entry) { return cartRow(entry, L.state.cart.indexOf(entry.item)); }).join('') + '</div><div class="commerce-cart-footer">' + linesHtml(t) + '<p class="commerce-delivery-note">Delivery fees, coverage and timing are not configured.</p><a href="' + (window.__IS_STATIC__ ? '#checkout' : '/checkout') + '" class="btn btn-primary commerce-cart-route commerce-checkout-link">Continue to checkout' + icon('arrow') + '</a><button type="button" class="commerce-text-button commerce-cart-close">Continue shopping</button><p class="commerce-cart-assurance">Demo checkout. No payment or delivery.</p></div>' : '<div class="commerce-cart-empty">' + emptyState('Your bag is empty.', 'Explore hair care, body care and sets to start your selection.') + '</div>');
   };
 
   L.openCart = function () {
@@ -133,13 +135,62 @@
 
   function checkoutSummary() {
     var t = totals();
-    return '<h2>In your bag <span>' + t.count + ' ' + (t.count === 1 ? 'item' : 'items') + '</span></h2><div class="commerce-summary-items">' + cartItems().map(function (entry) { var p = entry.product, item = entry.item; return '<div class="commerce-summary-image"><img src="' + e(asset(p.image)) + '" alt="' + e(p.name) + '"><span>' + item.qty + '</span></div><div><h3>' + e(p.name) + '</h3><p>' + e(item.size || p.size) + '</p></div><strong>' + money(p.price * item.qty) + '</strong></div>'; }).join('') + '</div>' + linesHtml(t) + '<div class="commerce-summary-note">' + icon('truck') + '<p>Delivery is not configured.<small>Fees, coverage and timing have not been supplied.</small></p></div><a class="commerce-edit-bag" href="#shop">Continue shopping' + icon('arrow') + '</a>';
+    var v = checkoutValues();
+    var isAba = v.payment === 'aba';
+    var paymentLabel = isAba ? 'ABA transfer · Preview' : 'Cash on delivery · Preview';
+    var paymentBadge = isAba ? 'ABA' : 'COD';
+    var items = cartItems();
+
+    return '<h2>In your bag <span>' + t.count + ' ' + (t.count === 1 ? 'item' : 'items') + '</span></h2>' +
+      '<div class="commerce-summary-items">' +
+      items.map(function (entry) {
+        var p = entry.product, item = entry.item;
+        var unitPrice = (p.sizePrices && p.sizePrices[item.size] != null) ? p.sizePrices[item.size] : ((item.price != null) ? item.price : p.price);
+        return '<div class="commerce-summary-item">' +
+          '<div class="commerce-summary-image">' +
+            '<img src="' + e(asset(p.image)) + '" alt="' + e(p.name) + '">' +
+            '<span>' + item.qty + '</span>' +
+          '</div>' +
+          '<div class="commerce-summary-info">' +
+            '<h3 class="commerce-summary-title">' + e(p.name) + '</h3>' +
+            '<p class="commerce-summary-size">' + e(item.size || p.size) + '</p>' +
+            '<p class="commerce-summary-qty">Qty: ' + item.qty + '</p>' +
+          '</div>' +
+          '<div class="commerce-summary-price">' +
+            '<strong>' + money(unitPrice * item.qty) + '</strong>' +
+          '</div>' +
+        '</div>';
+      }).join('') +
+      '</div>' +
+      linesHtml(t) +
+      '<div class="commerce-summary-payment-box">' +
+        '<div class="commerce-summary-payment-head">' +
+          '<span>Payment preview</span>' +
+          '<span class="commerce-payment-badge ' + (isAba ? 'commerce-aba-badge' : '') + '">' + paymentBadge + '</span>' +
+        '</div>' +
+        '<p class="commerce-summary-payment-chosen">' + paymentLabel + '</p>' +
+        '<div class="commerce-summary-payment-switch" role="group" aria-label="Select payment method">' +
+          '<button type="button" class="commerce-payment-switch-btn' + (!isAba ? ' is-active' : '') + '" data-pay="cod">' +
+            'Cash on delivery' +
+          '</button>' +
+          '<button type="button" class="commerce-payment-switch-btn' + (isAba ? ' is-active' : '') + '" data-pay="aba">' +
+            'ABA transfer' +
+          '</button>' +
+        '</div>' +
+      '</div>' +
+      '<div id="commerce-checkout-error" class="commerce-form-error" role="alert"></div>' +
+      '<button type="submit" form="commerce-checkout-form" class="btn btn-primary commerce-place-order">Save demo order' + icon('arrow') + '</button>' +
+      '<p class="commerce-submit-note">Your demo order is saved on this device only.</p>' +
+      '<div class="commerce-summary-note">' + icon('truck') +
+        '<p>Free standard delivery included on all orders.</p>' +
+      '</div>' +
+      '<a class="commerce-edit-bag" href="' + (window.__IS_STATIC__ ? '#shop' : '/shop') + '">Continue shopping' + icon('arrow') + '</a>';
   }
 
   L.renderCheckout = function () {
     if (!cartItems().length) return '<section class="commerce-page container">' + pageHeading('YOUR SELECTION', 'Checkout', '') + emptyState('Your bag is empty.', 'Add products to your bag before trying checkout.') + '</section>';
     var v = checkoutValues();
-    return '<section class="commerce-page container"><a href="#shop" class="commerce-back">' + icon('arrow') + ' Back to the collection</a>' + pageHeading('YOUR SELECTION', 'Checkout', 'Review your selection and try the checkout flow.') + '<div class="commerce-checkout-layout"><form id="commerce-checkout-form" class="commerce-checkout-form">' + demoNotice('Use sample contact and address details. This demo saves your order on this device only; no payment is collected and no order is sent.') + '<section class="commerce-form-section"><div class="commerce-section-title"><span>01</span><h2>Your details</h2></div>' + (!L.state.profile ? '<p class="commerce-signin-note">Saved your details before? <a href="#account">Open your demo account</a></p>' : '') + '<div class="commerce-field-grid">' + inputField('Full name', 'name', v.name, 'type="text" autocomplete="name" required minlength="2" maxlength="100" placeholder="Your first and last name"', true) + inputField('Email address', 'email', v.email, 'type="email" autocomplete="email" required maxlength="120" placeholder="you@example.com"') + inputField('Phone number', 'phone', v.phone, 'type="tel" autocomplete="tel" required pattern="[+0-9][0-9 ]{7,17}" placeholder="012 345 678" title="Enter a valid phone number, such as 012 345 678"') + '</div></section><section class="commerce-form-section"><div class="commerce-section-title"><span>02</span><h2>Delivery details</h2></div><div class="commerce-field-grid">' + inputField('Delivery address', 'address', v.address, 'type="text" autocomplete="street-address" required minlength="5" maxlength="240" placeholder="House number, street and district"', true) + selectCity(v.city) + '<div class="form-field commerce-field-wide"><label for="commerce-note">Delivery note <span>(optional)</span></label><textarea id="commerce-note" name="note" rows="3" maxlength="500" placeholder="A nearby landmark or delivery instructions">' + e(v.note) + '</textarea></div></div><p class="commerce-field-hint">Location fields demonstrate checkout only. Delivery availability and fees are not configured.</p></section><section class="commerce-form-section"><div class="commerce-section-title"><span>03</span><h2>Payment preview</h2></div><div class="commerce-payment-options"><label class="commerce-payment-option"><input type="radio" name="payment" value="cod"' + (v.payment === 'cod' ? ' checked' : '') + '><span class="commerce-radio"></span><span><strong>Cash on delivery · Preview</strong><small>Example selection. No amount is due.</small></span><span class="commerce-payment-badge">COD</span></label><label class="commerce-payment-option"><input type="radio" name="payment" value="aba"' + (v.payment === 'aba' ? ' checked' : '') + '><span class="commerce-radio"></span><span><strong>ABA transfer · Preview</strong><small>Example selection. No payment connection.</small></span><span class="commerce-payment-badge commerce-aba-badge">ABA</span></label></div><div id="commerce-payment-note" class="commerce-payment-note">' + paymentNote(v.payment) + '</div></section><div id="commerce-checkout-error" class="commerce-form-error" role="alert"></div><button type="submit" class="btn btn-primary commerce-place-order">Save demo order' + icon('arrow') + '</button><p class="commerce-submit-note">Your demo order is saved on this device only.</p></form><aside id="commerce-checkout-summary" class="commerce-checkout-summary" aria-label="Order summary">' + checkoutSummary() + '</aside></div></section>';
+    return '<section class="commerce-page container"><a href="' + (window.__IS_STATIC__ ? '#shop' : '/shop') + '" class="commerce-back">' + icon('arrow') + ' Back to the collection</a>' + pageHeading('YOUR SELECTION', 'Checkout', 'Review your selection and try the checkout flow.') + '<div class="commerce-checkout-layout"><form id="commerce-checkout-form" class="commerce-checkout-form"><section class="commerce-form-section"><div class="commerce-section-title"><span>01</span><h2>Your details</h2></div>' + (!L.state.profile ? '<p class="commerce-signin-note">Saved your details before? <a href="' + (window.__IS_STATIC__ ? '#account' : '/account') + '">Open your demo account</a></p>' : '') + '<div class="commerce-field-grid">' + inputField('Full name', 'name', v.name, 'type="text" autocomplete="name" required minlength="2" maxlength="100" placeholder="Your first and last name"', true) + inputField('Email address', 'email', v.email, 'type="email" autocomplete="email" required maxlength="120" placeholder="you@example.com"') + inputField('Phone number', 'phone', v.phone, 'type="tel" autocomplete="tel" required pattern="[+0-9][0-9 ]{7,17}" placeholder="012 345 678" title="Enter a valid phone number, such as 012 345 678"') + '</div></section><section class="commerce-form-section"><div class="commerce-section-title"><span>02</span><h2>Delivery details</h2></div><div class="commerce-field-grid">' + inputField('Delivery address', 'address', v.address, 'type="text" autocomplete="street-address" required minlength="5" maxlength="240" placeholder="House number, street and district"', true) + selectCity(v.city) + '<div class="form-field commerce-field-wide"><label for="commerce-note">Delivery note <span>(optional)</span></label><textarea id="commerce-note" name="note" rows="3" maxlength="500" placeholder="A nearby landmark or delivery instructions">' + e(v.note) + '</textarea></div></div><p class="commerce-field-hint">Location fields demonstrate checkout only. Delivery availability and fees are not configured.</p></section><input type="hidden" name="payment" id="commerce-payment-input" value="' + e(v.payment || 'cod') + '"></form><aside id="commerce-checkout-summary" class="commerce-checkout-summary" aria-label="Order summary">' + checkoutSummary() + '</aside></div></section>';
   };
 
   function paymentNote(payment) {
@@ -406,14 +457,33 @@
     if (event.target.closest('.commerce-logout')) { L.state.profile = null; pendingProfile = {}; accountStep = 'phone'; L.save(); L.render(true); L.toast('You’ve signed out of your demo account.'); return; }
     if (event.target.closest('.commerce-sample-order')) { var input = document.getElementById('commerce-order-id'); input.value = 'LIVA-1024'; findOrder('LIVA-1024'); return; }
     if (event.target.closest('.commerce-contact-again')) { document.getElementById('commerce-contact-success').hidden = true; document.getElementById('commerce-contact-form').hidden = false; document.getElementById('commerce-contact-form').reset(); document.getElementById('commerce-name').focus(); }
+    var switchBtn = event.target.closest('.commerce-payment-switch-btn');
+    if (switchBtn) {
+      event.preventDefault();
+      var pay = switchBtn.dataset.pay;
+      checkoutDraft.payment = pay;
+      var radio = document.querySelector('input[name="payment"][value="' + pay + '"]');
+      if (radio) {
+        radio.checked = true;
+      }
+      var note = document.getElementById('commerce-payment-note');
+      if (note) note.innerHTML = paymentNote(pay);
+      refreshSummary();
+      return;
+    }
   });
 
   document.addEventListener('change', function (event) {
     var form = event.target.closest('#commerce-checkout-form');
     if (form) {
       captureCheckout();
-      if (event.target.name === 'city') refreshSummary();
-      if (event.target.name === 'payment') document.getElementById('commerce-payment-note').innerHTML = paymentNote(event.target.value);
+      if (event.target.name === 'city' || event.target.name === 'payment') {
+        if (event.target.name === 'payment') {
+          var note = document.getElementById('commerce-payment-note');
+          if (note) note.innerHTML = paymentNote(event.target.value);
+        }
+        refreshSummary();
+      }
     }
   });
   document.addEventListener('input', function (event) { if (event.target.closest('#commerce-checkout-form')) captureCheckout(); });
