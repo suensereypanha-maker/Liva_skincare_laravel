@@ -53,15 +53,6 @@ if (!function_exists('config')) {
 <body>
     <a class="skip-link" href="#main-content">Skip to content</a>
 
-    <div class="announcement">
-        <span data-i18n="personalCare">PERSONAL CARE. PERSONALLY YOURS.</span>
-        <a href="#routine">
-            <span data-i18n="buildYourShelf">Build your shelf</span>
-            <span aria-hidden="true">↗</span>
-        </a>
-        <span data-i18n="dailyEdit">THE LIVA DAILY EDIT</span>
-    </div>
-
     <header class="site-header">
         <div class="header-inner container">
             <button class="icon-button mobile-menu-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-navigation" data-icon="menu"></button>
