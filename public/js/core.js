@@ -303,11 +303,14 @@
     asset: path => {
       if (!path) return '';
       if (/^(https?:|\/\/|data:)/.test(path)) return path;
-      const clean = path.replace(/^\/+/, '');
       if (typeof window !== 'undefined' && window.__LIVA_BASE__) {
+        if (path.startsWith(window.__LIVA_BASE__) || path.startsWith('./public/') || path.startsWith('public/')) {
+          return path;
+        }
+        const clean = path.replace(/^\/+/, '');
         return window.__LIVA_BASE__ + clean;
       }
-      return '/' + clean;
+      return '/' + path.replace(/^\/+/, '');
     },
     getProduct: id => Liva.products.find(p => p.id === id),
     save: () => {

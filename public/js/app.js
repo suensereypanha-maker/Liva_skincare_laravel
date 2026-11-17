@@ -155,13 +155,15 @@
         if (path === '#main-content') { document.getElementById('main-content').focus(); return; }
         closeNavigation();
         if (L.closeCart) L.closeCart();
-        const knownPages = ['shop', 'product', 'routine', 'about', 'contact', 'shipping', 'privacy', 'terms', 'wishlist', 'compare', 'account', 'tracking'];
-        const targetPage = path.slice(1).split('/')[0];
-        if (knownPages.includes(targetPage)) {
-          const currentPath = window.location.pathname.replace(/^\/|\/$/g, '');
-          if (currentPath !== path.slice(1)) {
-            window.location.href = '/' + path.slice(1);
-            return;
+        if (!window.__IS_STATIC__) {
+          const knownPages = ['shop', 'product', 'routine', 'about', 'contact', 'shipping', 'privacy', 'terms', 'wishlist', 'compare', 'account', 'tracking'];
+          const targetPage = path.slice(1).split('/')[0];
+          if (knownPages.includes(targetPage)) {
+            const currentPath = window.location.pathname.replace(/^\/|\/$/g, '');
+            if (currentPath !== path.slice(1)) {
+              window.location.href = '/' + path.slice(1);
+              return;
+            }
           }
         }
         L.render(true);
