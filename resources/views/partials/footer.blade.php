@@ -39,6 +39,12 @@
             <a href="{{ route('shipping') }}">Delivery & returns</a>
             <a href="{{ route('privacy') }}">Privacy</a>
         </div>
+        <div class="footer-payment-support">
+            <h2 data-i18n="supportKhqr">Support KH QR</h2>
+            <div class="footer-qr-card">
+                <img src="{{ asset('img/khqr.png') }}" alt="Support KH QR" class="footer-qr-img" width="76" height="76" loading="lazy">
+            </div>
+        </div>
     </div>
 
     <div class="footer-bottom container">

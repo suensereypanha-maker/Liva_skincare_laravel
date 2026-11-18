@@ -36,6 +36,9 @@ class PagesTest extends TestCase
             $response->assertSee('floating-social-telegram');
             $response->assertSee('floating-social-facebook');
             $response->assertSee('floating-social-tiktok');
+            $response->assertSee('footer-payment-support');
+            $response->assertSee('Support KH QR');
+            $response->assertSee('khqr.png');
         }
     }
 
@@ -110,8 +113,8 @@ class PagesTest extends TestCase
         $response->assertSee('SilkSculpt Shampoo');
         $response->assertSee('campaign-hero');
         $response->assertSee('slide-1-poster.webp');
-        $response->assertSee('slide-2-poster.webp');
-        $response->assertSee('slide-3-poster.webp');
+        $response->assertSee('banner-1.jpg');
+        $response->assertSee('banner-2.jpg');
     }
 
     /**
@@ -201,5 +204,18 @@ class PagesTest extends TestCase
         $response->assertSee('cat-product-videos');
         $response->assertSee('cat-video-grid');
         $response->assertSee('media/videos/video-1.mp4');
+    }
+
+    /**
+     * Test hero carousel has video on first slide and static banner images on next slides.
+     */
+    public function test_hero_carousel_has_video_first_and_image_next(): void
+    {
+        $response = $this->get('/');
+        $response->assertStatus(200);
+        $response->assertSee('slide-1-everyday.mp4');
+        $response->assertDontSee('slide-2-hair-pair.mp4');
+        $response->assertSee('banner-1.jpg');
+        $response->assertSee('banner-2.jpg');
     }
 }

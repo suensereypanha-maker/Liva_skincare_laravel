@@ -17,38 +17,20 @@
             </div>
         </article>
 
-        <!-- Slide 02: The hair pair -->
-        <article class="campaign-slide" data-slide="1" data-theme="light" role="group" aria-roledescription="slide" aria-label="2 of 3: The hair pair" inert aria-hidden="true">
+        <!-- Slide 02: Natural Glow Banner -->
+        <article class="campaign-slide is-banner" data-slide="1" data-theme="light" role="group" aria-roledescription="slide" aria-label="2 of 3: Natural Glow" inert aria-hidden="true">
             <div class="campaign-media">
-                <img class="campaign-poster" src="{{ asset('assets/campaign/slide-2-poster.webp') }}" alt="LIVA shampoo and conditioner paired on a sunlit stone surface" width="1280" height="720" loading="lazy" decoding="async">
-                <video class="campaign-video" muted playsinline loop preload="auto" src="{{ asset('assets/campaign/slide-2-hair-pair.mp4') }}" poster="{{ asset('assets/campaign/slide-2-poster.webp') }}" aria-hidden="true" tabindex="-1" disablepictureinpicture>
-                    <source src="{{ asset('assets/campaign/slide-2-hair-pair.mp4') }}" type="video/mp4">
-                </video>
+                <img class="campaign-poster" src="{{ asset('assets/campaign/banner-1.jpg') }}" alt="LIVA Skincare - Healthy Skin, Natural Glow" width="1024" height="576" loading="lazy" decoding="async">
             </div>
-            <div class="campaign-copy">
-                <p class="campaign-eyebrow">THE HAIR PAIR</p>
-                <h2 class="campaign-title">Good things<br>come <em>in pairs.</em></h2>
-                <p class="campaign-description">Shampoo &amp; conditioner.<br> Two essentials, one place to begin.</p>
-                <a class="btn campaign-cta" href="{{ route('product.show', 'ritual-duo') }}">Discover the pair <x-icon name="arrow" /></a>
-                <span class="campaign-note">2 × 250 mL · $38.00 · Sample collection</span>
-            </div>
+            <a href="{{ route('shop') }}" class="campaign-banner-link" aria-label="Shop LIVA Skincare - Healthy Skin, Natural Glow"></a>
         </article>
 
-        <!-- Slide 03: Your moment -->
-        <article class="campaign-slide" data-slide="2" data-theme="dark" role="group" aria-roledescription="slide" aria-label="3 of 3: Your moment" inert aria-hidden="true">
+        <!-- Slide 03: Natural Beauty Banner -->
+        <article class="campaign-slide is-banner" data-slide="2" data-theme="light" role="group" aria-roledescription="slide" aria-label="3 of 3: Natural Beauty" inert aria-hidden="true">
             <div class="campaign-media">
-                <img class="campaign-poster" src="{{ asset('assets/campaign/slide-3-poster.webp') }}" alt="A quiet moment of personal care in warm afternoon light" width="1280" height="720" loading="lazy" decoding="async">
-                <video class="campaign-video" muted playsinline loop preload="auto" src="{{ asset('assets/campaign/slide-3-your-moment.mp4') }}" poster="{{ asset('assets/campaign/slide-3-poster.webp') }}" aria-hidden="true" tabindex="-1" disablepictureinpicture>
-                    <source src="{{ asset('assets/campaign/slide-3-your-moment.mp4') }}" type="video/mp4">
-                </video>
+                <img class="campaign-poster" src="{{ asset('assets/campaign/banner-2.jpg') }}" alt="LIVA Skincare - Reveal Your Natural Beauty" width="1024" height="576" loading="lazy" decoding="async">
             </div>
-            <div class="campaign-copy">
-                <p class="campaign-eyebrow">A MOMENT, JUST YOURS</p>
-                <h2 class="campaign-title">A little time.<br><em>Entirely yours.</em></h2>
-                <p class="campaign-description">Make room for the things<br> that belong in your everyday.</p>
-                <a class="btn campaign-cta" href="{{ route('routine') }}">Build your shelf <x-icon name="arrow" /></a>
-                <span class="campaign-note">CURATED BY YOU</span>
-            </div>
+            <a href="{{ route('shop') }}" class="campaign-banner-link" aria-label="Shop LIVA Skincare - Reveal Your Natural Beauty"></a>
         </article>
     </div>
 
@@ -59,14 +41,14 @@
                 <span class="chapter-name">Everyday</span>
                 <span class="chapter-progress" aria-hidden="true"><span></span></span>
             </button>
-            <button type="button" class="campaign-chapter" data-hero-go="1" aria-label="Show story 2: The hair pair">
+            <button type="button" class="campaign-chapter" data-hero-go="1" aria-label="Show story 2: Natural Glow">
                 <span class="chapter-number" aria-hidden="true">02</span>
-                <span class="chapter-name">The hair pair</span>
+                <span class="chapter-name">Natural Glow</span>
                 <span class="chapter-progress" aria-hidden="true"><span></span></span>
             </button>
-            <button type="button" class="campaign-chapter" data-hero-go="2" aria-label="Show story 3: Your moment">
+            <button type="button" class="campaign-chapter" data-hero-go="2" aria-label="Show story 3: Natural Beauty">
                 <span class="chapter-number" aria-hidden="true">03</span>
-                <span class="chapter-name">Your moment</span>
+                <span class="chapter-name">Natural Beauty</span>
                 <span class="chapter-progress" aria-hidden="true"><span></span></span>
             </button>
         </div>

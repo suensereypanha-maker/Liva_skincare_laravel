@@ -2,9 +2,9 @@
   'use strict';
 
   const slides = [
-    { id: 'everyday', theme: 'dark', image: '/assets/campaign/slide-1-poster.webp', video: '/assets/campaign/slide-1-everyday.mp4', mobileVideo: '/assets/campaign/slide-1-everyday.mp4', duration: 8000, eyebrow: 'THE LIVA DAILY EDIT', title: 'The art of<br><em>the everyday.</em>', description: 'Hair and body essentials.<br> A little space for yourself.', cta: 'Shop the collection', href: '#shop', note: 'HAIR + BODY CARE', chapter: 'Everyday', alt: 'LIVA hair and body essentials in warm, sculptural light' },
-    { id: 'pair', theme: 'light', image: '/assets/campaign/slide-2-poster.webp', video: '/assets/campaign/slide-2-hair-pair.mp4', mobileVideo: '/assets/campaign/slide-2-hair-pair.mp4', duration: 8000, eyebrow: 'THE HAIR PAIR', title: 'Good things<br>come <em>in pairs.</em>', description: 'Shampoo &amp; conditioner.<br> Two essentials, one place to begin.', cta: 'Discover the pair', href: '#product/ritual-duo', note: '2 × 250 mL · $38.00 · Sample collection', chapter: 'The hair pair', alt: 'LIVA shampoo and conditioner paired on a sunlit stone surface' },
-    { id: 'moment', theme: 'dark', image: '/assets/campaign/slide-3-poster.webp', video: '/assets/campaign/slide-3-your-moment.mp4', mobileVideo: '/assets/campaign/slide-3-your-moment.mp4', duration: 8000, eyebrow: 'A MOMENT, JUST YOURS', title: 'A little time.<br><em>Entirely yours.</em>', description: 'Make room for the things<br> that belong in your everyday.', cta: 'Build your shelf', href: '#routine', note: 'CURATED BY YOU', chapter: 'Your moment', alt: 'A quiet moment of personal care in warm afternoon light' }
+    { id: 'everyday', theme: 'dark', isBanner: false, image: '/assets/campaign/slide-1-poster.webp', video: '/assets/campaign/slide-1-everyday.mp4', mobileVideo: '/assets/campaign/slide-1-everyday.mp4', duration: 8000, eyebrow: 'THE LIVA DAILY EDIT', title: 'The art of<br><em>the everyday.</em>', description: 'Hair and body essentials.<br> A little space for yourself.', cta: 'Shop the collection', href: '#shop', note: 'HAIR + BODY CARE', chapter: 'Everyday', alt: 'LIVA hair and body essentials in warm, sculptural light' },
+    { id: 'glow', theme: 'light', isBanner: true, image: '/assets/campaign/banner-1.jpg', video: null, mobileVideo: null, duration: 8000, eyebrow: 'LIVA SKINCARE', title: 'Healthy Skin,<br><em>Natural Glow.</em>', description: 'Care today, more beautiful tomorrow.', cta: 'Shop Now', href: '#shop', note: 'DEEP HYDRATION · BRIGHTENING', chapter: 'Natural Glow', alt: 'LIVA Skincare - Healthy Skin, Natural Glow' },
+    { id: 'beauty', theme: 'light', isBanner: true, image: '/assets/campaign/banner-2.jpg', video: null, mobileVideo: null, duration: 8000, eyebrow: 'LIVA SKINCARE', title: 'Reveal Your<br><em>Natural Beauty.</em>', description: 'Healthy Skin. Confident You.', cta: 'Shop Now', href: '#shop', note: 'GENTLE FORMULA · PROTECTS SKIN', chapter: 'Natural Beauty', alt: 'LIVA Skincare - Reveal Your Natural Beauty' }
   ];
 
   const kmSlideMap = {
@@ -16,21 +16,21 @@
       note: 'ការថែទាំសក់ និងដងខ្លួន',
       chapter: 'ប្រចាំថ្ងៃ'
     },
-    pair: {
-      eyebrow: 'ឈុតថែរក្សាសក់',
-      title: 'អ្វីដែលល្អ<br>តែងតែមក<em>ជាគូ។</em>',
-      description: 'សាប៊ូកក់ និងបន្ទន់សក់។<br> របស់ចាំបាច់ទាំងពីរ កន្លែងចាប់ផ្តើមដ៏ល្អ។',
-      cta: 'ស្វែងយល់ពីឈុតនេះ',
-      note: '២ × ២៥០ mL · $៣៨.០០ · កម្រងគំរូ',
-      chapter: 'ឈុតសក់'
+    glow: {
+      eyebrow: 'LIVA SKINCARE',
+      title: 'ស្បែកមានសុខភាពល្អ និងភ្លឺថ្លាពីធម្មជាតិ',
+      description: 'ថែទាំថ្ងៃនេះ កាន់តែស្រស់ស្អាតនៅថ្ងៃស្អែក',
+      cta: 'ទិញឥឡូវនេះ',
+      note: 'ផ្តល់សំណើមយ៉ាងជ្រៅ · ស្បែកភ្លឺថ្លា',
+      chapter: 'ពន្លឺធម្មជាតិ'
     },
-    moment: {
-      eyebrow: 'ពេលវេលាផ្ទាល់ខ្លួនរបស់អ្នក',
-      title: 'ពេលវេលាដ៏មានតម្លៃ<br><em>សម្រាប់តែអ្នក។</em>',
-      description: 'ទុកកន្លែងសម្រាប់របស់<br> ដែលជាជីវិតប្រចាំថ្ងៃរបស់អ្នក។',
-      cta: 'រៀបចំកញ្ចប់ផ្ទាល់ខ្លួន',
-      note: 'រៀបចំដោយអ្នកផ្ទាល់',
-      chapter: 'ពេលវេលារបស់អ្នក'
+    beauty: {
+      eyebrow: 'LIVA SKINCARE',
+      title: 'បង្ហាញភាពស្រស់ស្អាតបែបធម្មជាតិរបស់អ្នក',
+      description: 'ស្បែកមានសុខភាពល្អ ទំនុកចិត្តរបស់អ្នក',
+      cta: 'ទិញឥឡូវនេះ',
+      note: 'រូបមន្តស្រាលស្រទន់ · ការពារស្បែក',
+      chapter: 'សម្រស់ធម្មជាតិ'
     }
   };
 
@@ -202,9 +202,9 @@
     const asset = path => (window.Liva && window.Liva.asset ? window.Liva.asset(path) : path);
 
     return `<section class="campaign-hero" id="liva-campaign" role="region" aria-roledescription="carousel" aria-label="LIVA collection stories" data-theme="dark" style="--hero-progress:0">
-      <div class="campaign-stage">${activeSlides.map((slide, index) => `<article class="campaign-slide${index === 0 ? ' is-active' : ''}" data-slide="${index}" data-theme="${slide.theme}" role="group" aria-roledescription="slide" aria-label="${index + 1} of 3: ${slide.chapter}"${index ? ' inert aria-hidden="true"' : ' aria-hidden="false"'}>
-        <div class="campaign-media"><img class="campaign-poster" src="${asset(slide.image)}" alt="${slide.alt}" width="${index === 0 ? 1280 : 1672}" height="${index === 0 ? 720 : 941}"${index === 0 ? ' fetchpriority="high" loading="eager"' : ' loading="lazy"'} decoding="async">${slide.video ? `<video class="campaign-video" muted playsinline loop preload="none" poster="${asset(slide.image)}" aria-hidden="true" tabindex="-1" disablepictureinpicture></video>` : ''}</div>
-        <div class="campaign-copy"><p class="campaign-eyebrow">${slide.eyebrow}</p><${index ? 'h2' : 'h1'} class="campaign-title">${slide.title}</${index ? 'h2' : 'h1'}><p class="campaign-description">${slide.description}</p><a class="btn campaign-cta" href="${slide.href}">${slide.cta} ${arrow}</a><span class="campaign-note">${slide.note}</span></div>
+      <div class="campaign-stage">${activeSlides.map((slide, index) => `<article class="campaign-slide${index === 0 ? ' is-active' : ''}${slide.isBanner ? ' is-banner' : ''}" data-slide="${index}" data-theme="${slide.theme}" role="group" aria-roledescription="slide" aria-label="${index + 1} of 3: ${slide.chapter}"${index ? ' inert aria-hidden="true"' : ' aria-hidden="false"'}>
+        <div class="campaign-media"><img class="campaign-poster" src="${asset(slide.image)}" alt="${slide.alt}" width="1024" height="576"${index === 0 ? ' fetchpriority="high" loading="eager"' : ' loading="lazy"'} decoding="async">${slide.video ? `<video class="campaign-video" muted playsinline loop preload="none" poster="${asset(slide.image)}" aria-hidden="true" tabindex="-1" disablepictureinpicture></video>` : ''}</div>
+        ${slide.isBanner ? `<a href="${slide.href}" class="campaign-banner-link" aria-label="${slide.alt}"></a>` : `<div class="campaign-copy"><p class="campaign-eyebrow">${slide.eyebrow}</p><${index ? 'h2' : 'h1'} class="campaign-title">${slide.title}</${index ? 'h2' : 'h1'}><p class="campaign-description">${slide.description}</p><a class="btn campaign-cta" href="${slide.href}">${slide.cta} ${arrow}</a><span class="campaign-note">${slide.note}</span></div>`}
       </article>`).join('')}</div>
       <div class="campaign-footer"><div class="campaign-pagination" role="group" aria-label="Choose a collection story">${activeSlides.map((slide, index) => `<button type="button" class="campaign-chapter" data-hero-go="${index}" aria-label="Show story ${index + 1}: ${slide.chapter}"${index === 0 ? ' aria-current="true"' : ''}><span class="chapter-number" aria-hidden="true">0${index + 1}</span><span class="chapter-name">${slide.chapter}</span><span class="chapter-progress" aria-hidden="true"><span></span></span></button>`).join('')}</div>
       <div class="campaign-controls"><span class="campaign-counter" aria-hidden="true">01 / 03</span><button type="button" class="campaign-arrow" data-hero-prev aria-label="Previous story">${arrow}</button><button type="button" class="campaign-arrow" data-hero-next aria-label="Next story">${arrow}</button><button type="button" class="campaign-motion" data-hero-motion aria-label="Pause slideshow and video">${pauseIcon}${playIcon}<span>${pauseText}</span></button></div></div>

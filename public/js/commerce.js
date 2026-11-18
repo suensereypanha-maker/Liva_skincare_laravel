@@ -122,8 +122,38 @@
 
   function checkoutValues() {
     var p = L.state.profile || {};
-    return Object.assign({ name: p.name || '', email: p.email || '', phone: p.phone || '', address: p.address || '', city: p.city || 'Phnom Penh', note: '', payment: 'cod' }, checkoutDraft);
+    return Object.assign({ name: p.name || '', email: p.email || '', phone: p.phone || '', address: p.address || '', city: p.city || 'Phnom Penh', note: '', payment: 'cod', bank: 'ac' }, checkoutDraft);
   }
+
+  var bankAccounts = {
+    ac: {
+      id: 'ac',
+      name: 'ACLEDA Bank (AC Bank)',
+      short: 'AC Bank',
+      accountName: 'LIVA SKINCARE',
+      code: '012 345 678',
+      qr: 'img/bank-qr.png',
+      note: 'Scan with ACLEDA Mobile or any KHQR banking app'
+    },
+    wing: {
+      id: 'wing',
+      name: 'Wing Bank',
+      short: 'Wing Bank',
+      accountName: 'LIVA SKINCARE',
+      code: '098 765 432',
+      qr: 'img/bank-qr.png',
+      note: 'Scan with Wing Bank app or any KHQR banking app'
+    },
+    ABA: {
+      id: 'ABA',
+      name: 'ABA Bank',
+      short: 'ABA',
+      accountName: 'LIVA SKINCARE',
+      code: '001 888 999',
+      qr: 'img/bank-qr.png',
+      note: 'Scan with ABA Bank or any KHQR banking app'
+    }
+  };
 
   function inputField(label, name, value, attrs, wide) {
     return '<div class="form-field' + (wide ? ' commerce-field-wide' : '') + '"><label for="commerce-' + name + '">' + label + '</label><input id="commerce-' + name + '" name="' + name + '" value="' + e(value) + '" ' + (attrs || '') + '></div>';
@@ -136,9 +166,11 @@
   function checkoutSummary() {
     var t = totals();
     var v = checkoutValues();
-    var isAba = v.payment === 'aba';
-    var paymentLabel = isAba ? 'ABA transfer · Preview' : 'Cash on delivery · Preview';
-    var paymentBadge = isAba ? 'ABA' : 'COD';
+    var isBank = v.payment === 'transfer' || v.payment === 'aba';
+    var selectedBank = v.bank || 'ac';
+    var currentBank = bankAccounts[selectedBank] || bankAccounts.ac;
+    var paymentLabel = isBank ? 'Bank transfer (' + currentBank.short + ') · Preview' : 'Cash on delivery · Preview';
+    var paymentBadge = isBank ? 'KHQR' : 'COD';
     var items = cartItems();
 
     return '<h2>In your bag <span>' + t.count + ' ' + (t.count === 1 ? 'item' : 'items') + '</span></h2>' +
@@ -166,17 +198,56 @@
       '<div class="commerce-summary-payment-box">' +
         '<div class="commerce-summary-payment-head">' +
           '<span>Payment preview</span>' +
-          '<span class="commerce-payment-badge ' + (isAba ? 'commerce-aba-badge' : '') + '">' + paymentBadge + '</span>' +
+          '<span class="commerce-payment-badge ' + (isBank ? 'commerce-bank-badge' : '') + '">' + paymentBadge + '</span>' +
         '</div>' +
         '<p class="commerce-summary-payment-chosen">' + paymentLabel + '</p>' +
         '<div class="commerce-summary-payment-switch" role="group" aria-label="Select payment method">' +
-          '<button type="button" class="commerce-payment-switch-btn' + (!isAba ? ' is-active' : '') + '" data-pay="cod">' +
+          '<button type="button" class="commerce-payment-switch-btn' + (!isBank ? ' is-active' : '') + '" data-pay="cod">' +
             'Cash on delivery' +
           '</button>' +
-          '<button type="button" class="commerce-payment-switch-btn' + (isAba ? ' is-active' : '') + '" data-pay="aba">' +
-            'ABA transfer' +
+          '<button type="button" class="commerce-payment-switch-btn' + (isBank ? ' is-active' : '') + '" data-pay="transfer">' +
+            'Bank transfer' +
           '</button>' +
         '</div>' +
+        (isBank ? (
+          '<div class="commerce-bank-section">' +
+            '<div class="commerce-bank-tabs" role="tablist" aria-label="Choose Bank">' +
+              Object.keys(bankAccounts).map(function (key) {
+                var b = bankAccounts[key];
+                var isActive = selectedBank === key;
+                return '<button type="button" class="commerce-bank-tab' + (isActive ? ' is-active' : '') + '" data-bank="' + key + '" role="tab" aria-selected="' + isActive + '">' +
+                  e(b.short) +
+                '</button>';
+              }).join('') +
+            '</div>' +
+            '<div class="commerce-bank-card">' +
+              '<div class="commerce-bank-details">' +
+                '<div class="commerce-bank-row">' +
+                  '<span class="commerce-bank-label">Bank Name</span>' +
+                  '<strong class="commerce-bank-value">' + e(currentBank.name) + '</strong>' +
+                '</div>' +
+                '<div class="commerce-bank-row">' +
+                  '<span class="commerce-bank-label">Account Name</span>' +
+                  '<strong class="commerce-bank-value">' + e(currentBank.accountName) + '</strong>' +
+                '</div>' +
+                '<div class="commerce-bank-row">' +
+                  '<span class="commerce-bank-label">Code / Account</span>' +
+                  '<div class="commerce-bank-code-wrap">' +
+                    '<strong class="commerce-bank-code">' + e(currentBank.code) + '</strong>' +
+                    '<button type="button" class="commerce-copy-code-btn" data-copy="' + e(currentBank.code) + '" title="Copy code">' +
+                      'Copy' +
+                    '</button>' +
+                  '</div>' +
+                '</div>' +
+              '</div>' +
+              '<div class="commerce-bank-qr-box">' +
+                '<img src="' + e(asset(currentBank.qr)) + '" alt="' + e(currentBank.name) + ' QR Code" class="commerce-bank-qr-img" width="90" height="90">' +
+                '<span class="commerce-bank-qr-caption">KHQR Code</span>' +
+              '</div>' +
+            '</div>' +
+            '<p class="commerce-bank-note">' + e(currentBank.note) + '</p>' +
+          '</div>'
+        ) : '') +
       '</div>' +
       '<div id="commerce-checkout-error" class="commerce-form-error" role="alert"></div>' +
       '<button type="submit" form="commerce-checkout-form" class="btn btn-primary commerce-place-order">Save demo order' + icon('arrow') + '</button>' +
@@ -194,7 +265,7 @@
   };
 
   function paymentNote(payment) {
-    return payment === 'aba' ? '<strong>ABA payment preview</strong><p>No active QR code or bank details are provided. You will not be charged; placing this order only creates a local demo record.</p>' : '<p>Cash on delivery is shown for illustration. No delivery is arranged and nothing is due for this demo order.</p>';
+    return (payment === 'transfer' || payment === 'aba') ? '<strong>Bank transfer preview</strong><p>Scan the KHQR code or use the bank account code to transfer with AC Bank, Wing Bank, or ABA Bank.</p>' : '<p>Cash on delivery is shown for illustration. No delivery is arranged and nothing is due for this demo order.</p>';
   }
 
   function captureCheckout() {
@@ -219,7 +290,9 @@
   L.renderConfirmation = function (id) {
     var order = (L.state.orders || []).find(function (entry) { return entry.id === id; });
     if (!order) return '<section class="commerce-page container">' + emptyState('We can’t find that order.', 'This demo saves orders in the browser where they were placed.', '#tracking', 'Track an order') + '</section>';
-    return '<section class="commerce-page commerce-confirmation container"><div class="commerce-confirmation-head"><span class="commerce-success-icon">' + icon('check') + '</span><p class="eyebrow">DEMO ORDER SAVED</p><h1>Thank you, ' + e(order.customer.name.split(' ')[0]) + '.</h1><p>Your demo order is saved on this device.</p><div class="commerce-reference">Order <strong>' + e(order.id) + '</strong><span>' + dateLabel(order.createdAt) + '</span></div></div><div class="commerce-confirmation-card">' + demoNotice('This order is saved in your browser only. Nothing will be charged, shipped or emailed.') + '<h2>Your selection</h2>' + orderItemsHtml(order.items) + linesHtml(order) + '<div class="commerce-confirmation-details"><div><span>DELIVERY ADDRESS</span><p>' + e(order.customer.name) + '<br>' + e(order.customer.address) + '<br>' + e(order.customer.city) + ', Cambodia</p></div><div><span>PAYMENT METHOD</span><p>' + (order.payment === 'aba' ? 'ABA bank transfer · Demo' : 'Cash on delivery · Demo') + '<br>' + e(order.customer.phone) + '</p></div></div></div><div class="commerce-confirmation-actions"><a href="#tracking/' + e(order.id) + '" class="btn btn-primary">View demo tracking' + icon('arrow') + '</a>' + repeatButton(order) + '<a href="#shop" class="btn btn-secondary">Continue shopping</a></div><p class="commerce-submit-note">Add again uses current illustrative prices. Review your bag before checkout.</p></section>';
+    var isOrderBank = order.payment === 'transfer' || order.payment === 'aba';
+    var orderBankName = isOrderBank ? (bankAccounts[order.bank || 'ac'] ? bankAccounts[order.bank || 'ac'].name : 'Bank transfer') : 'Cash on delivery';
+    return '<section class="commerce-page commerce-confirmation container"><div class="commerce-confirmation-head"><span class="commerce-success-icon">' + icon('check') + '</span><p class="eyebrow">DEMO ORDER SAVED</p><h1>Thank you, ' + e(order.customer.name.split(' ')[0]) + '.</h1><p>Your demo order is saved on this device.</p><div class="commerce-reference">Order <strong>' + e(order.id) + '</strong><span>' + dateLabel(order.createdAt) + '</span></div></div><div class="commerce-confirmation-card">' + demoNotice('This order is saved in your browser only. Nothing will be charged, shipped or emailed.') + '<h2>Your selection</h2>' + orderItemsHtml(order.items) + linesHtml(order) + '<div class="commerce-confirmation-details"><div><span>DELIVERY ADDRESS</span><p>' + e(order.customer.name) + '<br>' + e(order.customer.address) + '<br>' + e(order.customer.city) + ', Cambodia</p></div><div><span>PAYMENT METHOD</span><p>' + (isOrderBank ? (orderBankName + ' · Demo') : 'Cash on delivery · Demo') + '<br>' + e(order.customer.phone) + '</p></div></div></div><div class="commerce-confirmation-actions"><a href="#tracking/' + e(order.id) + '" class="btn btn-primary">View demo tracking' + icon('arrow') + '</a>' + repeatButton(order) + '<a href="#shop" class="btn btn-secondary">Continue shopping</a></div><p class="commerce-submit-note">Add again uses current illustrative prices. Review your bag before checkout.</p></section>';
   };
 
   function renderSocialAuth() {
@@ -462,13 +535,38 @@
       event.preventDefault();
       var pay = switchBtn.dataset.pay;
       checkoutDraft.payment = pay;
-      var radio = document.querySelector('input[name="payment"][value="' + pay + '"]');
+      var radio = document.querySelector('input[name="payment"]');
       if (radio) {
-        radio.checked = true;
+        radio.value = pay;
       }
       var note = document.getElementById('commerce-payment-note');
       if (note) note.innerHTML = paymentNote(pay);
       refreshSummary();
+      return;
+    }
+    var bankTab = event.target.closest('.commerce-bank-tab');
+    if (bankTab) {
+      event.preventDefault();
+      var b = bankTab.dataset.bank;
+      checkoutDraft.bank = b;
+      refreshSummary();
+      return;
+    }
+    var copyBtn = event.target.closest('.commerce-copy-code-btn');
+    if (copyBtn) {
+      event.preventDefault();
+      var code = copyBtn.dataset.copy;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(code).then(function () {
+          copyBtn.textContent = 'Copied!';
+          setTimeout(function () { copyBtn.textContent = 'Copy'; }, 1800);
+          if (L.toast) L.toast('Account code copied: ' + code);
+        }).catch(function () {
+          if (L.toast) L.toast('Account code: ' + code);
+        });
+      } else {
+        if (L.toast) L.toast('Account code: ' + code);
+      }
       return;
     }
   });
@@ -506,7 +604,8 @@
         id: id,
         createdAt: new Date().toISOString(),
         status: 'Confirmed',
-        payment: v.payment === 'aba' ? 'aba' : 'cod',
+        payment: (v.payment === 'transfer' || v.payment === 'aba') ? 'transfer' : 'cod',
+        bank: v.bank || 'ac',
         customer: { name: v.name.trim(), email: v.email.trim(), phone: v.phone.trim(), address: v.address.trim(), city: v.city, note: (v.note || '').trim() },
         items: cartItems().map(function (entry) {
           var p = entry.product;
