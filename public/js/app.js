@@ -396,5 +396,35 @@
         e.preventDefault();
         document.getElementById('main-content').focus();
       });
+
+      function initAnnouncementTimer() {
+        const timerEl = document.getElementById('timer');
+        if (!timerEl) return;
+        const key = 'liva_announcement_end';
+        let endTime;
+        try {
+          endTime = parseInt(localStorage.getItem(key), 10);
+          if (!endTime || isNaN(endTime) || endTime <= Date.now()) {
+            endTime = Date.now() + (24 * 60 * 60 * 1000);
+            localStorage.setItem(key, endTime);
+          }
+        } catch (_) {
+          endTime = Date.now() + (24 * 60 * 60 * 1000);
+        }
+
+        function update() {
+          const remaining = Math.max(0, endTime - Date.now());
+          const hours = Math.floor(remaining / 3600000);
+          const minutes = Math.floor((remaining % 3600000) / 60000);
+          const seconds = Math.floor((remaining % 60000) / 1000);
+          timerEl.textContent =
+            String(hours).padStart(2, '0') + ':' +
+            String(minutes).padStart(2, '0') + ':' +
+            String(seconds).padStart(2, '0');
+        }
+        update();
+        setInterval(update, 1000);
+      }
+      initAnnouncementTimer();
     });
   }) (window, window.jQuery);

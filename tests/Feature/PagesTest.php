@@ -220,4 +220,56 @@ class PagesTest extends TestCase
         $response->assertSee('Good things');
         $response->assertSee('A little time');
     }
+
+    /**
+     * Test checkout fields are simplified to phone and address, and footer supports KHQR and ABA.
+     */
+    public function test_checkout_simplified_and_footer_aba_support(): void
+    {
+        $response = $this->get('/checkout');
+        $response->assertStatus(200);
+        $response->assertSee('commerce.js');
+        $response->assertSee('commerce.css');
+        $response->assertSee('commerce-add-demo-btn');
+
+        $commerceJs = file_get_contents(public_path('js/commerce.js'));
+        $this->assertStringContainsString('Phone number', $commerceJs);
+        $this->assertStringContainsString('Delivery address', $commerceJs);
+        $this->assertStringContainsString('data-pay="cod"', $commerceJs);
+        $this->assertStringContainsString('data-pay="transfer"', $commerceJs);
+        $this->assertStringNotContainsString('data-pay="card"', $commerceJs);
+
+        $footerResponse = $this->get('/');
+        $footerResponse->assertStatus(200);
+        $footerResponse->assertSee('img/aba.png');
+        $footerResponse->assertSee('img/khqr.png');
+
+        $indexHtml = file_get_contents(base_path('index.html'));
+        $this->assertStringContainsString('aba.png', $indexHtml);
+        $this->assertStringContainsString('khqr.png', $indexHtml);
+    }
+
+    /**
+     * Test announcement bar and sticky header wrapper render properly on storefront and static deploy.
+     */
+    public function test_announcement_bar_and_sticky_header_render_successfully(): void
+    {
+        $response = $this->get('/');
+        $response->assertStatus(200);
+        $response->assertSee('site-header-sticky-wrapper');
+        $response->assertSee('announcement-bar');
+        $response->assertSee('announcement-inner');
+        $response->assertSee('timer');
+
+        $indexHtml = file_get_contents(base_path('index.html'));
+        $this->assertStringContainsString('site-header-sticky-wrapper', $indexHtml);
+        $this->assertStringContainsString('announcement-bar', $indexHtml);
+        $this->assertStringContainsString('announcement-inner container', $indexHtml);
+        $this->assertStringContainsString('id="timer"', $indexHtml);
+
+        $stylesCss = file_get_contents(public_path('css/styles.css'));
+        $this->assertStringContainsString('.site-header-sticky-wrapper{position:sticky;top:0', $stylesCss);
+        $this->assertStringContainsString('.announcement-bar', $stylesCss);
+        $this->assertStringContainsString('.announcement-inner', $stylesCss);
+    }
 }

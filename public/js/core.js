@@ -172,7 +172,20 @@
       savedCheckoutDetails: 'Saved checkout details',
       share: 'Share',
       shareProduct: 'Share this product',
-      linkCopied: 'Product link copied to clipboard!'
+      linkCopied: 'Product link copied to clipboard!',
+      announcementText: '🎉 Promotion! Get 20% OFF on All Skincare Products',
+      offerEndsIn: 'Offer Ends In:',
+      cashOnDelivery: 'Cash on delivery',
+      bankTransfer: 'Bank transfer',
+      creditCard: 'Credit card',
+      cardNumber: 'Card number',
+      expiration: 'Expiration',
+      cvc: 'CVC',
+      country: 'Country',
+      zip: 'ZIP',
+      securedByStripe: 'Payment secured by Stripe',
+      processingPayment: 'Processing payment...',
+      pay: 'Pay'
     },
     km: {
       realResults: 'លទ្ធផលពិតប្រាកដ',
@@ -303,7 +316,20 @@
       savedCheckoutDetails: 'ព័ត៌មានទូទាត់ដែលបានរក្សាទុក',
       share: 'ចែករំលែក',
       shareProduct: 'ចែករំលែកផលិតផលនេះ',
-      linkCopied: 'បានចម្លងតំណភ្ជាប់ផលិតផល!'
+      linkCopied: 'បានចម្លងតំណភ្ជាប់ផលិតផល!',
+      announcementText: '🎉 ការផ្ដល់ជូនពិសេស! បញ្ចុះតម្លៃ ២០% លើផលិតផលទាំងអស់',
+      offerEndsIn: 'ការផ្ដល់ជូនផុតកំណត់ក្នុងរយះពេល:',
+      cashOnDelivery: 'ទូទាត់ពេលទទួលទំនិញ',
+      bankTransfer: 'ផ្ទេរប្រាក់តាមធនាគារ',
+      creditCard: 'ប័ណ្ណឥណទាន',
+      cardNumber: 'លេខកាត',
+      expiration: 'កាលបរិច្ឆេទផុតកំណត់',
+      cvc: 'CVC',
+      country: 'ប្រទេស',
+      zip: 'លេខកូដតំបន់ (ZIP)',
+      securedByStripe: 'ទូទាត់ប្រកបដោយសុវត្ថិភាពតាមរយៈ Stripe',
+      processingPayment: 'កំពុងដំណើរការទូទាត់...',
+      pay: 'បង់ប្រាក់'
     }
   };
 

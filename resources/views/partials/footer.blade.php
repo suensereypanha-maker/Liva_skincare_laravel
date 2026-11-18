@@ -40,9 +40,10 @@
             <a href="{{ route('privacy') }}">Privacy</a>
         </div>
         <div class="footer-payment-support">
-            <h2 data-i18n="supportKhqr">Support KH QR</h2>
+            <h2 data-i18n="supportKhqr">Support KH QR & ABA</h2>
             <div class="footer-qr-card">
                 <img src="{{ asset('img/khqr.png') }}" alt="Support KH QR" class="footer-qr-img" width="76" height="76" loading="lazy">
+                <img src="{{ asset('img/aba.png') }}" alt="ABA Bank" class="footer-qr-img" width="76" height="76" loading="lazy">
             </div>
         </div>
     </div>

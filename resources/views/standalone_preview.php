@@ -42,12 +42,12 @@ if (! function_exists('config')) {
     <link rel="stylesheet" href="<?= asset('css/styles.css') ?>?v=8">
     <link rel="stylesheet" href="<?= asset('css/hero.css') ?>?v=3">
     <link rel="stylesheet" href="<?= asset('css/catalog.css') ?>?v=19">
-    <link rel="stylesheet" href="<?= asset('css/commerce.css') ?>?v=7">
+    <link rel="stylesheet" href="<?= asset('css/commerce.css') ?>?v=8">
 
     <script defer src="<?= asset('js/jquery-3.7.1.min.js') ?>"></script>
-    <script defer src="<?= asset('js/core.js') ?>?v=6"></script>
+    <script defer src="<?= asset('js/core.js') ?>?v=7"></script>
     <script defer src="<?= asset('js/catalog.js') ?>?v=18"></script>
-    <script defer src="<?= asset('js/commerce.js') ?>?v=4"></script>
+    <script defer src="<?= asset('js/commerce.js') ?>?v=5"></script>
     <script defer src="<?= asset('js/routine.js') ?>?v=6"></script>
     <script defer src="<?= asset('js/hero.js') ?>?v=3"></script>
     <script defer src="<?= asset('js/app.js') ?>?v=11"></script>
@@ -56,7 +56,21 @@ if (! function_exists('config')) {
 <body>
     <a class="skip-link" href="#main-content">Skip to content</a>
 
-    <header class="site-header">
+    <div class="site-header-sticky-wrapper">
+        <div class="announcement-bar">
+            <div class="announcement-inner container">
+                <div class="announcement-text" data-i18n="announcementText">
+                    🎉 Promotion! Get 20% OFF on All Skincare Products
+                </div>
+
+                <div class="countdown">
+                    <span data-i18n="offerEndsIn">Offer Ends In:</span>
+                    <div id="timer">00:00:00</div>
+                </div>
+            </div>
+        </div>
+
+        <header class="site-header">
         <div class="header-inner container">
             <button class="icon-button mobile-menu-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-navigation" data-icon="menu"></button>
             <a href="#home" class="brand" aria-label="LIVA home">
@@ -110,6 +124,7 @@ if (! function_exists('config')) {
             <p class="container">Explore by <a href="#shop?category=hair">hair</a>, <a href="#shop?category=body">body</a> or <a href="#shop?category=sets">sets</a>.</p>
         </div>
     </header>
+    </div>
 
     <main id="main-content" tabindex="-1">
         <div id="app"></div>

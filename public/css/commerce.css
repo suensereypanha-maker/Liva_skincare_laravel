@@ -676,6 +676,12 @@ body.drawer-open #toast {
   border-color: #14556b;
   font-weight: 600;
 }
+.commerce-card-badge {
+  background: #00a2ab;
+  color: white;
+  border-color: #00a2ab;
+  font-weight: 600;
+}
 .commerce-payment-note {
   margin-top: 14px;
   font-size: 12px;
@@ -849,13 +855,13 @@ body.drawer-open #toast {
 }
 .commerce-summary-payment-switch {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 6px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
 }
 .commerce-payment-switch-btn {
-  padding: 7px 10px;
-  font-size: 11px;
-  font-weight: 500;
+  padding: 9px 8px;
+  font-size: 11.5px;
+  font-weight: 600;
   border-radius: 6px;
   border: 1px solid var(--line);
   background: var(--paper);
@@ -863,6 +869,9 @@ body.drawer-open #toast {
   cursor: pointer;
   transition: all 0.15s ease;
   text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .commerce-payment-switch-btn:hover {
   border-color: var(--gold);
@@ -1012,6 +1021,228 @@ body.drawer-open #toast {
   color: var(--muted);
   line-height: 1.4;
   text-align: center;
+}
+/* Stripe Credit Card Section */
+.commerce-stripe-section {
+  margin-top: 14px;
+  padding: 14px 14px 16px;
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  animation: stripeFadeIn 0.22s ease-out;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+}
+@keyframes stripeFadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.commerce-stripe-email-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 2px 2px 8px;
+}
+.commerce-stripe-mail-icon {
+  color: #64748b;
+  flex: 0 0 16px;
+  display: flex;
+  align-items: center;
+}
+.commerce-stripe-email-input {
+  border: none;
+  outline: none;
+  background: transparent;
+  width: 100%;
+  font-size: 13px;
+  color: var(--ink);
+  font-family: inherit;
+}
+.commerce-stripe-email-input::placeholder {
+  color: #94a3b8;
+}
+.commerce-stripe-divider {
+  height: 1px;
+  background: #e5e7eb;
+  margin: 0 0 12px;
+}
+.commerce-stripe-field {
+  margin-bottom: 10px;
+}
+.commerce-stripe-field label {
+  display: block;
+  font-size: 11.5px;
+  font-weight: 500;
+  color: #475569;
+  margin-bottom: 5px;
+  letter-spacing: 0.01em;
+}
+.commerce-stripe-input-wrap,
+.commerce-stripe-select-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+.commerce-stripe-input,
+.commerce-stripe-select {
+  width: 100%;
+  height: 38px;
+  padding: 0 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 5px;
+  background: #ffffff;
+  color: var(--ink);
+  font-size: 13px;
+  font-family: inherit;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+  box-sizing: border-box;
+}
+.commerce-stripe-input::placeholder {
+  color: #94a3b8;
+}
+.commerce-stripe-input:focus,
+.commerce-stripe-select:focus {
+  outline: none;
+  border-color: #00a2ab;
+  box-shadow: 0 0 0 3px rgba(0, 162, 171, 0.18);
+}
+.commerce-stripe-input.has-error {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+}
+#commerce-card-number {
+  padding-right: 120px;
+  letter-spacing: 0.03em;
+}
+.commerce-stripe-brands {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  pointer-events: none;
+}
+.commerce-brand-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  border-radius: 3px;
+  overflow: hidden;
+}
+.commerce-brand-badge.is-dimmed {
+  opacity: 0.25;
+}
+.commerce-brand-badge.is-selected {
+  opacity: 1;
+  transform: scale(1.08);
+}
+.commerce-stripe-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+#commerce-card-cvc {
+  padding-right: 32px;
+}
+.commerce-stripe-cvc-icon {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+}
+.commerce-stripe-select {
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  padding-right: 26px;
+}
+.commerce-stripe-chevron {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+}
+.commerce-stripe-pay-btn {
+  width: 100%;
+  height: 42px;
+  margin-top: 14px;
+  background: #00a2ab;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background-color 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
+  box-shadow: 0 2px 4px rgba(0, 162, 171, 0.25);
+}
+.commerce-stripe-pay-btn:hover:not(:disabled) {
+  background: #008d96;
+  box-shadow: 0 4px 8px rgba(0, 162, 171, 0.32);
+}
+.commerce-stripe-pay-btn:active:not(:disabled) {
+  transform: translateY(1px);
+  background: #007a82;
+}
+.commerce-stripe-pay-btn:disabled {
+  opacity: 0.75;
+  cursor: not-allowed;
+}
+.commerce-stripe-spinner {
+  width: 15px;
+  height: 15px;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: stripeSpin 0.7s linear infinite;
+  display: inline-block;
+}
+@keyframes stripeSpin {
+  to { transform: rotate(360deg); }
+}
+.commerce-stripe-secured {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  color: #64748b;
+  font-size: 11px;
+  font-weight: 500;
+  text-align: center;
+}
+.commerce-stripe-lock-icon {
+  color: #64748b;
+  flex: 0 0 13px;
+}
+.commerce-card-paid-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  padding: 4px 10px;
+  background: #e6f7f8;
+  border: 1px solid #b2e8eb;
+  border-radius: 9999px;
+  font-size: 11.5px;
+  color: #007a82;
+  font-weight: 600;
 }
 .commerce-checkout-summary .commerce-place-order {
   width: 100%;

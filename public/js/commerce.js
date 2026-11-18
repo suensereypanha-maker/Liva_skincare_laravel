@@ -18,6 +18,7 @@
   var money = function (value) { return L.money(value); };
   var icon = function (name) { return L.icon(name); };
   var asset = function (path) { return L.asset ? L.asset(path) : (!path ? '' : (/^(https?:|\/\/|data:|\/)/.test(path) ? path : '/' + path)); };
+  var t = function (key, fallback) { return (L && L.t && L.t(key)) || fallback; };
   var cartItems = function () {
     return L.state.cart.map(function (item) {
       return { item: item, product: L.getProduct(item.id) };
@@ -122,7 +123,14 @@
 
   function checkoutValues() {
     var p = L.state.profile || {};
-    return Object.assign({ name: p.name || '', email: p.email || '', phone: p.phone || '', address: p.address || '', city: p.city || 'Phnom Penh', note: '', payment: 'cod', bank: 'ac' }, checkoutDraft);
+    return Object.assign({
+      name: p.name || 'LIVA Guest',
+      phone: p.phone || '',
+      address: p.address || '',
+      city: p.city || 'Phnom Penh',
+      payment: 'cod',
+      bank: 'ac'
+    }, checkoutDraft);
   }
 
   var bankAccounts = {
@@ -164,16 +172,19 @@
   }
 
   function checkoutSummary() {
-    var t = totals();
+    var tTotals = totals();
     var v = checkoutValues();
     var isBank = v.payment === 'transfer' || v.payment === 'aba';
     var selectedBank = v.bank || 'ac';
     var currentBank = bankAccounts[selectedBank] || bankAccounts.ac;
-    var paymentLabel = isBank ? 'Bank transfer (' + currentBank.short + ') · Preview' : 'Cash on delivery · Preview';
+    var paymentLabel = isBank
+      ? ('Bank transfer (' + currentBank.short + ') · Preview')
+      : (t('cashOnDelivery', 'Cash on delivery') + ' · Preview');
     var paymentBadge = isBank ? 'KHQR' : 'COD';
+    var badgeClass = isBank ? 'commerce-bank-badge' : '';
     var items = cartItems();
 
-    return '<h2>In your bag <span>' + t.count + ' ' + (t.count === 1 ? 'item' : 'items') + '</span></h2>' +
+    return '<h2>In your bag <span>' + tTotals.count + ' ' + (tTotals.count === 1 ? 'item' : 'items') + '</span></h2>' +
       '<div class="commerce-summary-items">' +
       items.map(function (entry) {
         var p = entry.product, item = entry.item;
@@ -194,19 +205,19 @@
         '</div>';
       }).join('') +
       '</div>' +
-      linesHtml(t) +
+      linesHtml(tTotals) +
       '<div class="commerce-summary-payment-box">' +
         '<div class="commerce-summary-payment-head">' +
           '<span>Payment preview</span>' +
-          '<span class="commerce-payment-badge ' + (isBank ? 'commerce-bank-badge' : '') + '">' + paymentBadge + '</span>' +
+          '<span class="commerce-payment-badge ' + badgeClass + '">' + paymentBadge + '</span>' +
         '</div>' +
         '<p class="commerce-summary-payment-chosen">' + paymentLabel + '</p>' +
         '<div class="commerce-summary-payment-switch" role="group" aria-label="Select payment method">' +
           '<button type="button" class="commerce-payment-switch-btn' + (!isBank ? ' is-active' : '') + '" data-pay="cod">' +
-            'Cash on delivery' +
+            e(t('cashOnDelivery', 'Cash on delivery')) +
           '</button>' +
           '<button type="button" class="commerce-payment-switch-btn' + (isBank ? ' is-active' : '') + '" data-pay="transfer">' +
-            'Bank transfer' +
+            e(t('bankTransfer', 'Bank transfer')) +
           '</button>' +
         '</div>' +
         (isBank ? (
@@ -259,18 +270,59 @@
   }
 
   L.renderCheckout = function () {
-    if (!cartItems().length) return '<section class="commerce-page container">' + pageHeading('YOUR SELECTION', 'Checkout', '') + emptyState('Your bag is empty.', 'Add products to your bag before trying checkout.') + '</section>';
+    if (!cartItems().length) {
+      return '<section class="commerce-page container">' +
+        pageHeading('YOUR SELECTION', 'Checkout', '') +
+        '<div class="commerce-empty empty-state">' +
+          '<span class="commerce-empty-icon">' + icon('bag') + '</span>' +
+          '<h2>Your bag is empty.</h2>' +
+          '<p>Add products to your bag before trying checkout.</p>' +
+          '<div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:18px;">' +
+            '<button type="button" class="btn btn-primary commerce-add-demo-btn">' +
+              icon('bag') + ' Add sample item &amp; try checkout' +
+            '</button>' +
+            '<a class="btn btn-secondary" href="' + (window.__IS_STATIC__ ? '#shop' : '/shop') + '">' +
+              'Explore the collection' + icon('arrow') +
+            '</a>' +
+          '</div>' +
+        '</div>' +
+      '</section>';
+    }
     var v = checkoutValues();
-    return '<section class="commerce-page container"><a href="' + (window.__IS_STATIC__ ? '#shop' : '/shop') + '" class="commerce-back">' + icon('arrow') + ' Back to the collection</a>' + pageHeading('YOUR SELECTION', 'Checkout', 'Review your selection and try the checkout flow.') + '<div class="commerce-checkout-layout"><form id="commerce-checkout-form" class="commerce-checkout-form"><section class="commerce-form-section"><div class="commerce-section-title"><span>01</span><h2>Your details</h2></div>' + (!L.state.profile ? '<p class="commerce-signin-note">Saved your details before? <a href="' + (window.__IS_STATIC__ ? '#account' : '/account') + '">Open your demo account</a></p>' : '') + '<div class="commerce-field-grid">' + inputField('Full name', 'name', v.name, 'type="text" autocomplete="name" required minlength="2" maxlength="100" placeholder="Your first and last name"', true) + inputField('Email address', 'email', v.email, 'type="email" autocomplete="email" required maxlength="120" placeholder="you@example.com"') + inputField('Phone number', 'phone', v.phone, 'type="tel" autocomplete="tel" required pattern="[+0-9][0-9 ]{7,17}" placeholder="012 345 678" title="Enter a valid phone number, such as 012 345 678"') + '</div></section><section class="commerce-form-section"><div class="commerce-section-title"><span>02</span><h2>Delivery details</h2></div><div class="commerce-field-grid">' + inputField('Delivery address', 'address', v.address, 'type="text" autocomplete="street-address" required minlength="5" maxlength="240" placeholder="House number, street and district"', true) + selectCity(v.city) + '<div class="form-field commerce-field-wide"><label for="commerce-note">Delivery note <span>(optional)</span></label><textarea id="commerce-note" name="note" rows="3" maxlength="500" placeholder="A nearby landmark or delivery instructions">' + e(v.note) + '</textarea></div></div><p class="commerce-field-hint">Location fields demonstrate checkout only. Delivery availability and fees are not configured.</p></section><input type="hidden" name="payment" id="commerce-payment-input" value="' + e(v.payment || 'cod') + '"></form><aside id="commerce-checkout-summary" class="commerce-checkout-summary" aria-label="Order summary">' + checkoutSummary() + '</aside></div></section>';
+    var isBank = v.payment === 'transfer' || v.payment === 'aba';
+    return '<section class="commerce-page container">' +
+      '<a href="' + (window.__IS_STATIC__ ? '#shop' : '/shop') + '" class="commerce-back">' + icon('arrow') + ' Back to the collection</a>' +
+      pageHeading('YOUR SELECTION', 'Checkout', 'Review your selection and enter your delivery details.') +
+      '<div class="commerce-checkout-layout">' +
+        '<form id="commerce-checkout-form" class="commerce-checkout-form">' +
+          '<section class="commerce-form-section">' +
+            '<div class="commerce-section-title"><span>01</span><h2>Delivery details</h2></div>' +
+            '<div class="commerce-field-grid">' +
+              inputField('Phone number', 'phone', v.phone, 'type="tel" autocomplete="tel" required pattern="[+0-9][0-9 ]{7,17}" placeholder="012 345 678" title="Enter a valid phone number, such as 012 345 678"', true) +
+              inputField('Delivery address', 'address', v.address, 'type="text" autocomplete="street-address" required minlength="5" maxlength="240" placeholder="House number, street, sangkat and city"', true) +
+            '</div>' +
+            '<p class="commerce-field-hint">We will contact you via this phone number to confirm your order and arrange delivery.</p>' +
+          '</section>' +
+          '<input type="hidden" name="payment" id="commerce-payment-input" value="' + e(isBank ? 'transfer' : 'cod') + '">' +
+        '</form>' +
+        '<aside id="commerce-checkout-summary" class="commerce-checkout-summary" aria-label="Order summary">' +
+          checkoutSummary() +
+        '</aside>' +
+      '</div>' +
+    '</section>';
   };
 
   function paymentNote(payment) {
-    return (payment === 'transfer' || payment === 'aba') ? '<strong>Bank transfer preview</strong><p>Scan the KHQR code or use the bank account code to transfer with AC Bank, Wing Bank, or ABA Bank.</p>' : '<p>Cash on delivery is shown for illustration. No delivery is arranged and nothing is due for this demo order.</p>';
+    return (payment === 'transfer' || payment === 'aba')
+      ? '<strong>Bank transfer preview</strong><p>Scan the KHQR code or use the bank account code to transfer with AC Bank, Wing Bank, or ABA Bank.</p>'
+      : '<p>Cash on delivery is shown for illustration. Pay cash upon delivery.</p>';
   }
 
   function captureCheckout() {
     var form = document.getElementById('commerce-checkout-form');
-    if (form) checkoutDraft = Object.fromEntries(new FormData(form).entries());
+    if (form) {
+      Object.assign(checkoutDraft, Object.fromEntries(new FormData(form).entries()));
+    }
   }
 
   function refreshSummary() {
@@ -292,7 +344,10 @@
     if (!order) return '<section class="commerce-page container">' + emptyState('We can’t find that order.', 'This demo saves orders in the browser where they were placed.', '#tracking', 'Track an order') + '</section>';
     var isOrderBank = order.payment === 'transfer' || order.payment === 'aba';
     var orderBankName = isOrderBank ? (bankAccounts[order.bank || 'ac'] ? bankAccounts[order.bank || 'ac'].name : 'Bank transfer') : 'Cash on delivery';
-    return '<section class="commerce-page commerce-confirmation container"><div class="commerce-confirmation-head"><span class="commerce-success-icon">' + icon('check') + '</span><p class="eyebrow">DEMO ORDER SAVED</p><h1>Thank you, ' + e(order.customer.name.split(' ')[0]) + '.</h1><p>Your demo order is saved on this device.</p><div class="commerce-reference">Order <strong>' + e(order.id) + '</strong><span>' + dateLabel(order.createdAt) + '</span></div></div><div class="commerce-confirmation-card">' + demoNotice('This order is saved in your browser only. Nothing will be charged, shipped or emailed.') + '<h2>Your selection</h2>' + orderItemsHtml(order.items) + linesHtml(order) + '<div class="commerce-confirmation-details"><div><span>DELIVERY ADDRESS</span><p>' + e(order.customer.name) + '<br>' + e(order.customer.address) + '<br>' + e(order.customer.city) + ', Cambodia</p></div><div><span>PAYMENT METHOD</span><p>' + (isOrderBank ? (orderBankName + ' · Demo') : 'Cash on delivery · Demo') + '<br>' + e(order.customer.phone) + '</p></div></div></div><div class="commerce-confirmation-actions"><a href="#tracking/' + e(order.id) + '" class="btn btn-primary">View demo tracking' + icon('arrow') + '</a>' + repeatButton(order) + '<a href="#shop" class="btn btn-secondary">Continue shopping</a></div><p class="commerce-submit-note">Add again uses current illustrative prices. Review your bag before checkout.</p></section>';
+    var orderPaymentText = isOrderBank ? (orderBankName + ' · Demo') : 'Cash on delivery · Demo';
+    var customerName = (order.customer && order.customer.name && order.customer.name !== 'LIVA Guest') ? order.customer.name.split(' ')[0] : '';
+
+    return '<section class="commerce-page commerce-confirmation container"><div class="commerce-confirmation-head"><span class="commerce-success-icon">' + icon('check') + '</span><p class="eyebrow">DEMO ORDER SAVED</p><h1>Thank you' + (customerName ? ', ' + e(customerName) : '') + '.</h1><p>Your demo order is saved on this device.</p><div class="commerce-reference">Order <strong>' + e(order.id) + '</strong><span>' + dateLabel(order.createdAt) + '</span></div></div><div class="commerce-confirmation-card">' + demoNotice('This order is saved in your browser only. Nothing will be charged, shipped or emailed.') + '<h2>Your selection</h2>' + orderItemsHtml(order.items) + linesHtml(order) + '<div class="commerce-confirmation-details"><div><span>DELIVERY DETAILS</span><p>' + e(order.customer.address) + (order.customer.city ? '<br>' + e(order.customer.city) + ', Cambodia' : '') + '<br>Phone: <strong>' + e(order.customer.phone) + '</strong></p></div><div><span>PAYMENT METHOD</span><p>' + e(orderPaymentText) + '<br>' + e(order.customer.phone) + '</p></div></div></div><div class="commerce-confirmation-actions"><a href="#tracking/' + e(order.id) + '" class="btn btn-primary">View demo tracking' + icon('arrow') + '</a>' + repeatButton(order) + '<a href="#shop" class="btn btn-secondary">Continue shopping</a></div><p class="commerce-submit-note">Add again uses current illustrative prices. Review your bag before checkout.</p></section>';
   };
 
   function renderSocialAuth() {
@@ -478,6 +533,16 @@
     }
     var remove = event.target.closest('.commerce-cart-remove');
     if (remove) { L.state.cart.splice(Number(remove.dataset.index), 1); refreshCartAfterMutation('.commerce-cart-close'); L.toast('Removed from your bag.'); return; }
+    var addDemoBtn = event.target.closest('.commerce-add-demo-btn');
+    if (addDemoBtn) {
+      event.preventDefault();
+      L.addToCart('shampoo', '250ml', 1);
+      if (typeof L.updateCounts === 'function') L.updateCounts();
+      document.dispatchEvent(new CustomEvent('liva:cart-updated'));
+      L.render(true);
+      if (L.toast) L.toast('Sample item added · Ready for checkout');
+      return;
+    }
     var repeat = event.target.closest('.commerce-repeat-order');
     if (repeat) {
       var result = L.repeatOrder(repeat.dataset.orderId);
@@ -575,16 +640,19 @@
     var form = event.target.closest('#commerce-checkout-form');
     if (form) {
       captureCheckout();
-      if (event.target.name === 'city' || event.target.name === 'payment') {
-        if (event.target.name === 'payment') {
-          var note = document.getElementById('commerce-payment-note');
-          if (note) note.innerHTML = paymentNote(event.target.value);
-        }
+      if (event.target.name === 'payment') {
+        var note = document.getElementById('commerce-payment-note');
+        if (note) note.innerHTML = paymentNote(event.target.value);
         refreshSummary();
       }
     }
   });
-  document.addEventListener('input', function (event) { if (event.target.closest('#commerce-checkout-form')) captureCheckout(); });
+
+  document.addEventListener('input', function (event) {
+    if (event.target.closest('#commerce-checkout-form') || event.target.closest('#commerce-checkout-summary')) {
+      captureCheckout();
+    }
+  });
 
   document.addEventListener('submit', function (event) {
     var form = event.target;
@@ -592,43 +660,58 @@
       event.preventDefault();
       if (orderSubmitting || !validateForm(form, 'commerce-checkout-error')) return;
       if (!cartItems().length) { announceError('commerce-checkout-error', 'Your bag is empty. Add a product before checking out.'); return; }
-      orderSubmitting = true;
-      var submit = form.querySelector('[type="submit"]');
-      submit.disabled = true;
       captureCheckout();
       var v = checkoutValues();
-      var t = totals();
-      var id = 'LIVA-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).slice(2, 5).toUpperCase();
-      /* Persisted order schema: totals, item price snapshots, customer address, demo payment and local status. */
-      var order = Object.assign({
-        id: id,
-        createdAt: new Date().toISOString(),
-        status: 'Confirmed',
-        payment: (v.payment === 'transfer' || v.payment === 'aba') ? 'transfer' : 'cod',
-        bank: v.bank || 'ac',
-        customer: { name: v.name.trim(), email: v.email.trim(), phone: v.phone.trim(), address: v.address.trim(), city: v.city, note: (v.note || '').trim() },
-        items: cartItems().map(function (entry) {
-          var p = entry.product;
-          var item = entry.item;
-          var unitPrice = (p.sizePrices && p.sizePrices[item.size] != null) ? p.sizePrices[item.size] : ((item.price != null) ? item.price : p.price);
-          return { id: p.id, name: p.name, size: item.size || p.size, qty: item.qty, price: unitPrice, image: asset(p.image) };
-        })
-      }, t);
-      L.state.orders = L.state.orders || [];
-      L.state.orders.push(order);
-      L.state.cart = [];
-      L.state.promo = '';
-      L.save();
-      checkoutDraft = {};
-      trackingResult = order;
-      trackingQuery = order.id;
-      trackingError = '';
-      L.closeCart();
-      L.navigate('#confirmation/' + id);
-      L.renderCart();
-      document.dispatchEvent(new CustomEvent('liva:cart-updated'));
-      if (typeof L.updateCounts === 'function') L.updateCounts();
-      orderSubmitting = false;
+
+      announceError('commerce-checkout-error', '');
+      orderSubmitting = true;
+      var submit = form.querySelector('[type="submit"]') || document.querySelector('.commerce-place-order');
+      if (submit) submit.disabled = true;
+
+      setTimeout(function () {
+        var orderTotals = totals();
+        var id = 'LIVA-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).slice(2, 5).toUpperCase();
+
+        var order = Object.assign({
+          id: id,
+          createdAt: new Date().toISOString(),
+          status: 'Confirmed',
+          payment: (v.payment === 'transfer' || v.payment === 'aba') ? 'transfer' : 'cod',
+          bank: v.bank || 'ac',
+          customer: {
+            name: (v.name || 'LIVA Guest').trim(),
+            phone: v.phone.trim(),
+            address: v.address.trim(),
+            city: v.city || 'Phnom Penh',
+            note: (v.note || '').trim()
+          },
+          items: cartItems().map(function (entry) {
+            var p = entry.product;
+            var item = entry.item;
+            var unitPrice = (p.sizePrices && p.sizePrices[item.size] != null) ? p.sizePrices[item.size] : ((item.price != null) ? item.price : p.price);
+            return { id: p.id, name: p.name, size: item.size || p.size, qty: item.qty, price: unitPrice, image: asset(p.image) };
+          })
+        }, orderTotals);
+
+        L.state.orders = L.state.orders || [];
+        L.state.orders.push(order);
+        L.state.cart = [];
+        L.state.promo = '';
+        L.save();
+        checkoutDraft = {};
+        trackingResult = order;
+        trackingQuery = order.id;
+        trackingError = '';
+        L.closeCart();
+        L.navigate('#confirmation/' + id);
+        L.renderCart();
+        document.dispatchEvent(new CustomEvent('liva:cart-updated'));
+        if (typeof L.updateCounts === 'function') L.updateCounts();
+        orderSubmitting = false;
+        if (L.toast) {
+          L.toast(order.payment === 'transfer' ? 'Demo transfer order placed.' : 'Your demo order has been placed.');
+        }
+      }, 0);
       return;
     }
     if (form.id === 'commerce-login-form') {
@@ -689,4 +772,10 @@
       else if (!event.shiftKey && (document.activeElement === last || !drawer.contains(document.activeElement))) { event.preventDefault(); first.focus(); }
     }
   });
+
+  try {
+    if (!cartItems().length && (window.location.search.indexOf('demo') !== -1 || window.location.hash.indexOf('demo') !== -1)) {
+      L.addToCart('shampoo', '250ml', 1);
+    }
+  } catch (_) {}
 })();
