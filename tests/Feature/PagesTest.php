@@ -207,7 +207,7 @@ class PagesTest extends TestCase
     }
 
     /**
-     * Test hero carousel has video on first slide and static banner images on next slides.
+     * Test hero carousel has video on first slide and static banner images with text overlays on next slides.
      */
     public function test_hero_carousel_has_video_first_and_image_next(): void
     {
@@ -217,5 +217,7 @@ class PagesTest extends TestCase
         $response->assertDontSee('slide-2-hair-pair.mp4');
         $response->assertSee('banner-1.jpg');
         $response->assertSee('banner-2.jpg');
+        $response->assertSee('Good things');
+        $response->assertSee('A little time');
     }
 }
