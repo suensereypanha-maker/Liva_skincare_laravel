@@ -829,10 +829,9 @@ body.drawer-open #toast {
 }
 .commerce-summary-payment-box {
   margin-top: 18px;
-  padding: 14px 16px;
-  /* background: #ffffff; */
-  /* border: 1px solid var(--line); */
-  border-radius: var(--radius-sm);
+  padding: 0;
+  background: transparent;
+  border: none;
 }
 .commerce-summary-payment-head {
   display: flex;
@@ -888,11 +887,10 @@ body.drawer-open #toast {
   line-height: 1.4;
 }
 .commerce-bank-section {
-  margin-top: 12px;
-  padding: 12px;
-  background: var(--paper);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-sm);
+  margin-top: 14px;
+  padding: 0;
+  background: transparent;
+  border: none;
   animation: bankFadeIn 0.2s ease;
 }
 @keyframes bankFadeIn {
@@ -902,11 +900,11 @@ body.drawer-open #toast {
 .commerce-bank-tabs {
   display: flex;
   gap: 6px;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 .commerce-bank-tab {
   flex: 1;
-  padding: 6px 4px;
+  padding: 8px 6px;
   font-size: 11px;
   font-weight: 600;
   border: 1px solid var(--line);
@@ -931,10 +929,9 @@ body.drawer-open #toast {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding: 10px 12px;
-  background: #ffffff;
-  border: 1px solid var(--line);
-  border-radius: 8px;
+  padding: 6px 0;
+  background: transparent;
+  border: none;
 }
 .commerce-bank-details {
   flex: 1;
@@ -1260,6 +1257,308 @@ body.drawer-open #toast {
 }
 .commerce-checkout-summary .commerce-form-error {
   margin-top: 12px;
+}
+
+/* Delivery Address Field with Location Pin Button */
+.commerce-address-field-wrap {
+  grid-column: 1 / -1;
+}
+.commerce-field-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.commerce-location-text-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--gold, #9e7d47);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 3px 7px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+.commerce-location-text-btn:hover {
+  background: #f0ebe1;
+  color: #795d2c;
+}
+.commerce-input-with-action {
+  position: relative;
+  width: 100%;
+}
+.commerce-input-with-action input {
+  padding-right: 48px !important;
+}
+.commerce-location-pin-btn {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--gold, #9e7d47);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 2;
+  padding: 0;
+}
+.commerce-location-pin-btn:hover {
+  background: #f2eee6;
+  border-color: #dcd6c8;
+  color: #795d2c;
+  transform: translateY(-50%) scale(1.06);
+}
+.commerce-location-pin-btn:active {
+  transform: translateY(-50%) scale(0.95);
+}
+.commerce-location-pin-btn svg {
+  display: block;
+}
+
+/* Map Location Picker Modal */
+.commerce-map-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.24s ease, visibility 0.24s ease;
+}
+.commerce-map-modal.is-open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+.commerce-map-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(22, 28, 20, 0.6);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+.commerce-map-dialog {
+  position: relative;
+  background: #faf8f4;
+  border-radius: 14px;
+  width: 100%;
+  max-width: 620px;
+  max-height: 92vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.24);
+  border: 1px solid #e5e0d4;
+  animation: mapModalIn 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes mapModalIn {
+  from { opacity: 0; transform: scale(0.96) translateY(8px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+.commerce-map-header {
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #eae5d9;
+  background: #faf8f4;
+}
+.commerce-map-eyebrow {
+  display: block;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--muted, #838479);
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+.commerce-map-header h2 {
+  font: 400 21px/1.25 var(--display);
+  margin: 0;
+  color: var(--ink, #1f201d);
+  letter-spacing: -0.01em;
+}
+.commerce-map-close {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: var(--ink, #1f201d);
+  font-size: 18px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.commerce-map-close:hover {
+  background: #ece7db;
+}
+.commerce-map-toolbar {
+  padding: 10px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: #f4efe5;
+  border-bottom: 1px solid #eae5d9;
+  flex-wrap: wrap;
+}
+.commerce-map-locate-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 7px 15px;
+  border-radius: 20px;
+  background: #ffffff;
+  border: 1px solid #d4cdbd;
+  color: var(--ink, #1f201d);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+.commerce-map-locate-btn:hover {
+  background: #faf8f4;
+  border-color: var(--gold, #9e7d47);
+  color: #795d2c;
+  transform: translateY(-1px);
+}
+.commerce-map-locate-btn.is-loading {
+  opacity: 0.75;
+  pointer-events: none;
+}
+.commerce-map-status {
+  font-size: 11.5px;
+  color: var(--muted, #838479);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.commerce-map-status.is-success {
+  color: #3b6b4c;
+  font-weight: 600;
+}
+.commerce-map-status.is-error {
+  color: #a14337;
+}
+.commerce-map-canvas-wrap {
+  position: relative;
+  width: 100%;
+  height: 320px;
+  background: #ebe6dc;
+}
+.commerce-map-canvas {
+  width: 100%;
+  height: 100%;
+}
+.commerce-map-hint-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 500;
+  background: rgba(31, 32, 29, 0.8);
+  color: #ffffff;
+  font-size: 11px;
+  padding: 5px 11px;
+  border-radius: 6px;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  pointer-events: none;
+}
+.commerce-map-footer {
+  background: #faf8f4;
+  border-top: 1px solid #eae5d9;
+}
+.commerce-map-selected-info {
+  padding: 13px 20px;
+  background: #ffffff;
+  border-bottom: 1px solid #eae5d9;
+}
+.commerce-map-selected-label {
+  display: block;
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--muted, #838479);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.commerce-map-selected-address {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ink, #1f201d);
+  margin: 0 0 3px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+.commerce-map-selected-coords {
+  font-size: 11px;
+  color: var(--muted, #838479);
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+.commerce-map-actions {
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+}
+.commerce-map-actions .btn {
+  min-height: 42px;
+  padding: 0 18px;
+  font-size: 13px;
+}
+
+/* Custom Vector Leaflet Marker */
+.commerce-custom-map-pin {
+  background: transparent !important;
+  border: none !important;
+}
+.commerce-pin-body {
+  position: relative;
+  z-index: 2;
+  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.35));
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.commerce-custom-map-pin:hover .commerce-pin-body {
+  transform: scale(1.15) translateY(-3px);
+}
+.commerce-pin-pulse {
+  position: absolute;
+  width: 14px;
+  height: 6px;
+  background: rgba(158, 125, 71, 0.45);
+  border-radius: 50%;
+  left: 11px;
+  bottom: 0px;
+  z-index: 1;
+  animation: commercePinPulse 2s infinite ease-out;
+}
+@keyframes commercePinPulse {
+  0% { transform: scale(1); opacity: 0.8; }
+  100% { transform: scale(2.8); opacity: 0; }
+}
+@media (max-width: 600px) {
+  .commerce-map-canvas-wrap { height: 260px; }
+  .commerce-map-actions { flex-direction: column-reverse; }
+  .commerce-map-actions .btn { width: 100%; }
 }
 .commerce-checkout-summary .commerce-promo {
   margin-bottom: 25px;

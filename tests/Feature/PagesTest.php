@@ -222,9 +222,9 @@ class PagesTest extends TestCase
     }
 
     /**
-     * Test checkout fields are simplified to phone and address, and footer supports KHQR and ABA.
+     * Test checkout fields include name, phone, address, province, and note, and footer supports KHQR and ABA.
      */
-    public function test_checkout_simplified_and_footer_aba_support(): void
+    public function test_checkout_fields_and_footer_aba_support(): void
     {
         $response = $this->get('/checkout');
         $response->assertStatus(200);
@@ -233,11 +233,21 @@ class PagesTest extends TestCase
         $response->assertSee('commerce-add-demo-btn');
 
         $commerceJs = file_get_contents(public_path('js/commerce.js'));
+        $this->assertStringContainsString('Full name', $commerceJs);
         $this->assertStringContainsString('Phone number', $commerceJs);
         $this->assertStringContainsString('Delivery address', $commerceJs);
+        $this->assertStringContainsString('City / province', $commerceJs);
+        $this->assertStringContainsString('Delivery note', $commerceJs);
+        $this->assertStringContainsString('commerce-location-pin-btn', $commerceJs);
+        $this->assertStringContainsString('commerce-map-modal', $commerceJs);
+        $this->assertStringContainsString('commerce-map-locate-btn', $commerceJs);
+        $this->assertStringContainsString('getCurrentPosition', $commerceJs);
         $this->assertStringContainsString('data-pay="cod"', $commerceJs);
         $this->assertStringContainsString('data-pay="transfer"', $commerceJs);
         $this->assertStringNotContainsString('data-pay="card"', $commerceJs);
+
+        $response->assertSee('leaflet.css');
+        $response->assertSee('leaflet.js');
 
         $footerResponse = $this->get('/');
         $footerResponse->assertStatus(200);
@@ -247,6 +257,8 @@ class PagesTest extends TestCase
         $indexHtml = file_get_contents(base_path('index.html'));
         $this->assertStringContainsString('aba.png', $indexHtml);
         $this->assertStringContainsString('khqr.png', $indexHtml);
+        $this->assertStringContainsString('leaflet.css', $indexHtml);
+        $this->assertStringContainsString('leaflet.js', $indexHtml);
     }
 
     /**

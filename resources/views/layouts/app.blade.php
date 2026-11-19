@@ -25,6 +25,7 @@
     <link rel="stylesheet" href="{{ asset('css/hero.css') }}?v={{ file_exists(public_path('css/hero.css')) ? filemtime(public_path('css/hero.css')) : '1.0.4' }}">
     <link rel="stylesheet" href="{{ asset('css/catalog.css') }}?v={{ file_exists(public_path('css/catalog.css')) ? filemtime(public_path('css/catalog.css')) : '1.0.4' }}">
     <link rel="stylesheet" href="{{ asset('css/commerce.css') }}?v={{ file_exists(public_path('css/commerce.css')) ? filemtime(public_path('css/commerce.css')) : '1.0.4' }}">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 
     @stack('styles')
 </head>
@@ -54,6 +55,7 @@
     <script defer src="{{ asset('js/jquery-3.7.1.min.js') }}"></script>
     <script defer src="{{ asset('js/core.js') }}?v={{ file_exists(public_path('js/core.js')) ? filemtime(public_path('js/core.js')) : '1.0.4' }}"></script>
     <script defer src="{{ asset('js/catalog.js') }}?v={{ file_exists(public_path('js/catalog.js')) ? filemtime(public_path('js/catalog.js')) : '1.0.4' }}"></script>
+    <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script defer src="{{ asset('js/commerce.js') }}?v={{ file_exists(public_path('js/commerce.js')) ? filemtime(public_path('js/commerce.js')) : '1.0.4' }}"></script>
     <script defer src="{{ asset('js/routine.js') }}?v={{ file_exists(public_path('js/routine.js')) ? filemtime(public_path('js/routine.js')) : '1.0.4' }}"></script>
     <script defer src="{{ asset('js/hero.js') }}?v={{ file_exists(public_path('js/hero.js')) ? filemtime(public_path('js/hero.js')) : '1.0.4' }}"></script>

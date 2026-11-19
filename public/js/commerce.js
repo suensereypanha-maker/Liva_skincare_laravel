@@ -124,10 +124,11 @@
   function checkoutValues() {
     var p = L.state.profile || {};
     return Object.assign({
-      name: p.name || 'LIVA Guest',
+      name: p.name || '',
       phone: p.phone || '',
       address: p.address || '',
       city: p.city || 'Phnom Penh',
+      note: '',
       payment: 'cod',
       bank: 'ac'
     }, checkoutDraft);
@@ -269,6 +270,317 @@
       '<a class="commerce-edit-bag" href="' + (window.__IS_STATIC__ ? '#shop' : '/shop') + '">Continue shopping' + icon('arrow') + '</a>';
   }
 
+  var mapModalState = {
+    isOpen: false,
+    map: null,
+    marker: null,
+    lat: 11.5564,
+    lng: 104.9282,
+    address: '',
+    city: 'Phnom Penh',
+    isLocating: false
+  };
+
+  function ensureLocationMapModal() {
+    var existing = document.getElementById('commerce-location-modal');
+    if (existing) return existing;
+
+    var div = document.createElement('div');
+    div.id = 'commerce-location-modal';
+    div.className = 'commerce-map-modal';
+    div.setAttribute('role', 'dialog');
+    div.setAttribute('aria-modal', 'true');
+    div.setAttribute('aria-labelledby', 'commerce-map-title');
+    div.innerHTML =
+      '<div class="commerce-map-backdrop" id="commerce-map-backdrop"></div>' +
+      '<div class="commerce-map-dialog">' +
+        '<div class="commerce-map-header">' +
+          '<div>' +
+            '<span class="commerce-map-eyebrow">LOCATION PICKER</span>' +
+            '<h2 id="commerce-map-title">Pin your delivery location</h2>' +
+          '</div>' +
+          '<button type="button" class="commerce-map-close" id="commerce-map-close-btn" aria-label="Close location picker">✕</button>' +
+        '</div>' +
+        '<div class="commerce-map-toolbar">' +
+          '<button type="button" class="commerce-map-locate-btn" id="commerce-map-locate-btn">' +
+            '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>' +
+            '<span>Use current location (GPS)</span>' +
+          '</button>' +
+          '<div class="commerce-map-status" id="commerce-map-status">Opening map...</div>' +
+        '</div>' +
+        '<div class="commerce-map-canvas-wrap">' +
+          '<div id="commerce-map-canvas" class="commerce-map-canvas"></div>' +
+          '<div class="commerce-map-hint-badge">Drag pin or tap map to adjust</div>' +
+        '</div>' +
+        '<div class="commerce-map-footer">' +
+          '<div class="commerce-map-selected-info">' +
+            '<span class="commerce-map-selected-label">SELECTED COORDINATES</span>' +
+            '<p class="commerce-map-selected-address" id="commerce-map-address-preview">11.55640, 104.92820</p>' +
+          '</div>' +
+          '<div class="commerce-map-actions">' +
+            '<button type="button" class="btn btn-secondary commerce-map-cancel-btn" id="commerce-map-cancel-btn">Cancel</button>' +
+            '<button type="button" class="btn btn-primary commerce-map-confirm-btn" id="commerce-map-confirm-btn">' +
+              'Use this location' + icon('arrow') +
+            '</button>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+    document.body.appendChild(div);
+    return div;
+  }
+
+  function loadLeaflet(callback) {
+    if (window.L && typeof window.L.map === 'function') {
+      return callback(window.L);
+    }
+    if (!document.getElementById('leaflet-css')) {
+      var link = document.createElement('link');
+      link.id = 'leaflet-css';
+      link.rel = 'stylesheet';
+      link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+      document.head.appendChild(link);
+    }
+    var existing = document.getElementById('leaflet-js');
+    if (existing) {
+      existing.addEventListener('load', function () { callback(window.L); });
+      return;
+    }
+    var script = document.createElement('script');
+    script.id = 'leaflet-js';
+    script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+    script.onload = function () {
+      callback(window.L);
+    };
+    script.onerror = function () {
+      callback(null);
+    };
+    document.head.appendChild(script);
+  }
+
+  function formatCoords(lat, lng) {
+    return Number(lat).toFixed(5) + ', ' + Number(lng).toFixed(5);
+  }
+
+  function reverseGeocode(lat, lng, callback) {
+    var coordsText = formatCoords(lat, lng);
+    var url = 'https://nominatim.openstreetmap.org/reverse?format=json&lat=' + encodeURIComponent(lat) + '&lon=' + encodeURIComponent(lng) + '&zoom=18&addressdetails=1';
+    fetch(url, { headers: { 'Accept': 'application/json' } })
+      .then(function (res) { return res.json(); })
+      .then(function (data) {
+        var addr = (data && data.address) || {};
+        var foundCity = 'Phnom Penh';
+        var textToCheck = (addr.city || addr.state || addr.province || addr.county || '').toLowerCase();
+        if (textToCheck.indexOf('siem reap') !== -1) foundCity = 'Siem Reap';
+        else if (textToCheck.indexOf('battambang') !== -1) foundCity = 'Battambang';
+        else if (textToCheck.indexOf('kampong cham') !== -1) foundCity = 'Kampong Cham';
+        else if (textToCheck.indexOf('kampot') !== -1) foundCity = 'Kampot';
+        else if (textToCheck.indexOf('kandal') !== -1) foundCity = 'Kandal';
+        else if (textToCheck.indexOf('sihanouk') !== -1) foundCity = 'Preah Sihanouk';
+        else if (textToCheck.indexOf('phnom penh') !== -1) foundCity = 'Phnom Penh';
+        else if (textToCheck.length > 0) foundCity = 'Other province';
+
+        callback(null, {
+          address: coordsText,
+          city: foundCity,
+          lat: lat,
+          lng: lng
+        });
+      })
+      .catch(function () {
+        callback(null, {
+          address: coordsText,
+          city: 'Phnom Penh',
+          lat: lat,
+          lng: lng
+        });
+      });
+  }
+
+  function updateLocationDisplay(lat, lng, statusText, isSuccess) {
+    mapModalState.lat = lat;
+    mapModalState.lng = lng;
+    var coords = formatCoords(lat, lng);
+    mapModalState.address = coords;
+
+    var statusEl = document.getElementById('commerce-map-status');
+    if (statusEl && statusText) {
+      statusEl.textContent = statusText;
+      statusEl.className = 'commerce-map-status' + (isSuccess ? ' is-success' : '');
+    }
+
+    var addressEl = document.getElementById('commerce-map-address-preview');
+    if (addressEl) {
+      addressEl.textContent = coords;
+    }
+
+    reverseGeocode(lat, lng, function (_, res) {
+      mapModalState.address = coords;
+      mapModalState.city = res.city;
+      if (addressEl) {
+        addressEl.textContent = coords;
+      }
+    });
+  }
+
+  function fetchUserGPSLocation() {
+    var locateBtn = document.getElementById('commerce-map-locate-btn');
+    var statusEl = document.getElementById('commerce-map-status');
+    if (locateBtn) locateBtn.classList.add('is-loading');
+    if (statusEl) {
+      statusEl.textContent = 'Getting current GPS location...';
+      statusEl.className = 'commerce-map-status';
+    }
+
+    if (!navigator.geolocation) {
+      if (locateBtn) locateBtn.classList.remove('is-loading');
+      if (statusEl) {
+        statusEl.textContent = 'GPS is not supported by your browser.';
+        statusEl.className = 'commerce-map-status is-error';
+      }
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      function (position) {
+        if (locateBtn) locateBtn.classList.remove('is-loading');
+        var lat = position.coords.latitude;
+        var lng = position.coords.longitude;
+        mapModalState.lat = lat;
+        mapModalState.lng = lng;
+
+        if (mapModalState.map) {
+          mapModalState.map.flyTo([lat, lng], 16, { animate: true, duration: 1.2 });
+        }
+        if (mapModalState.marker) {
+          mapModalState.marker.setLatLng([lat, lng]);
+        }
+        updateLocationDisplay(lat, lng, '✓ Current location detected', true);
+      },
+      function (error) {
+        if (locateBtn) locateBtn.classList.remove('is-loading');
+        var msg = 'Could not get GPS location. Drag pin or tap map to choose.';
+        if (error && error.code === 1) {
+          msg = 'Location permission denied. Drag pin or tap map.';
+        }
+        if (statusEl) {
+          statusEl.textContent = msg;
+          statusEl.className = 'commerce-map-status is-error';
+        }
+      },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+    );
+  }
+
+  function openLocationMapModal() {
+    var modal = ensureLocationMapModal();
+    modal.classList.add('is-open');
+    mapModalState.isOpen = true;
+
+    var currentInput = document.getElementById('commerce-address');
+    var currentInputVal = currentInput ? currentInput.value.trim() : '';
+    if (currentInputVal && !mapModalState.address) {
+      mapModalState.address = currentInputVal;
+    }
+
+    loadLeaflet(function (leafletLib) {
+      if (!leafletLib) {
+        var statusEl = document.getElementById('commerce-map-status');
+        if (statusEl) {
+          statusEl.textContent = 'Map view offline. Using GPS location directly.';
+          statusEl.className = 'commerce-map-status';
+        }
+        fetchUserGPSLocation();
+        return;
+      }
+
+      var defaultLat = mapModalState.lat || 11.5564;
+      var defaultLng = mapModalState.lng || 104.9282;
+
+      if (!mapModalState.map) {
+        var map = leafletLib.map('commerce-map-canvas', {
+          zoomControl: true,
+          attributionControl: false
+        }).setView([defaultLat, defaultLng], 14);
+
+        leafletLib.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          maxZoom: 19
+        }).addTo(map);
+
+        var pinIcon = leafletLib.divIcon({
+          className: 'commerce-custom-map-pin',
+          html: '<div class="commerce-pin-pulse"></div><div class="commerce-pin-body"><svg width="28" height="34" viewBox="0 0 24 24" fill="#9e7d47" stroke="#ffffff" stroke-width="1.5"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5" fill="#ffffff"/></svg></div>',
+          iconSize: [36, 42],
+          iconAnchor: [18, 42]
+        });
+
+        var marker = leafletLib.marker([defaultLat, defaultLng], {
+          icon: pinIcon,
+          draggable: true
+        }).addTo(map);
+
+        marker.on('dragend', function (e) {
+          var pos = e.target.getLatLng();
+          updateLocationDisplay(pos.lat, pos.lng, 'Marker moved', false);
+        });
+
+        map.on('click', function (e) {
+          marker.setLatLng(e.latlng);
+          updateLocationDisplay(e.latlng.lat, e.latlng.lng, 'Location selected', false);
+        });
+
+        mapModalState.map = map;
+        mapModalState.marker = marker;
+      } else {
+        setTimeout(function () {
+          mapModalState.map.invalidateSize();
+        }, 120);
+      }
+
+      // Automatically get current GPS location upon opening
+      fetchUserGPSLocation();
+    });
+  }
+
+  function closeLocationMapModal() {
+    var modal = document.getElementById('commerce-location-modal');
+    if (modal) modal.classList.remove('is-open');
+    mapModalState.isOpen = false;
+  }
+
+  function confirmLocationSelection() {
+    var coords = (mapModalState.lat && mapModalState.lng)
+      ? formatCoords(mapModalState.lat, mapModalState.lng)
+      : mapModalState.address;
+
+    if (coords) {
+      var addressInput = document.getElementById('commerce-address');
+      if (addressInput) {
+        addressInput.value = coords;
+        addressInput.dispatchEvent(new Event('input', { bubbles: true }));
+        addressInput.focus();
+      }
+      var citySelect = document.getElementById('commerce-city');
+      if (citySelect && mapModalState.city) {
+        var matchedOption = Array.from(citySelect.options).find(function (opt) {
+          return opt.value.toLowerCase() === mapModalState.city.toLowerCase();
+        });
+        if (matchedOption) {
+          citySelect.value = matchedOption.value;
+          citySelect.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+      }
+      checkoutDraft.address = coords;
+      if (mapModalState.city) checkoutDraft.city = mapModalState.city;
+      checkoutDraft.lat = mapModalState.lat;
+      checkoutDraft.lng = mapModalState.lng;
+
+      if (L.toast) {
+        L.toast('Delivery location updated: ' + coords);
+      }
+    }
+    closeLocationMapModal();
+  }
+
   L.renderCheckout = function () {
     if (!cartItems().length) {
       return '<section class="commerce-page container">' +
@@ -298,8 +610,22 @@
           '<section class="commerce-form-section">' +
             '<div class="commerce-section-title"><span>01</span><h2>Delivery details</h2></div>' +
             '<div class="commerce-field-grid">' +
-              inputField('Phone number', 'phone', v.phone, 'type="tel" autocomplete="tel" required pattern="[+0-9][0-9 ]{7,17}" placeholder="012 345 678" title="Enter a valid phone number, such as 012 345 678"', true) +
-              inputField('Delivery address', 'address', v.address, 'type="text" autocomplete="street-address" required minlength="5" maxlength="240" placeholder="House number, street, sangkat and city"', true) +
+              inputField('Full name', 'name', v.name, 'type="text" autocomplete="name" required minlength="2" maxlength="100" placeholder="Your full name"') +
+              inputField('Phone number', 'phone', v.phone, 'type="tel" autocomplete="tel" required pattern="[+0-9][0-9 ]{7,17}" placeholder="012 345 678" title="Enter a valid phone number, such as 012 345 678"') +
+              '<div class="form-field commerce-field-wide commerce-address-field-wrap">' +
+                '<label for="commerce-address">Delivery address</label>' +
+                '<div class="commerce-input-with-action">' +
+                  '<input id="commerce-address" name="address" type="text" autocomplete="street-address" required minlength="5" maxlength="240" placeholder="House number, street, and sangkat/commune" value="' + e(v.address) + '">' +
+                  '<button type="button" class="commerce-location-pin-btn" id="commerce-location-pin-btn" title="Pick location on map or get current location" aria-label="Pick location on map">' +
+                    '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+                      '<path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"/>' +
+                      '<circle cx="12" cy="10" r="3"/>' +
+                    '</svg>' +
+                  '</button>' +
+                '</div>' +
+              '</div>' +
+              selectCity(v.city) +
+              '<div class="form-field commerce-field-wide"><label for="commerce-note">Delivery note <span>(optional)</span></label><textarea id="commerce-note" name="note" rows="3" maxlength="500" placeholder="A nearby landmark or delivery instructions">' + e(v.note) + '</textarea></div>' +
             '</div>' +
             '<p class="commerce-field-hint">We will contact you via this phone number to confirm your order and arrange delivery.</p>' +
           '</section>' +
@@ -347,7 +673,7 @@
     var orderPaymentText = isOrderBank ? (orderBankName + ' · Demo') : 'Cash on delivery · Demo';
     var customerName = (order.customer && order.customer.name && order.customer.name !== 'LIVA Guest') ? order.customer.name.split(' ')[0] : '';
 
-    return '<section class="commerce-page commerce-confirmation container"><div class="commerce-confirmation-head"><span class="commerce-success-icon">' + icon('check') + '</span><p class="eyebrow">DEMO ORDER SAVED</p><h1>Thank you' + (customerName ? ', ' + e(customerName) : '') + '.</h1><p>Your demo order is saved on this device.</p><div class="commerce-reference">Order <strong>' + e(order.id) + '</strong><span>' + dateLabel(order.createdAt) + '</span></div></div><div class="commerce-confirmation-card">' + demoNotice('This order is saved in your browser only. Nothing will be charged, shipped or emailed.') + '<h2>Your selection</h2>' + orderItemsHtml(order.items) + linesHtml(order) + '<div class="commerce-confirmation-details"><div><span>DELIVERY DETAILS</span><p>' + e(order.customer.address) + (order.customer.city ? '<br>' + e(order.customer.city) + ', Cambodia' : '') + '<br>Phone: <strong>' + e(order.customer.phone) + '</strong></p></div><div><span>PAYMENT METHOD</span><p>' + e(orderPaymentText) + '<br>' + e(order.customer.phone) + '</p></div></div></div><div class="commerce-confirmation-actions"><a href="#tracking/' + e(order.id) + '" class="btn btn-primary">View demo tracking' + icon('arrow') + '</a>' + repeatButton(order) + '<a href="#shop" class="btn btn-secondary">Continue shopping</a></div><p class="commerce-submit-note">Add again uses current illustrative prices. Review your bag before checkout.</p></section>';
+    return '<section class="commerce-page commerce-confirmation container"><div class="commerce-confirmation-head"><span class="commerce-success-icon">' + icon('check') + '</span><p class="eyebrow">DEMO ORDER SAVED</p><h1>Thank you' + (customerName ? ', ' + e(customerName) : '') + '.</h1><p>Your demo order is saved on this device.</p><div class="commerce-reference">Order <strong>' + e(order.id) + '</strong><span>' + dateLabel(order.createdAt) + '</span></div></div><div class="commerce-confirmation-card">' + demoNotice('This order is saved in your browser only. Nothing will be charged, shipped or emailed.') + '<h2>Your selection</h2>' + orderItemsHtml(order.items) + linesHtml(order) + '<div class="commerce-confirmation-details"><div><span>DELIVERY DETAILS</span><p>' + (order.customer.name && order.customer.name !== 'LIVA Guest' ? '<strong>' + e(order.customer.name) + '</strong><br>' : '') + e(order.customer.address) + (order.customer.city ? '<br>' + e(order.customer.city) + ', Cambodia' : '') + '<br>Phone: <strong>' + e(order.customer.phone) + '</strong>' + (order.customer.note ? '<br>Note: <em>' + e(order.customer.note) + '</em>' : '') + '</p></div><div><span>PAYMENT METHOD</span><p>' + e(orderPaymentText) + '<br>' + e(order.customer.phone) + '</p></div></div></div><div class="commerce-confirmation-actions"><a href="#tracking/' + e(order.id) + '" class="btn btn-primary">View demo tracking' + icon('arrow') + '</a>' + repeatButton(order) + '<a href="#shop" class="btn btn-secondary">Continue shopping</a></div><p class="commerce-submit-note">Add again uses current illustrative prices. Review your bag before checkout.</p></section>';
   };
 
   function renderSocialAuth() {
@@ -634,6 +960,30 @@
       }
       return;
     }
+    var locationPinBtn = event.target.closest('.commerce-location-pin-btn, .commerce-location-text-btn');
+    if (locationPinBtn) {
+      event.preventDefault();
+      openLocationMapModal();
+      return;
+    }
+    var mapClose = event.target.closest('#commerce-map-close-btn, #commerce-map-cancel-btn, #commerce-map-backdrop');
+    if (mapClose) {
+      event.preventDefault();
+      closeLocationMapModal();
+      return;
+    }
+    var mapLocate = event.target.closest('#commerce-map-locate-btn');
+    if (mapLocate) {
+      event.preventDefault();
+      fetchUserGPSLocation();
+      return;
+    }
+    var mapConfirm = event.target.closest('#commerce-map-confirm-btn');
+    if (mapConfirm) {
+      event.preventDefault();
+      confirmLocationSelection();
+      return;
+    }
   });
 
   document.addEventListener('change', function (event) {
@@ -761,6 +1111,11 @@
   });
 
   document.addEventListener('keydown', function (event) {
+    if (mapModalState.isOpen && event.key === 'Escape') {
+      event.preventDefault();
+      closeLocationMapModal();
+      return;
+    }
     var drawer = document.getElementById('cart-drawer');
     if (!drawer || !drawer.classList.contains('is-open')) return;
     if (event.key === 'Escape') { event.preventDefault(); L.closeCart(); return; }
