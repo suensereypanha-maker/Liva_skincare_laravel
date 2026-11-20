@@ -213,7 +213,8 @@ class PagesTest extends TestCase
     {
         $response = $this->get('/');
         $response->assertStatus(200);
-        $response->assertSee('slide-1-everyday.mp4');
+        $response->assertSee('logovideo.mp4');
+        $response->assertDontSee('slide-1-everyday.mp4');
         $response->assertDontSee('slide-2-hair-pair.mp4');
         $response->assertSee('banner-1.jpg');
         $response->assertSee('banner-2.jpg');

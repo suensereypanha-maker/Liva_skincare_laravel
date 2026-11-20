@@ -4,8 +4,8 @@
         <article class="campaign-slide is-active" data-slide="0" data-theme="dark" role="group" aria-roledescription="slide" aria-label="1 of 3: Everyday" aria-hidden="false">
             <div class="campaign-media">
                 <img class="campaign-poster" src="{{ asset('assets/campaign/slide-1-poster.webp') }}" alt="LIVA hair and body essentials in warm, sculptural light" width="1280" height="720" fetchpriority="high" loading="eager" decoding="async">
-                <video class="campaign-video is-playing" autoplay muted playsinline loop preload="auto" src="{{ asset('assets/campaign/slide-1-everyday.mp4') }}" poster="{{ asset('assets/campaign/slide-1-poster.webp') }}" aria-hidden="true" tabindex="-1" disablepictureinpicture>
-                    <source src="{{ asset('assets/campaign/slide-1-everyday.mp4') }}" type="video/mp4">
+                <video class="campaign-video is-playing" autoplay muted playsinline loop preload="auto" src="{{ asset('assets/logovideo.mp4') }}" poster="{{ asset('assets/campaign/slide-1-poster.webp') }}" aria-hidden="true" tabindex="-1" disablepictureinpicture>
+                    <source src="{{ asset('assets/logovideo.mp4') }}" type="video/mp4">
                 </video>
             </div>
             <div class="campaign-copy">
