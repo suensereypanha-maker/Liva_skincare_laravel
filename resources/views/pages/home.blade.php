@@ -29,7 +29,7 @@
             </div>
             <div class="selection-intro">
                 <p>Start with what you came for.<br>Make room for something else.</p>
-                <a href="{{ route('shop') }}" class="text-link"> All products <x-icon name="arrow" /></a>
+                <a href="{{ route('shop') }}" class="text-link"><span data-i18n="allProducts">{{ __('storefront.allProducts') ?? 'All products' }}</span> <x-icon name="arrow" /></a>
             </div>
         </div>
 

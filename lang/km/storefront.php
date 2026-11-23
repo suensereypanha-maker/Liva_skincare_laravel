@@ -87,6 +87,7 @@ return [
     'selected' => 'បានជ្រើសរើស',
     'fullDetails' => 'ព័ត៌មានលម្អិត',
     'explore' => 'ស្វែងរក',
+    'allProducts' => 'ទំនិញទាំងអស់',
     'realResults' => 'លទ្ធផលពិតប្រាកដ',
     'satisfaction' => 'ការពេញចិត្ត ៩៦%',
     'verifiedBuyer' => 'បានទិញពិតប្រាកដ',

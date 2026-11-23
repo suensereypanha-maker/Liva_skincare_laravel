@@ -111,6 +111,7 @@ class PagesTest extends TestCase
         $response->assertViewHas('bodyProducts');
         $response->assertViewHas('setsProducts');
         $response->assertSee('SilkSculpt Shampoo');
+        $response->assertSee('All products');
         $response->assertSee('campaign-hero');
         $response->assertSee('slide-1-poster.webp');
         $response->assertSee('banner-1.jpg');

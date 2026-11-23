@@ -87,6 +87,7 @@ return [
     'selected' => 'Selected',
     'fullDetails' => 'Full Details',
     'explore' => 'Explore',
+    'allProducts' => 'All products',
     'realResults' => 'Real Results',
     'satisfaction' => '96% Satisfaction',
     'verifiedBuyer' => 'Verified Buyer',
