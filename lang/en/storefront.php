@@ -53,6 +53,7 @@ return [
     'bestSellers' => 'Best Sellers',
     'onSale' => 'On Sale',
     'availability' => 'Availability',
+    'stock' => 'Stock',
     'inStock' => 'In Stock',
     'outOfStock' => 'Out of Stock',
     'showing' => 'Showing',

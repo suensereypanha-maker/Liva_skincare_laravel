@@ -644,6 +644,12 @@
   pointer-events: auto;
 }
 
+@media (max-width: 768px) {
+  .cat-card-nav {
+    display: none !important;
+  }
+}
+
 .cat-card-prev {
   left: 8px;
 }
@@ -872,7 +878,7 @@
 
 .cat-card-price-line {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: 8px;
   margin-top: auto;
 }
@@ -882,40 +888,82 @@
   font-size: 16px;
   font-weight: 700;
   color: var(--cat-primary);
+  line-height: 1.2;
 }
 
 .cat-card-orig-price {
   font-size: 13px;
   color: #9e978c;
   text-decoration: line-through;
+  line-height: 1.2;
 }
 
 .cat-card-stock {
   margin-left: auto;
-  font-size: 11px;
+  font-size: 10.5px;
   font-weight: 500;
-  color: #4a6345;
+  color: #2e4d27;
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  background: rgba(74, 99, 69, 0.08);
-  padding: 3px 8px;
-  border-radius: 12px;
-  line-height: 1.4;
+  gap: 5.5px;
+  background: #f2f6ef;
+  border: 1px solid rgba(52, 90, 44, 0.16);
+  padding: 3px 8.5px;
+  border-radius: 999px;
+  line-height: 1.2;
   white-space: nowrap;
+  letter-spacing: 0.15px;
+  transition: all 0.2s ease;
 }
 
-.cat-card-stock strong {
+.cat-card-stock strong,
+.cat-card-stock .cat-stock-qty {
   font-weight: 600;
+  color: #1e3818;
 }
 
 .cat-stock-dot {
-  width: 6px;
-  height: 6px;
+  width: 5.5px;
+  height: 5.5px;
   border-radius: 50%;
-  background: #3e7b39;
+  background: #2e7d32;
+  box-shadow: 0 0 0 2px rgba(46, 125, 50, 0.22);
   display: inline-block;
   flex-shrink: 0;
+}
+
+/* Low Stock State */
+.cat-card-stock.is-low-stock {
+  color: #8c5208;
+  background: #fdf6ec;
+  border-color: rgba(217, 119, 6, 0.22);
+}
+
+.cat-card-stock.is-low-stock strong,
+.cat-card-stock.is-low-stock .cat-stock-qty {
+  color: #6d3d02;
+}
+
+.cat-card-stock.is-low-stock .cat-stock-dot {
+  background: #d97706;
+  box-shadow: 0 0 0 2px rgba(217, 119, 6, 0.22);
+}
+
+/* Out of Stock State */
+.cat-card-stock.is-out-of-stock {
+  color: #78716c;
+  background: #f5f4f2;
+  border-color: rgba(120, 113, 108, 0.2);
+}
+
+.cat-card-stock.is-out-of-stock strong,
+.cat-card-stock.is-out-of-stock .cat-stock-qty {
+  color: #57534e;
+}
+
+.cat-card-stock.is-out-of-stock .cat-stock-dot {
+  background: #a8a29e;
+  box-shadow: 0 0 0 2px rgba(168, 162, 158, 0.2);
 }
 
 .cat-quickview-purchase-wrap {
@@ -2552,30 +2600,50 @@
   }
 }
 
-@media (max-width: 680px) {
+@media (max-width: 768px) {
   .cat-product-videos {
     padding: 24px 0 36px;
+    overflow: hidden;
   }
 
   .cat-video-grid {
-    display: flex;
-    overflow-x: auto;
+    display: flex !important;
+    overflow-x: auto !important;
+    overflow-y: hidden;
     scroll-snap-type: x mandatory;
     gap: 12px;
-    padding-bottom: 12px;
+    padding: 4px 4px 14px 4px;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
+    touch-action: pan-x;
+    cursor: grab;
+  }
+
+  .cat-video-grid:active {
+    cursor: grabbing;
   }
 
   .cat-video-grid::-webkit-scrollbar {
     display: none;
+    width: 0;
+    height: 0;
   }
 
   .cat-video-card {
-    flex: 0 0 58%;
-    max-width: 220px;
+    flex: 0 0 65% !important;
+    min-width: 180px;
+    max-width: 240px;
     scroll-snap-align: start;
-    max-height: 360px;
+    flex-shrink: 0 !important;
+    max-height: 380px;
+  }
+
+  .cat-video-card video {
+    pointer-events: none;
+  }
+
+  .cat-video-sound-toggle {
+    pointer-events: auto;
   }
 }
 
@@ -2844,6 +2912,25 @@
 
   .cat-card-orig-price {
     font-size: 11px;
+  }
+
+  .cat-card-price-line {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px 6px;
+  }
+
+  .cat-card-stock {
+    font-size: 9.5px;
+    padding: 2px 6.5px;
+    gap: 4px;
+  }
+
+  .cat-stock-dot {
+    width: 4.5px;
+    height: 4.5px;
+    box-shadow: 0 0 0 1.5px rgba(46, 125, 50, 0.22);
   }
 
   .cat-action-circle {

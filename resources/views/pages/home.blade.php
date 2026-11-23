@@ -29,7 +29,6 @@
             </div>
             <div class="selection-intro">
                 <p>Start with what you came for.<br>Make room for something else.</p>
-                <a href="{{ route('shop') }}" class="text-link"><span data-i18n="allProducts">{{ __('storefront.allProducts') ?? 'All products' }}</span> <x-icon name="arrow" /></a>
             </div>
         </div>
 
@@ -65,6 +64,9 @@
                     @endforeach
                 </div>
                 <div id="comparison-tray"></div>
+                <div class="home-all-products-footer">
+                    <a href="{{ route('shop') }}" class="text-link"><span data-i18n="allProducts">{{ __('storefront.allProducts') ?? 'All products' }}</span> <x-icon name="arrow" /></a>
+                </div>
             </div>
         </div>
     </section>

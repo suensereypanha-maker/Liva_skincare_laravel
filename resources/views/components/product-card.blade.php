@@ -75,8 +75,16 @@
             @if($origPriceFormatted)
                 <span class="cat-card-orig-price">{{ $origPriceFormatted }}</span>
             @endif
-            <span class="cat-card-stock">
-                <span class="cat-stock-dot"></span>Stock: {{ $product['stock'] ?? 20 }}
+            @php
+                $stockVal = (int) ($product['stock'] ?? 20);
+                $isOutOfStock = $stockVal <= 0;
+                $isLowStock = $stockVal > 0 && $stockVal <= 5;
+                $stockClass = $isOutOfStock ? ' is-out-of-stock' : ($isLowStock ? ' is-low-stock' : '');
+            @endphp
+            <span class="cat-card-stock{{ $stockClass }}">
+                <span class="cat-stock-dot"></span>
+                <span class="cat-stock-label" data-i18n="stock">{{ __('storefront.stock') ?? 'Stock' }}:</span>
+                <strong class="cat-stock-qty">{{ $stockVal }}</strong>
             </span>
         </div>
     </div>

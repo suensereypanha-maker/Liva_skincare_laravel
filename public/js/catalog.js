@@ -564,7 +564,7 @@
         <div class="cat-card-price-line">
           <span class="cat-card-price">${money(product.price)}</span>
           ${product.originalPrice ? `<span class="cat-card-orig-price">${money(product.originalPrice)}</span>` : ''}
-          <span class="cat-card-stock"><span class="cat-stock-dot"></span>Stock: ${product.stock || 20}</span>
+          <span class="cat-card-stock${(product.stock || 20) <= 0 ? ' is-out-of-stock' : ((product.stock || 20) <= 5 ? ' is-low-stock' : '')}"><span class="cat-stock-dot"></span><span class="cat-stock-label" data-i18n="stock">${L.t('stock') || 'Stock'}:</span> <strong class="cat-stock-qty">${product.stock || 20}</strong></span>
         </div>
       </div>
     </article>`;
@@ -1252,7 +1252,7 @@
                 <span class="cat-card-price" style="font-size: 24px;">${money(product.price)}</span>
                 ${product.originalPrice ? `<span class="cat-card-orig-price" style="font-size: 16px;">${money(product.originalPrice)}</span>` : ''}
                 <span class="cat-card-format" style="margin-left: 12px; font-size: 13px;">${esc(product.size)}</span>
-                <span class="cat-card-stock"><span class="cat-stock-dot"></span>Stock: <strong class="cat-stock-qty">${product.stock || 20}</strong></span>
+                <span class="cat-card-stock${(product.stock || 20) <= 0 ? ' is-out-of-stock' : ((product.stock || 20) <= 5 ? ' is-low-stock' : '')}"><span class="cat-stock-dot"></span><span class="cat-stock-label" data-i18n="stock">${L.t('stock') || 'Stock'}:</span> <strong class="cat-stock-qty">${product.stock || 20}</strong></span>
               </div>
               <p class="cat-description">${esc(product.description)}</p>
               ${sizeSelectorHtml}
@@ -1633,7 +1633,43 @@
     }
   });
 
+  // Product Video Reels: drag/swipe to scroll & sound/play toggle
+  let videoGridIsDown = false;
+  let videoGridStartX = 0;
+  let videoGridScrollLeft = 0;
+  let videoGridHasDragged = false;
+
+  $(document).on('mousedown', '.cat-video-grid', function (e) {
+    videoGridIsDown = true;
+    videoGridHasDragged = false;
+    videoGridStartX = e.pageX - this.offsetLeft;
+    videoGridScrollLeft = this.scrollLeft;
+  });
+
+  $(document).on('mouseleave mouseup', function () {
+    if (videoGridIsDown) {
+      videoGridIsDown = false;
+      setTimeout(() => { videoGridHasDragged = false; }, 50);
+    }
+  });
+
+  $(document).on('mousemove', '.cat-video-grid', function (e) {
+    if (!videoGridIsDown) return;
+    const x = e.pageX - this.offsetLeft;
+    const walk = (x - videoGridStartX) * 1.5;
+    if (Math.abs(walk) > 5) {
+      videoGridHasDragged = true;
+      e.preventDefault();
+      this.scrollLeft = videoGridScrollLeft - walk;
+    }
+  });
+
   $(document).on('click', '.cat-video-card', function (e) {
+    if (videoGridHasDragged) {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      return;
+    }
     if ($(e.target).closest('.cat-video-sound-toggle').length) return;
 
     const $card = $(this);

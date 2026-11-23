@@ -53,6 +53,7 @@ return [
     'bestSellers' => 'លក់ដាច់បំផុត',
     'onSale' => 'មានបញ្ចុះតម្លៃ',
     'availability' => 'ស្ថានភាពក្នុងស្តុក',
+    'stock' => 'ស្តុក',
     'inStock' => 'មានក្នុងស្តុក',
     'outOfStock' => 'អស់ពីស្តុក',
     'showing' => 'កំពុងបង្ហាញ',
