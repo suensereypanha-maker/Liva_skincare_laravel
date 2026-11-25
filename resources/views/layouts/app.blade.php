@@ -25,12 +25,13 @@
     <link rel="stylesheet" href="{{ asset('css/hero.css') }}?v={{ file_exists(public_path('css/hero.css')) ? filemtime(public_path('css/hero.css')) : '1.0.4' }}">
     <link rel="stylesheet" href="{{ asset('css/catalog.css') }}?v={{ file_exists(public_path('css/catalog.css')) ? filemtime(public_path('css/catalog.css')) : '1.0.4' }}">
     <link rel="stylesheet" href="{{ asset('css/commerce.css') }}?v={{ file_exists(public_path('css/commerce.css')) ? filemtime(public_path('css/commerce.css')) : '1.0.4' }}">
+    <link rel="stylesheet" href="{{ asset('css/profile.css') }}?v={{ file_exists(public_path('css/profile.css')) ? filemtime(public_path('css/profile.css')) : '1.0.4' }}">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 
     @stack('styles')
 </head>
 
-<body data-page="{{ request()->routeIs('home') ? 'home' : (request()->routeIs('shop*') ? 'shop' : (request()->routeIs('product*') ? 'product' : (request()->routeIs('routine') ? 'routine' : (request()->routeIs('about') ? 'about' : (request()->routeIs('contact') ? 'contact' : (request()->routeIs('account*') ? 'account' : (request()->routeIs('wishlist') ? 'wishlist' : (request()->routeIs('compare') ? 'compare' : (request()->routeIs('tracking') ? 'tracking' : (request()->routeIs('checkout*') ? 'checkout' : 'default')))))))))) }}">
+<body data-page="{{ request()->routeIs('home') ? 'home' : (request()->routeIs('shop*') ? 'shop' : (request()->routeIs('product*') ? 'product' : (request()->routeIs('routine') ? 'routine' : (request()->routeIs('about') ? 'about' : (request()->routeIs('contact') ? 'contact' : (request()->routeIs('login', 'register') ? 'login' : (request()->routeIs('profile*') ? 'profile' : (request()->routeIs('account*') ? 'account' : (request()->routeIs('wishlist') ? 'wishlist' : (request()->routeIs('compare') ? 'compare' : (request()->routeIs('tracking') ? 'tracking' : (request()->routeIs('checkout*') ? 'checkout' : 'default')))))))))))) }}">
     <a class="skip-link" href="#main-content">Skip to content</a>
 
     <div class="site-header-sticky-wrapper" style="position: sticky; top: 0; z-index: 100; width: 100%;">
@@ -57,6 +58,7 @@
     <script defer src="{{ asset('js/catalog.js') }}?v={{ file_exists(public_path('js/catalog.js')) ? filemtime(public_path('js/catalog.js')) : '1.0.4' }}"></script>
     <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script defer src="{{ asset('js/commerce.js') }}?v={{ file_exists(public_path('js/commerce.js')) ? filemtime(public_path('js/commerce.js')) : '1.0.4' }}"></script>
+    <script defer src="{{ asset('js/profile.js') }}?v={{ file_exists(public_path('js/profile.js')) ? filemtime(public_path('js/profile.js')) : '1.0.4' }}"></script>
     <script defer src="{{ asset('js/routine.js') }}?v={{ file_exists(public_path('js/routine.js')) ? filemtime(public_path('js/routine.js')) : '1.0.4' }}"></script>
     <script defer src="{{ asset('js/hero.js') }}?v={{ file_exists(public_path('js/hero.js')) ? filemtime(public_path('js/hero.js')) : '1.0.4' }}"></script>
     <script defer src="{{ asset('js/app.js') }}?v={{ file_exists(public_path('js/app.js')) ? filemtime(public_path('js/app.js')) : '1.0.4' }}"></script>

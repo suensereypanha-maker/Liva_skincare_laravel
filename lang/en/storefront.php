@@ -96,6 +96,11 @@ return [
     // Customer Account & Profile
     'yourLiva' => 'YOUR LIVA',
     'yourAccount' => 'YOUR ACCOUNT',
+    'yourProfile' => 'YOUR PROFILE',
+    'myProfile' => 'My profile',
+    'orderHistory' => 'Order history',
+    'openMyProfile' => 'Open my profile',
+    'personalProfileBadge' => 'Personal care profile',
     'demoAccess' => 'DEMO ACCESS',
     'signIn' => 'Sign in',
     'createProfile' => 'Create a profile',

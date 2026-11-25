@@ -1,10 +1,12 @@
 <?php
 
+use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LocaleController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\Profile\ProfileController;
 use App\Http\Controllers\RoutineController;
 use App\Http\Controllers\ShopController;
 use Illuminate\Support\Facades\Route;
@@ -42,6 +44,13 @@ Route::get('/checkout', [CartController::class, 'checkout'])->name('checkout');
 Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
 Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
 Route::post('/cart/remove', [CartController::class, 'remove'])->name('cart.remove');
+
+// Auth & Customer Profile (Design Preview — Local Storage Until DB Integration)
+Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
+Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
+Route::get('/profile/orders', [ProfileController::class, 'orders'])->name('profile.orders');
+Route::get('/profile/settings', [ProfileController::class, 'settings'])->name('profile.settings');
 
 // Customer Account & Order Tracking
 Route::get('/account', [PageController::class, 'account'])->name('account');

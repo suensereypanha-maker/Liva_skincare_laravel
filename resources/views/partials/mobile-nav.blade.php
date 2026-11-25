@@ -100,9 +100,9 @@
     <div class="mobile-nav-section">
         <span class="mobile-nav-eyebrow" data-i18n="accountCare">Account & Care</span>
         <div class="mobile-nav-grid">
-            <a href="{{ route('account') }}" class="mobile-nav-sublink">
+            <a href="{{ route('login') }}" class="mobile-nav-sublink" id="liva-mobile-account-link" data-profile-url="{{ route('profile') }}" data-login-url="{{ route('login') }}">
                 <span data-icon="user"></span>
-                <span data-i18n="myAccount">My account</span>
+                <span id="liva-mobile-account-label" data-i18n="signIn">{{ __('storefront.signIn') ?? 'Sign in' }}</span>
             </a>
             <a href="{{ route('tracking') }}" class="mobile-nav-sublink">
                 <span data-icon="truck"></span>

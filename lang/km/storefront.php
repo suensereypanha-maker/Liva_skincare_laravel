@@ -96,6 +96,11 @@ return [
     // Customer Account & Profile
     'yourLiva' => 'កម្រងប្រចាំថ្ងៃ LIVA',
     'yourAccount' => 'គណនីរបស់អ្នក',
+    'yourProfile' => 'ប្រវត្តិរូបរបស់អ្នក',
+    'myProfile' => 'ប្រវត្តិរូបខ្ញុំ',
+    'orderHistory' => 'ប្រវត្តិការកុម្ម៉ង់',
+    'openMyProfile' => 'បើកប្រវត្តិរូបរបស់ខ្ញុំ',
+    'personalProfileBadge' => 'ប្រវត្តិរូបថែទាំផ្ទាល់ខ្លួន',
     'demoAccess' => 'ចូលប្រើសាកល្បង',
     'signIn' => 'ចូលគណនី',
     'createProfile' => 'បង្កើតគណនី',

@@ -155,11 +155,7 @@
                         </div>
                     </form>
 
-                    <div class="cat-preview-note cat-product-preview">
-                        <strong>Sample product</strong>
-                        <span>This is a storefront preview. Product details and prices are subject to confirmation; checkout
-                            is a demonstration.</span>
-                    </div>
+                
 
                     <div class="cat-product-accordions">
                         @foreach (['Formula & ingredients', 'Suitability', 'How to use'] as $label)

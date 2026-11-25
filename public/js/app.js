@@ -51,7 +51,7 @@
     if (!window.__IS_STATIC__ && raw && !['main-content', 'app', 'shop-main', 'liva-campaign'].includes(raw)) {
       const [hashPath, hashQuery] = raw.split('?');
       const [hashPage, hashId] = hashPath.split('/');
-      const knownPages = ['home', 'shop', 'product', 'routine', 'about', 'contact', 'shipping', 'privacy', 'terms', 'wishlist', 'compare', 'account', 'tracking', 'checkout'];
+      const knownPages = ['home', 'shop', 'product', 'routine', 'about', 'contact', 'shipping', 'privacy', 'terms', 'wishlist', 'compare', 'account', 'login', 'register', 'profile', 'tracking', 'checkout'];
       if (knownPages.includes(hashPage)) {
         const targetUrl = (hashPage === 'home' ? '/' : '/' + hashPage) + (hashId ? '/' + hashId : '') + (hashQuery ? '?' + hashQuery : '');
         if (window.location.pathname !== (hashPage === 'home' ? '/' : '/' + hashPage) && window.location.pathname !== '/' + hashPage + '/' + hashId) {
@@ -115,9 +115,9 @@
       $('[data-nav]').filter(function () { return this.dataset.nav === targetNav; }).addClass('active').attr('aria-current', 'page');
     }
     const promoTitles = { 'new-arrival': 'New Arrivals', 'best-seller': 'Best Sellers', 'on-sale': 'Promotions', 'promotion': 'Promotions', 'promotions': 'Promotions' };
-    const labels = { shop: promoTitles[params.get('promo')] || categoryNames[params.get('category')] || 'The collection', product: L.getProduct(id)?.name || 'Product', routine: 'Build your shelf', compare: 'Compare products', wishlist: 'Saved products', checkout: 'Checkout', account: 'Your account', tracking: 'Order tracking', contact: 'Help & contact', confirmation: 'Order saved', about: 'About LIVA', shipping: 'Delivery & returns', privacy: 'Privacy', terms: 'About this preview' };
+    const labels = { shop: promoTitles[params.get('promo')] || categoryNames[params.get('category')] || 'The collection', product: L.getProduct(id)?.name || 'Product', routine: 'Build your shelf', compare: 'Compare products', wishlist: 'Saved products', checkout: 'Checkout', account: 'Your account', login: 'Sign in', register: 'Create profile', profile: 'My profile', tracking: 'Order tracking', contact: 'Help & contact', confirmation: 'Order saved', about: 'About LIVA', shipping: 'Delivery & returns', privacy: 'Privacy', terms: 'About this preview' };
     document.title = page === 'home' ? 'LIVA — The Daily Edit' : `${labels[page] || 'Explore'} — LIVA`;
-    L.updateCounts(); if (L.initCatalogPage) L.initCatalogPage(); if (L.initHero) L.initHero();
+    L.updateCounts(); if (L.initCatalogPage) L.initCatalogPage(); if (L.initHero) L.initHero(); if (L.initProfileModule) L.initProfileModule();
     syncLanguage(L.getLang ? L.getLang() : 'en');
   };
   function syncLanguage(lang) {
@@ -177,7 +177,7 @@
       closeNavigation();
       if (L.closeCart) L.closeCart();
       if (!window.__IS_STATIC__) {
-        const knownPages = ['shop', 'product', 'routine', 'about', 'contact', 'shipping', 'privacy', 'terms', 'wishlist', 'compare', 'account', 'tracking', 'checkout'];
+        const knownPages = ['shop', 'product', 'routine', 'about', 'contact', 'shipping', 'privacy', 'terms', 'wishlist', 'compare', 'account', 'login', 'register', 'profile', 'tracking', 'checkout'];
         const targetPage = path.slice(1).split('/')[0];
         if (knownPages.includes(targetPage)) {
           const currentPath = window.location.pathname.replace(/^\/|\/$/g, '');

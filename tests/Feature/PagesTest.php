@@ -286,4 +286,43 @@ class PagesTest extends TestCase
         $this->assertStringContainsString('.announcement-bar', $stylesCss);
         $this->assertStringContainsString('.announcement-inner', $stylesCss);
     }
+
+    /**
+     * Test login, register, and profile design pages render cleanly with header links.
+     */
+    public function test_login_and_profile_design_pages_render_successfully(): void
+    {
+        $home = $this->get('/');
+        $home->assertStatus(200);
+        $home->assertSee('liva-header-login-link');
+        $home->assertSee('liva-header-profile-btn');
+        $home->assertSee('profile.css');
+        $home->assertSee('profile.js');
+
+        $login = $this->get('/login');
+        $login->assertStatus(200);
+        $login->assertSee('data-auth-page', false);
+        $login->assertSee('liva-auth-form');
+        $login->assertSee('liva-auth-otp-form');
+        $login->assertSee('Continue with Google');
+
+        $register = $this->get('/register');
+        $register->assertStatus(200);
+        $register->assertSee('data-initial-mode="register"', false);
+
+        $profile = $this->get('/profile');
+        $profile->assertStatus(200);
+        $profile->assertSee('data-profile-page', false);
+        $profile->assertSee('liva-profile-sidebar');
+        $profile->assertSee('liva-profile-details-form');
+        $profile->assertSee('liva-profile-orders-list');
+
+        $orders = $this->get('/profile/orders');
+        $orders->assertStatus(200);
+        $orders->assertSee('data-active-tab="orders"', false);
+
+        $settings = $this->get('/profile/settings');
+        $settings->assertStatus(200);
+        $settings->assertSee('data-active-tab="details"', false);
+    }
 }

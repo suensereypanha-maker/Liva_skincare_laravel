@@ -30,7 +30,36 @@
 
             <button class="icon-button search-toggle" aria-label="Search products" aria-expanded="false" aria-controls="site-search" data-icon="search"></button>
             
-            <a class="icon-button account-link {{ request()->routeIs('account*') ? 'active' : '' }}" href="{{ route('account') }}" aria-label="My account" data-icon="user"></a>
+            <div class="liva-account-menu" id="liva-header-account-menu">
+                <a class="icon-button account-link {{ request()->routeIs('login', 'register', 'account*') ? 'active' : '' }}" href="{{ route('login') }}" id="liva-header-login-link" aria-label="Sign in" title="Sign in" data-icon="user"></a>
+
+                <button type="button" class="liva-header-profile-btn {{ request()->routeIs('profile*') ? 'active' : '' }}" id="liva-header-profile-btn" aria-expanded="false" aria-haspopup="menu" aria-controls="liva-header-profile-dropdown" hidden>
+                    <span class="liva-header-avatar" id="liva-header-avatar">L</span>
+                    <span class="liva-header-first-name" id="liva-header-first-name">Profile</span>
+                </button>
+
+                <div class="liva-profile-dropdown" id="liva-header-profile-dropdown" role="menu" hidden>
+                    <div class="liva-profile-dropdown-head">
+                        <strong id="liva-dropdown-name">LIVA Member</strong>
+                        <span id="liva-dropdown-contact"></span>
+                    </div>
+                    <a href="{{ route('profile') }}" role="menuitem" class="liva-dropdown-item">
+                        <span data-icon="user"></span>
+                        <span data-i18n="myProfile">{{ __('storefront.myProfile') ?? 'My profile' }}</span>
+                    </a>
+                    <a href="{{ route('profile.orders') }}" role="menuitem" class="liva-dropdown-item">
+                        <span data-icon="bag"></span>
+                        <span data-i18n="orderHistory">{{ __('storefront.orderHistory') ?? 'Order history' }}</span>
+                    </a>
+                    <a href="{{ route('wishlist') }}" role="menuitem" class="liva-dropdown-item">
+                        <span data-icon="heart"></span>
+                        <span data-i18n="savedProducts">{{ __('storefront.savedProducts') ?? 'Saved products' }}</span>
+                    </a>
+                    <button type="button" role="menuitem" class="liva-dropdown-item liva-dropdown-logout" id="liva-header-logout">
+                        <span data-i18n="signOut">{{ __('storefront.signOut') ?? 'Sign out' }}</span>
+                    </button>
+                </div>
+            </div>
             
             <a class="icon-button wishlist-link {{ request()->routeIs('wishlist') ? 'active' : '' }}" href="{{ route('wishlist') }}" aria-label="Saved products">
                 <span data-icon="heart"></span>
