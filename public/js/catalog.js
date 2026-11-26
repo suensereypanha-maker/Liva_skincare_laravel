@@ -1892,11 +1892,13 @@
     videoGridHasDragged = false;
     videoGridStartX = e.pageX - this.offsetLeft;
     videoGridScrollLeft = this.scrollLeft;
+    $(this).addClass('is-dragging');
   });
 
   $(document).on('mouseleave mouseup', function () {
     if (videoGridIsDown) {
       videoGridIsDown = false;
+      $('.cat-video-grid.is-dragging').removeClass('is-dragging');
       setTimeout(() => { videoGridHasDragged = false; }, 50);
     }
   });

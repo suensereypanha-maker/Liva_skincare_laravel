@@ -29,6 +29,13 @@ class HomeController extends Controller
                 'category' => 'body',
                 'url' => route('shop', ['category' => 'body']),
             ],
+            [
+                'title' => 'Sets',
+                'description' => 'A few things, together',
+                'image' => 'assets/ritual-duo.webp',
+                'category' => 'sets',
+                'url' => route('shop', ['category' => 'sets']),
+            ],
 
         ];
 
