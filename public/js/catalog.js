@@ -1872,7 +1872,7 @@
       $btn.find('.sound-off-icon').hide();
       $btn.find('.sound-on-icon').show();
       if (video.paused) {
-        video.play().catch(function () {});
+        video.play().catch(function () { });
         $card.removeClass('is-paused');
       }
     } else {
@@ -1926,7 +1926,7 @@
     if (!video) return;
 
     if (video.paused) {
-      video.play().catch(function () {});
+      video.play().catch(function () { });
       $card.removeClass('is-paused');
     } else {
       video.pause();
