@@ -269,7 +269,7 @@
         slide.classList.toggle('is-active', active);
         slide.inert = !active;
         slide.setAttribute('aria-hidden', String(!active));
-        if (active) slide.querySelector('img').loading = 'eager';
+        if (active) { const img = slide.querySelector('img'); if (img) img.loading = 'eager'; }
         if (active) chapters[index].setAttribute('aria-current', 'true'); else chapters[index].removeAttribute('aria-current');
       });
       root.dataset.theme = slides[state.index].theme;

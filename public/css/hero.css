@@ -1,10 +1,10 @@
 /* LIVA campaign: one visual world, three useful ways into the collection. */
-.campaign-hero{--hero-progress:0;--campaign-height:clamp(580px,calc(100svh - 128px),800px);position:relative;isolation:isolate;background:#4d4b30;color:#fffaf0;overflow:hidden}
+.campaign-hero{--hero-progress:0;--campaign-height:clamp(580px,calc(100svh - 128px),800px);position:relative;isolation:isolate;background:#d9c8b1;color:#fffaf0;overflow:hidden}
 .campaign-stage{position:relative;height:var(--campaign-height);touch-action:pan-y pinch-zoom}
 .campaign-slide{position:absolute;inset:0;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .65s ease,visibility .65s;overflow:hidden;color:#fffaf0}
 .campaign-slide.is-active{opacity:1;visibility:visible;pointer-events:auto;z-index:1}
 .campaign-slide[data-theme="light"]{color:var(--ink)}
-.campaign-media{position:absolute;inset:0;overflow:hidden;background:#62603d}
+.campaign-media{position:absolute;inset:0;overflow:hidden;background:transparent}
 .campaign-media img,.campaign-media video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;display:block}
 .campaign-media video{opacity:0;transition:opacity .35s;pointer-events:none}
 .campaign-slide.is-active .campaign-media video,.campaign-media video.is-playing{opacity:1}
@@ -53,7 +53,7 @@ body[data-page="home"] .category-index{padding-block:34px 25px}
  .campaign-stage{height:var(--campaign-height)}
  .campaign-slide{display:grid;grid-template-rows:var(--mobile-media-height) auto;color:var(--ink);background:var(--paper)}
  .campaign-slide::after{display:none}
- .campaign-media{position:relative;inset:auto;grid-row:1;min-width:0;border-radius:0 0 20px 20px;overflow:hidden;background:#5a563b}
+ .campaign-media{position:relative;inset:auto;grid-row:1;min-width:0;border-radius:0 0 20px 20px;overflow:hidden;background:#d9c8b1}
  .campaign-media img,.campaign-media video{object-position:center 30%}
  .campaign-copy{position:relative;inset:auto;top:auto;left:auto;transform:none;grid-row:2;width:100%;max-width:none;padding:18px 20px 14px;background:var(--paper)}
  .campaign-eyebrow{font-size:9.5px;letter-spacing:1.4px;font-weight:600;margin:0 0 8px;color:var(--muted)}
