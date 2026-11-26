@@ -87,6 +87,9 @@ class PagesTest extends TestCase
         $response->assertSee('SilkSculpt Shampoo');
         $response->assertSee('cat-detail-share');
         $response->assertSee('cat-product-actions');
+        $response->assertSee('How to use');
+        $response->assertSee('Product reviews');
+        $response->assertSee('cat-product-reviews');
         $response->assertDontSee('cat-product-results');
         $response->assertDontSee('REAL RESULTS');
         $response->assertSee('cat-product-videos');

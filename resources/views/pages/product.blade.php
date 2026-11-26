@@ -164,6 +164,97 @@
                                 <p>Brand-confirmed details will be added before launch.</p>
                             </details>
                         @endforeach
+
+                        @php
+                            $reviewRating = number_format((float) ($product['rating'] ?? 4.9), 1);
+                            $reviewCount = (int) ($product['reviewsCount'] ?? 0);
+                            $defaultReviews = [
+                                [
+                                    'author' => 'Sophea M.',
+                                    'rating' => 5,
+                                    'date' => 'Verified Buyer',
+                                    'comment' => 'Gentle texture with a clean, subtle scent. Leaves everything feeling soft and balanced without heaviness.',
+                                ],
+                                [
+                                    'author' => 'Dara V.',
+                                    'rating' => 5,
+                                    'date' => 'Verified Buyer',
+                                    'comment' => 'A staple in my daily shelf now. A small amount goes a long way and the packaging feels thoughtful.',
+                                ],
+                                [
+                                    'author' => 'Lina K.',
+                                    'rating' => 4,
+                                    'date' => 'Verified Buyer',
+                                    'comment' => 'Very calming for everyday use and absorbs cleanly. Would definitely repurchase the larger size.',
+                                ],
+                            ];
+                        @endphp
+                        <details class="cat-review-accordion">
+                            <summary>
+                                <span class="cat-review-accordion-title">
+                                    <span>Product reviews</span>
+                                    <span class="cat-review-accordion-badge">
+                                        <x-icon name="starFill" />
+                                        <span data-review-avg>{{ $reviewRating }}</span>
+                                        <span class="cat-review-accordion-count" data-review-count>({{ $reviewCount }})</span>
+                                    </span>
+                                </span>
+                                <x-icon name="plus" />
+                            </summary>
+                            <div class="cat-product-reviews" data-product-id="{{ $product['id'] }}" data-base-rating="{{ $reviewRating }}" data-base-count="{{ $reviewCount }}">
+                                <div class="cat-review-overview">
+                                    <div class="cat-review-overview-score">
+                                        <x-icon name="starFill" />
+                                        <strong data-review-avg-text>{{ $reviewRating }}</strong>
+                                        <span>/ 5.0 · <span data-review-total-text>{{ $reviewCount }}</span> reviews</span>
+                                    </div>
+                                    <button type="button" class="cat-review-write-toggle" aria-expanded="false">Write a review</button>
+                                </div>
+
+                                <form class="cat-review-form" hidden>
+                                    <div class="cat-review-form-row">
+                                        <label class="cat-review-field">
+                                            <span>Your name</span>
+                                            <input type="text" name="author" required maxlength="60" placeholder="e.g. Sokha R.">
+                                        </label>
+                                        <label class="cat-review-field">
+                                            <span>Rating</span>
+                                            <select name="rating" aria-label="Rating">
+                                                <option value="5" selected>5 Stars</option>
+                                                <option value="4">4 Stars</option>
+                                                <option value="3">3 Stars</option>
+                                                <option value="2">2 Stars</option>
+                                                <option value="1">1 Star</option>
+                                            </select>
+                                        </label>
+                                    </div>
+                                    <label class="cat-review-field">
+                                        <span>Your review</span>
+                                        <textarea name="comment" rows="3" required maxlength="500" placeholder="Share your experience with {{ $product['name'] }}..."></textarea>
+                                    </label>
+                                    <div class="cat-review-form-actions">
+                                        <button type="submit" class="cat-review-submit-btn">Submit review</button>
+                                    </div>
+                                </form>
+
+                                <ul class="cat-review-list">
+                                    @foreach ($defaultReviews as $rev)
+                                        <li class="cat-review-item">
+                                            <div class="cat-review-item-head">
+                                                <strong>{{ $rev['author'] }}</strong>
+                                                <span class="cat-review-stars" aria-label="{{ $rev['rating'] }} out of 5 stars">
+                                                    @for ($i = 0; $i < $rev['rating']; $i++)
+                                                        <x-icon name="starFill" />
+                                                    @endfor
+                                                </span>
+                                            </div>
+                                            <span class="cat-review-meta">{{ $rev['date'] }}</span>
+                                            <p>{{ $rev['comment'] }}</p>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        </details>
                     </div>
                 </div>
             </section>
