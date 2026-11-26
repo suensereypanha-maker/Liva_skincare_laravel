@@ -107,10 +107,13 @@ class PagesTest extends TestCase
         $response = $this->get('/');
         $response->assertStatus(200);
         $response->assertViewHas('categoryCards');
-        $response->assertViewHas('hairProducts');
-        $response->assertViewHas('bodyProducts');
-        $response->assertViewHas('setsProducts');
+        $response->assertViewHas('hairProducts', fn ($items) => $items->count() === 6);
+        $response->assertViewHas('bodyProducts', fn ($items) => $items->count() === 6);
+        $response->assertViewHas('setsProducts', fn ($items) => $items->count() === 6);
         $response->assertSee('SilkSculpt Shampoo');
+        $response->assertSee('Botanical Scalp Elixir');
+        $response->assertSee('SilkMist Leave-In Spray');
+        $response->assertSee('Camellia Shine Hair Oil');
         $response->assertSee('All products');
         $response->assertSee('campaign-hero');
         $response->assertSee('slide-1-poster.webp');

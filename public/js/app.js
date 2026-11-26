@@ -12,7 +12,7 @@
     sets: 'Sets'
   };
   function editProducts() {
-    return L.products.filter(p => p.category === editCategory).slice(0, 3).map(L.productCard).join('');
+    return L.products.filter(p => p.category === editCategory).slice(0, 6).map(L.productCard).join('');
   }
   function home() {
     return `${L.renderHero()}

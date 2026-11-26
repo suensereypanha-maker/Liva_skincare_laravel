@@ -29,18 +29,12 @@ class HomeController extends Controller
                 'category' => 'body',
                 'url' => route('shop', ['category' => 'body']),
             ],
-            [
-                'title' => 'Sets',
-                'description' => 'A few things, together',
-                'image' => 'assets/ritual-duo.webp',
-                'category' => 'sets',
-                'url' => route('shop', ['category' => 'sets']),
-            ],
+
         ];
 
-        $hairProducts = Product::whereCategory('hair')->take(3);
-        $bodyProducts = Product::whereCategory('body')->take(3);
-        $setsProducts = Product::whereCategory('sets')->take(3);
+        $hairProducts = Product::whereCategory('hair')->take(6);
+        $bodyProducts = Product::whereCategory('body')->take(6);
+        $setsProducts = Product::whereCategory('sets')->take(6);
 
         return view('pages.home', [
             'categories' => $categories,
