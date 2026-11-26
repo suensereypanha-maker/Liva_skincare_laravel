@@ -1242,6 +1242,74 @@
     setTimeout(() => $modal.remove(), 200);
   }
 
+  const defaultReviewsList = [
+    { author: 'Sophea M.', rating: 5, date: 'Verified Buyer', comment: 'Gentle texture with a clean, subtle scent. Leaves everything feeling soft and balanced without heaviness.' },
+    { author: 'Dara V.', rating: 5, date: 'Verified Buyer', comment: 'A staple in my daily shelf now. A small amount goes a long way and the packaging feels thoughtful.' },
+    { author: 'Lina K.', rating: 4, date: 'Verified Buyer', comment: 'Very calming for everyday use and absorbs cleanly. Would definitely repurchase the larger size.' }
+  ];
+
+  function getSavedReviews(productId) {
+    try {
+      const store = JSON.parse(localStorage.getItem('liva-reviews-v1') || '{}');
+      return Array.isArray(store[productId]) ? store[productId] : [];
+    } catch (_) {
+      return [];
+    }
+  }
+
+  function saveProductReview(productId, review) {
+    try {
+      const store = JSON.parse(localStorage.getItem('liva-reviews-v1') || '{}');
+      const list = Array.isArray(store[productId]) ? store[productId] : [];
+      list.unshift(review);
+      store[productId] = list;
+      localStorage.setItem('liva-reviews-v1', JSON.stringify(store));
+    } catch (_) { }
+  }
+
+  function renderReviewStars(count) {
+    const n = Math.max(1, Math.min(5, Math.round(Number(count) || 5)));
+    return Array.from({ length: n }, () => icon('starFill')).join('');
+  }
+
+  function renderReviewItem(rev) {
+    return `<li class="cat-review-item"><div class="cat-review-item-head"><strong>${esc(rev.author)}</strong><span class="cat-review-stars" aria-label="${Number(rev.rating) || 5} out of 5 stars">${renderReviewStars(rev.rating)}</span></div><span class="cat-review-meta">${esc(rev.date || 'Just now')}</span><p>${esc(rev.comment)}</p></li>`;
+  }
+
+  function renderProductReviewsAccordion(product) {
+    const baseRating = Number(product.rating || 4.9);
+    const baseCount = Number(product.reviewsCount || 0);
+    const saved = getSavedReviews(product.id);
+    const totalCount = baseCount + saved.length;
+    const avg = saved.length
+      ? (((baseRating * baseCount) + saved.reduce((sum, r) => sum + (Number(r.rating) || 5), 0)) / Math.max(1, totalCount)).toFixed(1)
+      : baseRating.toFixed(1);
+    const allReviews = saved.concat(defaultReviewsList);
+    return `<details class="cat-review-accordion"><summary><span class="cat-review-accordion-title"><span>Product reviews</span><span class="cat-review-accordion-badge">${icon('starFill')}<span data-review-avg>${avg}</span><span class="cat-review-accordion-count" data-review-count>(${totalCount})</span></span></span>${icon('plus')}</summary><div class="cat-product-reviews" data-product-id="${esc(product.id)}" data-base-rating="${baseRating.toFixed(1)}" data-base-count="${baseCount}"><div class="cat-review-overview"><div class="cat-review-overview-score">${icon('starFill')}<strong data-review-avg-text>${avg}</strong><span>/ 5.0 · <span data-review-total-text>${totalCount}</span> reviews</span></div><button type="button" class="cat-review-write-toggle" aria-expanded="false">Write a review</button></div><form class="cat-review-form" hidden><div class="cat-review-form-row"><label class="cat-review-field"><span>Your name</span><input type="text" name="author" required maxlength="60" placeholder="e.g. Sokha R."></label><label class="cat-review-field"><span>Rating</span><select name="rating" aria-label="Rating"><option value="5" selected>5 Stars</option><option value="4">4 Stars</option><option value="3">3 Stars</option><option value="2">2 Stars</option><option value="1">1 Star</option></select></label></div><label class="cat-review-field"><span>Your review</span><textarea name="comment" rows="3" required maxlength="500" placeholder="Share your experience with ${esc(product.name)}..."></textarea></label><div class="cat-review-form-actions"><button type="submit" class="cat-review-submit-btn">Submit review</button></div></form><ul class="cat-review-list">${allReviews.map(renderReviewItem).join('')}</ul></div></details>`;
+  }
+
+  function hydrateProductReviews() {
+    $('.cat-product-reviews').each(function () {
+      const $wrap = $(this);
+      const id = $wrap.attr('data-product-id');
+      if (!id) return;
+      const saved = getSavedReviews(id);
+      if (!saved.length) return;
+      const baseRating = Number($wrap.attr('data-base-rating')) || 4.9;
+      const baseCount = Number($wrap.attr('data-base-count')) || 0;
+      const totalCount = baseCount + saved.length;
+      const avg = (((baseRating * baseCount) + saved.reduce((sum, r) => sum + (Number(r.rating) || 5), 0)) / Math.max(1, totalCount)).toFixed(1);
+      const $acc = $wrap.closest('.cat-review-accordion');
+      $acc.find('[data-review-avg], [data-review-avg-text]').text(avg);
+      $acc.find('[data-review-count]').text(`(${totalCount})`);
+      $acc.find('[data-review-total-text]').text(totalCount);
+      const $list = $wrap.find('.cat-review-list');
+      $list.find('[data-user-review="true"]').remove();
+      const savedHtml = saved.map(r => renderReviewItem(r).replace('<li class="cat-review-item">', '<li class="cat-review-item" data-user-review="true">')).join('');
+      $list.prepend(savedHtml);
+    });
+  }
+
   L.renderProduct = function (id) {
     const product = findProduct(id);
     if (!product) return `<section class="container cat-empty"><p class="eyebrow">PRODUCT NOT FOUND</p><h1>Back to the collection.</h1><p>This product is not part of the current sample collection.</p><a class="btn btn-primary" href="#shop">Shop all ${icon('arrow')}</a></section>`;
@@ -1292,7 +1360,7 @@
         </div>
       </form>
       <div class="cat-preview-note cat-product-preview"><strong>Sample product</strong><span>This is a storefront preview. Product details and prices are subject to confirmation; checkout is a demonstration.</span></div>
-      <div class="cat-product-accordions">${['Formula & ingredients', 'Suitability', 'How to use'].map(label => `<details><summary>${label}${icon('plus')}</summary><p>${pendingDetails}</p></details>`).join('')}</div></div></section>
+      <div class="cat-product-accordions">${['Formula & ingredients', 'Suitability', 'How to use'].map(label => `<details><summary>${label}${icon('plus')}</summary><p>${pendingDetails}</p></details>`).join('')}${renderProductReviewsAccordion(product)}</div></div></section>
       ${comparisonSlot()}<div class="cat-mobile-purchase" id="cat-mobile-purchase" aria-label="Product purchase"><div><strong>${esc(product.name)}</strong><span id="cat-mobile-size-display">${esc(product.size)} · <span data-cat-quantity>1</span> selected</span></div><button type="submit" form="cat-product-form"><span>${L.t('addToBag')}</span><span data-cat-total>${money(product.price)}</span></button></div>
       <section class="cat-product-videos" aria-label="Product video reels"><div class="cat-video-grid"><div class="cat-video-card"><video src="${asset('media/videos/video-1.mp4')}" poster="${asset('media/videos/thumb1.jpg')}" playsinline webkit-playsinline loop muted autoplay preload="metadata"></video><button type="button" class="cat-video-sound-toggle" aria-label="Toggle sound"><svg class="sound-off-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg><svg class="sound-on-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display: none;"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg></button><div class="cat-video-play-indicator" aria-hidden="true"><svg viewBox="0 0 24 24" width="32" height="32" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"></polygon></svg></div></div><div class="cat-video-card"><video src="${asset('media/videos/video-2.mp4')}" poster="${asset('media/videos/thumb2.jpg')}" playsinline webkit-playsinline loop muted autoplay preload="metadata"></video><button type="button" class="cat-video-sound-toggle" aria-label="Toggle sound"><svg class="sound-off-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg><svg class="sound-on-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display: none;"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg></button><div class="cat-video-play-indicator" aria-hidden="true"><svg viewBox="0 0 24 24" width="32" height="32" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"></polygon></svg></div></div><div class="cat-video-card"><video src="${asset('media/videos/video-3.mp4')}" poster="${asset('media/videos/thumb3.jpg')}" playsinline webkit-playsinline loop muted autoplay preload="metadata"></video><button type="button" class="cat-video-sound-toggle" aria-label="Toggle sound"><svg class="sound-off-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg><svg class="sound-on-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display: none;"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg></button><div class="cat-video-play-indicator" aria-hidden="true"><svg viewBox="0 0 24 24" width="32" height="32" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"></polygon></svg></div></div><div class="cat-video-card"><video src="${asset('media/videos/video-4.mp4')}" poster="${asset('media/videos/thumb4.jpg')}" playsinline webkit-playsinline loop muted autoplay preload="metadata"></video><button type="button" class="cat-video-sound-toggle" aria-label="Toggle sound"><svg class="sound-off-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg><svg class="sound-on-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="display: none;"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg></button><div class="cat-video-play-indicator" aria-hidden="true"><svg viewBox="0 0 24 24" width="32" height="32" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"></polygon></svg></div></div></div></section>
       <section class="cat-related" aria-labelledby="cat-related-title"><div class="cat-section-heading"><div><p class="eyebrow">${L.t('continueExploring')}</p><h2 id="cat-related-title">${L.t('moreInCategory')}</h2><p>${L.t('otherProducts')}</p></div><a class="cat-text-link" href="#shop?category=${product.category}">${L.t('viewCollection')} ${icon('arrow')}</a></div><div class="cat-product-grid">${related.map(L.productCard).join('')}</div></section></div>`;
@@ -1479,6 +1547,7 @@
     if (footerObserver) footerObserver.disconnect();
     syncComparison();
     syncQuantity();
+    hydrateProductReviews();
     const purchase = document.querySelector('.cat-detail-add');
     const bar = document.getElementById('cat-mobile-purchase');
     if (purchase && bar && ('IntersectionObserver' in window)) {
@@ -1803,7 +1872,7 @@
       $btn.find('.sound-off-icon').hide();
       $btn.find('.sound-on-icon').show();
       if (video.paused) {
-        video.play().catch(function () {});
+        video.play().catch(function () { });
         $card.removeClass('is-paused');
       }
     } else {
@@ -1857,7 +1926,7 @@
     if (!video) return;
 
     if (video.paused) {
-      video.play().catch(function () {});
+      video.play().catch(function () { });
       $card.removeClass('is-paused');
     } else {
       video.pause();
@@ -2086,6 +2155,32 @@
     const target = document.querySelector('.cat-compare-toggle, #cat-compare-content a');
     if (target) target.focus({ preventScroll: true });
     L.toast('Comparison cleared');
+  });
+
+  $(document).on('click', '.cat-review-write-toggle', function () {
+    const $btn = $(this);
+    const $form = $btn.closest('.cat-product-reviews').find('.cat-review-form');
+    const isHidden = $form.prop('hidden');
+    $form.prop('hidden', !isHidden);
+    $btn.attr('aria-expanded', String(isHidden));
+    if (isHidden) $form.find('input[name="author"]').trigger('focus');
+  });
+
+  $(document).on('submit', '.cat-review-form', function (event) {
+    event.preventDefault();
+    const $form = $(this);
+    const $wrap = $form.closest('.cat-product-reviews');
+    const productId = $wrap.attr('data-product-id');
+    const author = String($form.find('[name="author"]').val() || '').trim();
+    const rating = Number($form.find('[name="rating"]').val()) || 5;
+    const comment = String($form.find('[name="comment"]').val() || '').trim();
+    if (!productId || !author || !comment) return;
+    saveProductReview(productId, { author, rating, comment, date: 'Verified Review' });
+    this.reset();
+    $form.prop('hidden', true);
+    $wrap.find('.cat-review-write-toggle').attr('aria-expanded', 'false');
+    hydrateProductReviews();
+    if (L.toast) L.toast('Thank you for your review');
   });
 
   $(document).on('liva:change', syncWishlist);
