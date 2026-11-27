@@ -43,7 +43,7 @@
   L.render = function (forceRender) {
     if (L.destroyHero) L.destroyHero();
     let raw = window.location.hash.slice(1);
-    const p = window.location.pathname.replace(/^\/|\/$/g, '');
+    const p = window.__IS_STATIC__ ? '' : window.location.pathname.replace(/^\/|\/$/g, '');
     const currentRoute = p || 'home';
     let page = currentRoute.split('/')[0];
     let id = currentRoute.split('/')[1];
